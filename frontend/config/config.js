@@ -172,11 +172,12 @@ export default {
   manifest: {
     basePath: '/',
   }, // chainWebpack: webpackPlugin,
-  // proxy: {
-  //   '/server/api/': {
-  //     target: 'https://preview.pro.ant.design/',
-  //     changeOrigin: true,
-  //     pathRewrite: { '^/server': '' },
-  //   },
-  // },
+  // 开发接口代理
+  proxy: {
+    '/api': {
+      target: 'http://dj.39.test/api/',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
+    },
+  },
 };

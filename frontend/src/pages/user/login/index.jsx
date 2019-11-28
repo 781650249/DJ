@@ -32,7 +32,7 @@ class Login extends Component {
           },
           callback: response => {
             console.log(response)
-
+            console.log('test')
             notification.success({
               message: '登陆成功',
             })

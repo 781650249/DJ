@@ -28,5 +28,11 @@ class AuthServiceProvider extends ServiceProvider
 
         // 令牌理由
         Passport::routes();
+
+        // 令牌期限
+        Passport::tokensExpireIn(now()->addDays(15));
+
+        // 令牌刷新
+        Passport::refreshTokensExpireIn(now()->addDays(30));
     }
 }

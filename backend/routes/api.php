@@ -35,6 +35,8 @@ Route::group(['middleware' => 'auth:api', 'namespace'  => 'API'], function ($api
     $api->put('/me/password', 'UserController@changePassword');
 
     /****************** 商品 ******************************************/
+    $api->post('/products/import', 'ProductController@import');
+
     $api->resource('/products', 'ProductController');
 
 });

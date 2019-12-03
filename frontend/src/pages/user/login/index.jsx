@@ -1,10 +1,10 @@
 import { Alert, Form, Input, Button, notification } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Link } from 'umi';
+import { Link, router } from 'umi';
 import styles from './style.less';
 
-const FormItem = Form.Item
+const FormItem = Form.Item;
 
 @connect(({ login, loading }) => ({
   userLogin: login,
@@ -15,33 +15,34 @@ class Login extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    const { form, dispatch } = this.props
+    const { form, dispatch } = this.props;
 
     form.validateFields((err, values) => {
-        if (err) {
-          return
-        }
+      if (err) {
+        return;
+      }
 
-        dispatch({
-          type: 'login/login',
-          payload: {
-            grant_type: 'password',
-            client_id: '2',
-            client_secret: 'TmcgliNsLxIkpFWY9zS4NMMbe1wNVjR1UwKUl7H1',
-            ...values,
-          },
-          callback: response => {
-            console.log(response)
+      dispatch({
+        type: 'login/login',
+        payload: {
+          grant_type: 'password',
+          client_id: '3',
+          client_secret: 'PggwVjfP0OiEs1N98YqOlt6oTpTgrIgHs00FVjym',
+          ...values,
+        },
+        callback: response => {
+          console.log(response);
 
-            notification.success({
-              message: '登陆成功',
-            })
+          notification.success({
+            message: '登陆成功',
+          });
 
-            window.location.href = '/';
-          },
-        })
-      },
-    )
+          router.push({
+            pathname: '/',
+          });
+        },
+      });
+    });
   };
 
   renderMessage = content => (
@@ -57,24 +58,15 @@ class Login extends Component {
 
   render() {
     const { form, submitting } = this.props;
-    const { getFieldDecorator } = form
+    const { getFieldDecorator } = form;
 
     return (
       <div className={styles.main}>
         <Form onSubmit={this.handleSubmit}>
-          <FormItem>
-            {
-              getFieldDecorator('username')(
-                <Input placeholder="邮件" />,
-            )}
-          </FormItem>
+          <FormItem>{getFieldDecorator('username')(<Input placeholder="邮件" />)}</FormItem>
 
           <FormItem>
-            {
-              getFieldDecorator('password')(
-                <Input type="password" placeholder="密码" />,
-              )
-            }
+            {getFieldDecorator('password')(<Input type="password" placeholder="密码" />)}
           </FormItem>
           <FormItem>
             <Button loading={submitting} type="primary" htmlType="submit">

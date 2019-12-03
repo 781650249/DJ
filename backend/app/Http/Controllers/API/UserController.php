@@ -78,24 +78,24 @@ class UserController extends Controller {
      */
     public function changePassword (Request $request) {
         $validator = Validator::make($request->all(), [
-            'old_password' => [
+            'old_password'     => [
                 'required',
                 new CheckOldPassword()
             ],
-            'new_password' => 'required|min:6|max:18',
-            'confirm_password'     => 'required|same:new_password',
+            'new_password'     => 'required|min:6|max:18',
+            'confirm_password' => 'required|same:new_password',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => '注册失败',
+                'message' => '修改失败',
                 'error'   => $validator->errors()->first() ?? '未知错误'
             ], 422);
         }
 
-
+        $newPassword = $request->input('new_password');
         $user = Auth::user();
-        $user->password = Hash::make($request->newPassword);
+        $user->password = Hash::make($newPassword);
         $user->save();
 
         // 记录到日志

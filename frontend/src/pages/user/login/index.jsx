@@ -1,9 +1,11 @@
-import { Alert, Form, Input, Button, notification, Row, Col } from 'antd';
+import { Alert, Form, Input, Button, notification } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { NavLink } from 'umi';
+import { Link, router } from 'umi';
+import styles from './style.less';
 
 const FormItem = Form.Item;
+
 @connect(({ login, loading }) => ({
   userLogin: login,
   submitting: loading.effects['login/login'],
@@ -24,13 +26,16 @@ class Login extends Component {
         type: 'login/login',
         payload: {
           grant_type: 'password',
-          client_id: '2',
-          client_secret: 'TmcgliNsLxIkpFWY9zS4NMMbe1wNVjR1UwKUl7H1',
+          client_id: '3',
+          client_secret: 'PggwVjfP0OiEs1N98YqOlt6oTpTgrIgHs00FVjym',
           ...values,
         },
         callback: () => {
           notification.success({
             message: '登陆成功',
+          });
+          router.push({
+            pathname: '/',
           });
         },
       });
@@ -53,26 +58,22 @@ class Login extends Component {
     const { getFieldDecorator } = form;
 
     return (
-      <div>
-        <Row type="flex" justify="center">
-          <Col span={4}>
-            <Form onSubmit={this.handleSubmit}>
-              <FormItem>{getFieldDecorator('username')(<Input placeholder="邮箱" />)}</FormItem>
+      <div className={styles.main}>
+        <Form onSubmit={this.handleSubmit}>
+          <FormItem>{getFieldDecorator('username')(<Input placeholder="邮件" />)}</FormItem>
 
-              <FormItem>
-                {getFieldDecorator('password')(<Input type="password" placeholder="密码" />)}
-              </FormItem>
-              <FormItem>
-                <Button loading={submitting} type="primary" htmlType="submit">
-                  登陆
-                </Button>
-                <NavLink style={{ float: 'right' }} to="/user/register">
-                  去注册
-                </NavLink>
-              </FormItem>
-            </Form>
-          </Col>
-        </Row>
+          <FormItem>
+            {getFieldDecorator('password')(<Input type="password" placeholder="密码" />)}
+          </FormItem>
+          <FormItem>
+            <Button loading={submitting} type="primary" htmlType="submit">
+              登陆
+            </Button>
+            <Link style={{ float: 'right' }} to="/user/register">
+              去注册
+            </Link>
+          </FormItem>
+        </Form>
       </div>
     );
   }

@@ -1,7 +1,7 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'querystring';
 import { fakeAccountLogin, getFakeCaptcha } from '@/services/login';
-import { setAuthority } from '@/utils/authority';
+import { setAuthorityByToken } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 
 const Model = {
@@ -11,14 +11,19 @@ const Model = {
   },
   effects: {
     *login({ payload, callback }, { call, put }) {
-      const response = yield call(fakeAccountLogin, payload);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: response,
-      });
+      const { response, data } = yield call(fakeAccountLogin, payload);
 
       // Login successfully
-      if (callback) callback(response)
+      if (response.status && response.status === 200) {
+        if (callback) callback(response);
+
+        yield put({
+          type: 'changeLoginStatus',
+          payload: data,
+        });
+      } else {
+        // 登录失败处理
+      }
     },
 
     *getCaptcha({ payload }, { call }) {
@@ -42,7 +47,9 @@ const Model = {
   },
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.currentAuthority);
+      // setAuthority(payload.currentAuthority);
+      // 根据token来设置用户是否在线
+      setAuthorityByToken(payload);
       return { ...state, status: payload.status, type: payload.type };
     },
   },

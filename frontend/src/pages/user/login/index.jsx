@@ -1,11 +1,9 @@
-import { Alert, Form, Input, Button, notification } from 'antd';
+import { Alert, Form, Input, Button, notification, Row, Col } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Link } from 'umi';
-import styles from './style.less';
+import { NavLink } from 'umi';
 
-const FormItem = Form.Item
-
+const FormItem = Form.Item;
 @connect(({ login, loading }) => ({
   userLogin: login,
   submitting: loading.effects['login/login'],
@@ -15,33 +13,28 @@ class Login extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    const { form, dispatch } = this.props
+    const { form, dispatch } = this.props;
 
     form.validateFields((err, values) => {
-        if (err) {
-          return
-        }
+      if (err) {
+        return;
+      }
 
-        dispatch({
-          type: 'login/login',
-          payload: {
-            grant_type: 'password',
-            client_id: '2',
-            client_secret: 'TmcgliNsLxIkpFWY9zS4NMMbe1wNVjR1UwKUl7H1',
-            ...values,
-          },
-          callback: response => {
-            console.log(response)
-            console.log('我修改了细节')
-            notification.success({
-              message: '登陆成功',
-            })
-
-            window.location.href = '/';
-          },
-        })
-      },
-    )
+      dispatch({
+        type: 'login/login',
+        payload: {
+          grant_type: 'password',
+          client_id: '2',
+          client_secret: 'TmcgliNsLxIkpFWY9zS4NMMbe1wNVjR1UwKUl7H1',
+          ...values,
+        },
+        callback: () => {
+          notification.success({
+            message: '登陆成功',
+          });
+        },
+      });
+    });
   };
 
   renderMessage = content => (
@@ -57,34 +50,29 @@ class Login extends Component {
 
   render() {
     const { form, submitting } = this.props;
-    const { getFieldDecorator } = form
+    const { getFieldDecorator } = form;
 
     return (
-      <div className={styles.main}>
-        <Form onSubmit={this.handleSubmit}>
-          <FormItem>
-            {
-              getFieldDecorator('username')(
-                <Input placeholder="邮件" />,
-            )}
-          </FormItem>
+      <div>
+        <Row type="flex" justify="center">
+          <Col span={4}>
+            <Form onSubmit={this.handleSubmit}>
+              <FormItem>{getFieldDecorator('username')(<Input placeholder="邮箱" />)}</FormItem>
 
-          <FormItem>
-            {
-              getFieldDecorator('password')(
-                <Input type="password" placeholder="密码" />,
-              )
-            }
-          </FormItem>
-          <FormItem>
-            <Button loading={submitting} type="primary" htmlType="submit">
-              登陆
-            </Button>
-            <Link style={{ float: 'right' }} to="/user/register">
-              去注册
-            </Link>
-          </FormItem>
-        </Form>
+              <FormItem>
+                {getFieldDecorator('password')(<Input type="password" placeholder="密码" />)}
+              </FormItem>
+              <FormItem>
+                <Button loading={submitting} type="primary" htmlType="submit">
+                  登陆
+                </Button>
+                <NavLink style={{ float: 'right' }} to="/user/register">
+                  去注册
+                </NavLink>
+              </FormItem>
+            </Form>
+          </Col>
+        </Row>
       </div>
     );
   }

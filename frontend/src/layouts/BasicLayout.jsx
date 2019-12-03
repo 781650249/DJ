@@ -3,16 +3,14 @@
  * You can view component api by:
  * https://github.com/ant-design/ant-design-pro-layout
  */
-import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
+import ProLayout from '@ant-design/pro-layout';
 import React, { useEffect } from 'react';
 import Link from 'umi/link';
 import { connect } from 'dva';
-import { Icon, Result, Button } from 'antd';
-import { formatMessage } from 'umi-plugin-react/locale';
+import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
-import { isAntDesignPro, getAuthorityFromRouter } from '@/utils/utils';
-import logo from '../assets/logo.svg';
+import { getAuthorityFromRouter } from '@/utils/utils'; // import logo from '../assets/logo.svg';
 
 const noMatch = (
   <Result
@@ -26,67 +24,15 @@ const noMatch = (
     }
   />
 );
-
 /**
  * use Authorized check all menu item
  */
+
 const menuDataRender = menuList =>
   menuList.map(item => {
     const localItem = { ...item, children: item.children ? menuDataRender(item.children) : [] };
     return Authorized.check(item.authority, localItem, null);
   });
-
-const defaultFooterDom = (
-  <DefaultFooter
-    copyright="2019 蚂蚁金服体验技术部出品"
-    links={[
-      {
-        key: 'Ant Design Pro',
-        title: 'Ant Design Pro',
-        href: 'https://pro.ant.design',
-        blankTarget: true,
-      },
-      {
-        key: 'github',
-        title: <Icon type="github" />,
-        href: 'https://github.com/ant-design/ant-design-pro',
-        blankTarget: true,
-      },
-      {
-        key: 'Ant Design',
-        title: 'Ant Design',
-        href: 'https://ant.design',
-        blankTarget: true,
-      },
-    ]}
-  />
-);
-
-const footerRender = () => {
-  if (!isAntDesignPro()) {
-    return defaultFooterDom;
-  }
-
-  return (
-    <>
-      {defaultFooterDom}
-      <div
-        style={{
-          padding: '0px 24px 24px',
-          textAlign: 'center',
-        }}
-      >
-        <a href="https://www.netlify.com" target="_blank" rel="noopener noreferrer">
-          <img
-            src="https://www.netlify.com/img/global/badges/netlify-color-bg.svg"
-            width="82px"
-            alt="netlify logo"
-          />
-        </a>
-      </div>
-    </>
-  );
-};
 
 const BasicLayout = props => {
   const {
@@ -125,12 +71,16 @@ const BasicLayout = props => {
     authority: undefined,
   };
   return (
-    <ProLayout
-      logo={logo}
-      menuHeaderRender={(logoDom, titleDom) => (
-        <Link to="/">
-          {logoDom}
-          {titleDom}
+    <ProLayout // logo={logo}
+      menuHeaderRender={() => (
+        <Link style={{ textDecoration: 'none', Color: '#0096FA' }} to="/">
+          {/* {logoDom} */}
+          <img
+            alt="_"
+            src="https://axure-file.lanhuapp.com/8b151158-a1bf-477d-87e1-89ddf489ae42__d28701f941a0303bf153712d0f6af1ba.png"
+          />
+          &nbsp; &nbsp; &nbsp;DJ Demo
+          <h2 style={{ Color: '#0096FA', fontWeight: '700', textAlign: 'left' }}> </h2>
         </Link>
       )}
       onCollapse={handleMenuCollapse}
@@ -144,10 +94,7 @@ const BasicLayout = props => {
       breadcrumbRender={(routers = []) => [
         {
           path: '/',
-          breadcrumbName: formatMessage({
-            id: 'menu.home',
-            defaultMessage: 'Home',
-          }),
+          breadcrumbName: '首页',
         },
         ...routers,
       ]}
@@ -158,10 +105,8 @@ const BasicLayout = props => {
         ) : (
           <span>{route.breadcrumbName}</span>
         );
-      }}
-      footerRender={footerRender}
+      }} // footerRender={footerRender}
       menuDataRender={menuDataRender}
-      formatMessage={formatMessage}
       rightContentRender={rightProps => <RightContent {...rightProps} />}
       {...props}
       {...settings}

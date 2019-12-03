@@ -30,13 +30,10 @@ class Login extends Component {
           client_secret: 'PggwVjfP0OiEs1N98YqOlt6oTpTgrIgHs00FVjym',
           ...values,
         },
-        callback: response => {
-          console.log(response);
-
+        callback: () => {
           notification.success({
             message: '登陆成功',
           });
-
           router.push({
             pathname: '/',
           });

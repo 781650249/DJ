@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Redirect } from 'umi';
-import { stringify } from 'querystring';
 import PageLoading from '@/components/PageLoading';
 
 class SecurityLayout extends React.Component {

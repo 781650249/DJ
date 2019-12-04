@@ -1,7 +1,7 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'querystring';
 import { fakeAccountLogin, getFakeCaptcha } from '@/services/login';
-import { setAuthority, setAuthorityByToken } from '@/utils/authority';
+import { setAuthorityByToken } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 
 const Model = {

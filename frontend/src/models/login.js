@@ -15,12 +15,12 @@ const Model = {
 
       // Login successfully
       if (response.status && response.status === 200) {
-        if (callback) callback(response);
-
         yield put({
           type: 'changeLoginStatus',
           payload: data,
         });
+
+        if (callback) callback(response);
       } else {
         // 登录失败处理
       }

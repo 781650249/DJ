@@ -11,6 +11,7 @@ import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { getAuthorityFromRouter } from '@/utils/utils'; // import logo from '../assets/logo.svg';
+import img1 from '@/assets/imgs/logo.png';
 
 const noMatch = (
   <Result
@@ -24,6 +25,7 @@ const noMatch = (
     }
   />
 );
+
 /**
  * use Authorized check all menu item
  */
@@ -43,20 +45,6 @@ const BasicLayout = props => {
       pathname: '/',
     },
   } = props;
-  /**
-   * constructor
-   */
-
-  // useEffect(() => {
-  //   if (dispatch) {
-  //     dispatch({
-  //       type: 'user/fetchCurrent',
-  //     });
-  //   }
-  // }, []);
-  /**
-   * init variables
-   */
 
   const handleMenuCollapse = payload => {
     if (dispatch) {
@@ -71,14 +59,11 @@ const BasicLayout = props => {
     authority: undefined,
   };
   return (
-    <ProLayout // logo={logo}
+    <ProLayout
       menuHeaderRender={() => (
         <Link style={{ textDecoration: 'none', Color: '#0096FA' }} to="/">
           {/* {logoDom} */}
-          <img
-            alt="_"
-            src="https://axure-file.lanhuapp.com/8b151158-a1bf-477d-87e1-89ddf489ae42__d28701f941a0303bf153712d0f6af1ba.png"
-          />
+          <img alt="_" src={img1} />
           &nbsp; &nbsp; &nbsp;DJ Demo
           <h2 style={{ Color: '#0096FA', fontWeight: '700', textAlign: 'left' }}> </h2>
         </Link>
@@ -105,7 +90,7 @@ const BasicLayout = props => {
         ) : (
           <span>{route.breadcrumbName}</span>
         );
-      }} // footerRender={footerRender}
+      }}
       menuDataRender={menuDataRender}
       rightContentRender={rightProps => <RightContent {...rightProps} />}
       {...props}

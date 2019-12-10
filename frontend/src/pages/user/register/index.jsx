@@ -4,9 +4,9 @@ import { connect } from 'dva';
 import { Link, router } from 'umi';
 
 @Form.create()
-@connect(({ register, loading }) => ({
-  register,
-  submitting: loading.effects['register/register'],
+@connect(({ user, loading }) => ({
+  user,
+  submitting: loading.effects['user/register'],
 }))
 class Register extends Component {
   onRegister = e => {
@@ -18,7 +18,7 @@ class Register extends Component {
       }
 
       dispatch({
-        type: 'register/register',
+        type: 'user/register',
         payload: {
           ...values,
         },
@@ -29,10 +29,6 @@ class Register extends Component {
               message: '注册成功',
             });
             router.push('/user/login');
-          } else {
-            notification.error({
-              message: '注册失败',
-            });
           }
         },
       });

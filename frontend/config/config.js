@@ -105,40 +105,40 @@ export default {
           component: '../layouts/BasicLayout',
           authority: ['admin', 'user'],
           routes: [
-            {
-              path: '/',
-              redirect: '/GoodList',
-            },
-            {
-              path: '/GoodList',
-              name: '商品列表',
-              icon: 'unordered-list',
-              component: './GoodList',
-            },
-            {
-              path: './OrderManage',
-              name: '订单管理',
-              icon: 'mail',
-              component: './OrderManage',
-            },
-            {
-              path: './OperationLog',
-              name: '操作日志',
-              icon: 'pie-chart',
-              component: './OperationLog',
-            },
-            {
-              path: './LogisOrder',
-              name: '物流订单',
-              icon: 'global',
-              component: './LogisOrder',
-            },
-            {
-              path: './Personal',
-              name: '个人中心',
-              icon: 'user',
-              component: './Personal',
-            },
+            // {
+            //   path: '/',
+            //   redirect: '/GoodList',
+            // },
+            // {
+            //   path: '/GoodList',
+            //   name: '商品列表',
+            //   icon: 'unordered-list',
+            //   component: './GoodList',
+            // },
+            // {
+            //   path: './OrderManage',
+            //   name: '订单管理',
+            //   icon: 'mail',
+            //   component: './OrderManage',
+            // },
+            // {
+            //   path: './OperationLog',
+            //   name: '操作日志',
+            //   icon: 'pie-chart',
+            //   component: './OperationLog',
+            // },
+            // {
+            //   path: './LogisOrder',
+            //   name: '物流订单',
+            //   icon: 'global',
+            //   component: './LogisOrder',
+            // },
+            // {
+            //   path: './Personal',
+            //   name: '个人中心',
+            //   icon: 'user',
+            //   component: './Personal',
+            // },
 
             {
               path: '/admin',

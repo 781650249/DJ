@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\ActivityLog;
 use App\Imports\ImportToArray;
 use App\Products;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -548,6 +549,73 @@ class ProductController extends Controller
             'new_count'     => $newCount,
             'update_count'  => $updateCount,
             'message'       => $logMsg
+        ], 200);
+    }
+
+    /**
+     * 批量删除
+     * 日志记录
+     * {
+     *   'sku': sku,
+     *   'title': '标题'
+     * }
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function batchDel(Request $request) {
+        $ids = $request->input('ids', []);
+
+        if (!is_array($ids)) {
+            return response([
+                'message' => '请求的参数’ids‘不是有效的数组',
+                'code'    => -1
+            ], 500);
+        }
+
+        if (count($ids) > 300) {
+            return response([
+                'message' => '将要删除的数据超过300条，操作被拒绝，请确认后再试！'
+            ], 422);
+        }
+
+        $products = Products::whereIn('id', $ids)
+            ->get();
+
+        if (count($products) === 0) {
+            return response([
+                'message' => '要删除的数据不存在，请确认后再试！'
+            ], 422);
+        }
+
+        if (count($products) !== count($ids)) {
+            return response([
+                'message' => '将要删除的数据和请求的参数不符，请刷新数据后再试！操作被拒绝。'
+            ], 422);
+        }
+
+        $num = 0;
+        foreach ($products as $product) {
+            activity(ActivityLog::TYPE_PRODUCT_BATCH_DELETE)
+                ->withProperties([
+                    'title'      => $product->title,
+                    'sku'        => $product->sku,
+                    'deleted_at' => Carbon::now()
+                ])
+                ->log("批量删除中，删除了 '{$product->sku}' 这个商品");
+
+            $product->delete();
+            $num++;
+        }
+
+        \activity(ActivityLog::TYPE_PRODUCTS_BATCH_DEL)
+            ->withProperties([
+                'delete_count'  => $num,
+            ])
+            ->log("批量删除了 '{$num}' 个商品");
+
+        return response([
+            'message'      => '删除成功',
+            'delete_count' => $num
         ], 200);
     }
 }

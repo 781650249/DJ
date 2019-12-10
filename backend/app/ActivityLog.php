@@ -17,4 +17,6 @@ class ActivityLog extends Model
     const TYPE_PRODUCT_IMPORT_FAILED = 'PRODUCT_IMPORT_FAILED'; // 批量导入失败
     const TYPE_PRODUCT_IMPORT_ADD = 'PRODUCT_IMPORT_ADD'; // 导入添加
     const TYPE_PRODUCT_IMPORT_UPDATE = 'PRODUCT_IMPORT_UPDATE'; // 导入更新
+    const TYPE_PRODUCT_BATCH_DELETE = 'PRODUCT_BATCH_DELETE'; // 批量删除中删除商品
+    const TYPE_PRODUCTS_BATCH_DEL = 'PRODUCTS_BATCH_DEL'; // 商品批量删除
 }

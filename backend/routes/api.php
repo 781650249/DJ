@@ -37,6 +37,9 @@ Route::group(['middleware' => 'auth:api', 'namespace'  => 'API'], function ($api
     /****************** 商品 ******************************************/
     $api->post('/products/import', 'ProductController@import');
 
+    // 批量删除
+    $api->post('/products/batch_delete', 'ProductController@batchDel');
+
     $api->resource('/products', 'ProductController');
 
 });

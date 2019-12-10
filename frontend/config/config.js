@@ -105,6 +105,12 @@ export default {
               redirect: '/welcome',
             },
             {
+              path: '/upload_example',
+              name: '文件上传示例',
+              icon: 'upload',
+              component: './FileUPloadExample'
+            },
+            {
               path: '/welcome',
               name: 'welcome',
               icon: 'smile',

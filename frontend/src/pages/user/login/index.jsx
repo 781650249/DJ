@@ -34,9 +34,8 @@ class Login extends Component {
           notification.success({
             message: '登陆成功',
           });
-          router.push({
-            pathname: '/',
-          });
+
+          window.location.href = '/'
         },
       });
     });

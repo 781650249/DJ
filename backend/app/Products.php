@@ -15,6 +15,7 @@ class Products extends Model
         'title',
         'title_en',
         'weight',
+        'quantity',
         'created_at',
         'updated_at',
         'sku',

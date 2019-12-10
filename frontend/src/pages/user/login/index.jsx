@@ -1,7 +1,7 @@
 import { Alert, Form, Input, Button, notification, Row, Col } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Link, router } from 'umi';
+import { Link } from 'umi';
 
 const FormItem = Form.Item;
 
@@ -30,9 +30,8 @@ class Login extends Component {
           notification.success({
             message: '登陆成功',
           });
-          router.push({
-            pathname: '/',
-          });
+
+          window.location.href = '/';
         },
       });
     });

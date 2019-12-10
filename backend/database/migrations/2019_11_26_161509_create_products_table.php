@@ -18,6 +18,7 @@ class CreateProductsTable extends Migration
             $table->boolean('double_side')->default(false)->comment('单双面');
             $table->float('purchase_price')->nullable()->comment('采购价格');
             $table->float('weight')->nullable()->comment('重量');
+            $table->integer('quantity')->default(0)->comment('数量');
             $table->string('title')->nullable()->comment('标题');
             $table->string('sku')->index()->comment('sku');
             $table->string('title_en')->nullable()->comment('英文标题');

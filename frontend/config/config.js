@@ -141,6 +141,18 @@ export default {
             // },
 
             {
+              path: '/upload_example',
+              name: '文件上传示例',
+              icon: 'upload',
+              component: './FileUPloadExample',
+            },
+            {
+              path: '/welcome',
+              name: 'welcome',
+              icon: 'smile',
+              component: './Welcome',
+            },
+            {
               path: '/admin',
               name: 'admin',
               icon: 'crown',

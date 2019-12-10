@@ -1,8 +1,7 @@
-import { Alert, Form, Input, Button, notification } from 'antd';
+import { Alert, Form, Input, Button, notification, Row, Col } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Link, router } from 'umi';
-import styles from './style.less';
 
 const FormItem = Form.Item;
 
@@ -14,14 +13,11 @@ const FormItem = Form.Item;
 class Login extends Component {
   handleSubmit = e => {
     e.preventDefault();
-
     const { form, dispatch } = this.props;
-
     form.validateFields((err, values) => {
       if (err) {
         return;
       }
-
       dispatch({
         type: 'login/login',
         payload: {
@@ -58,23 +54,37 @@ class Login extends Component {
     const { getFieldDecorator } = form;
 
     return (
-      <div className={styles.main}>
-        <Form onSubmit={this.handleSubmit}>
-          <FormItem>{getFieldDecorator('username')(<Input placeholder="邮件" />)}</FormItem>
+      <Row type="flex" justify="center">
+        <Col span={4}>
+          <Form onSubmit={this.handleSubmit}>
+            <FormItem>
+              {getFieldDecorator('username', {
+                rules: [
+                  { required: true, message: '邮箱不能为空' },
+                  { pattern: /\w+@\w+(\.\w+){1,2}/, message: '邮箱不正确' },
+                ],
+              })(<Input placeholder="邮箱" />)}
+            </FormItem>
 
-          <FormItem>
-            {getFieldDecorator('password')(<Input type="password" placeholder="密码" />)}
-          </FormItem>
-          <FormItem>
-            <Button loading={submitting} type="primary" htmlType="submit">
-              登陆
-            </Button>
-            <Link style={{ float: 'right' }} to="/user/register">
-              去注册
-            </Link>
-          </FormItem>
-        </Form>
-      </div>
+            <FormItem>
+              {getFieldDecorator('password', {
+                rules: [
+                  { required: true, message: '密码不能为空' },
+                  { min: 6, message: '密码至少为6位组成' },
+                ],
+              })(<Input type="password" placeholder="密码" />)}
+            </FormItem>
+            <FormItem>
+              <Button loading={submitting} type="primary" htmlType="submit">
+                登陆
+              </Button>
+              <Link style={{ float: 'right' }} to="/user/register">
+                去注册
+              </Link>
+            </FormItem>
+          </Form>
+        </Col>
+      </Row>
     );
   }
 }

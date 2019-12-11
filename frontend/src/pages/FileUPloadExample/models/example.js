@@ -10,17 +10,17 @@ export default {
 
   effects: {
     *upload({ payload, callback }, { call }) {
-      const res = yield call(formData, 'example/upload', payload)
-      
-      console.log(res)
+      const res = yield call(formData, 'example/upload', payload);
+
+      console.log(res);
 
       const { data, response } = res;
 
       if (response.status === 200) {
-        if (callback) callback(data)
+        if (callback) callback(data);
       }
     },
   },
 
   reducers: {},
-}
+};

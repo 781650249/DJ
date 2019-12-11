@@ -22,7 +22,7 @@ class FIleUploadExample extends Component {
     file: null,
     errorMessage: null,
     subming: false,
-  }
+  };
 
   handleBeforeUpload = file => {
     const fileType = file.type;
@@ -58,16 +58,16 @@ class FIleUploadExample extends Component {
   handleRemove = () => {
     this.setState({
       file: null,
-    })
-  }
+    });
+  };
 
   submit = async () => {
-    console.log('提交')
-    const { file } = this.state
-    const { dispatch } = this.props
+    console.log('提交');
+    const { file } = this.state;
+    const { dispatch } = this.props;
     this.setState({
       subming: true,
-    })
+    });
 
     await dispatch({
       type: 'example/upload',
@@ -77,15 +77,15 @@ class FIleUploadExample extends Component {
       callback: response => {
         console.log(response);
       },
-    })
+    });
 
     this.setState({
       subming: false,
-    })
-  }
+    });
+  };
 
   render() {
-    const { file, errorMessage, subming } = this.state
+    const { file, errorMessage, subming } = this.state;
 
     return (
       <Card bordered>
@@ -101,19 +101,21 @@ class FIleUploadExample extends Component {
             <p className="ant-upload-text">点击选择或拖拽文件到线框中上传</p>
             <small className="ant-upload-hint">仅支持小于10M的XLSX、XLS格式的excel文件</small>
           </Dragger>
-          {
-            errorMessage && (
-              <Alert message={errorMessage}/>
-            )
-          }
+          {errorMessage && <Alert message={errorMessage} />}
 
-          <Button disabled={!file} style={{ marginTop: 12 }} type="primary" loading={subming} onClick={this.submit}>
+          <Button
+            disabled={!file}
+            style={{ marginTop: 12 }}
+            type="primary"
+            loading={subming}
+            onClick={this.submit}
+          >
             提交
           </Button>
         </div>
       </Card>
-    )
+    );
   }
 }
 
-export default FIleUploadExample
+export default FIleUploadExample;

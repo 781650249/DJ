@@ -18,7 +18,7 @@ const plugins = [
       },
       locale: {
         // default false
-        enable: true,
+        enable: false,
         // default zh-CN
         default: 'zh-CN',
         // default true, when it is true, will use `navigator.language` overwrite default
@@ -89,6 +89,11 @@ export default {
           path: '/user/login',
           component: './user/login',
         },
+        {
+          name: 'register',
+          path: '/user/register',
+          component: './user/register',
+        },
       ],
     },
     {
@@ -100,15 +105,46 @@ export default {
           component: '../layouts/BasicLayout',
           authority: ['admin', 'user'],
           routes: [
-            {
-              path: '/',
-              redirect: '/welcome',
-            },
+            // {
+            //   path: '/',
+            //   redirect: '/GoodList',
+            // },
+            // {
+            //   path: '/GoodList',
+            //   name: '商品列表',
+            //   icon: 'unordered-list',
+            //   component: './GoodList',
+            // },
+            // {
+            //   path: './OrderManage',
+            //   name: '订单管理',
+            //   icon: 'mail',
+            //   component: './OrderManage',
+            // },
+            // {
+            //   path: './OperationLog',
+            //   name: '操作日志',
+            //   icon: 'pie-chart',
+            //   component: './OperationLog',
+            // },
+            // {
+            //   path: './LogisOrder',
+            //   name: '物流订单',
+            //   icon: 'global',
+            //   component: './LogisOrder',
+            // },
+            // {
+            //   path: './Personal',
+            //   name: '个人中心',
+            //   icon: 'user',
+            //   component: './Personal',
+            // },
+
             {
               path: '/upload_example',
               name: '文件上传示例',
               icon: 'upload',
-              component: './FileUPloadExample'
+              component: './FileUPloadExample',
             },
             {
               path: '/welcome',
@@ -180,10 +216,10 @@ export default {
   }, // chainWebpack: webpackPlugin,
   // 开发接口代理
   proxy: {
-    '/api': {
-      target: 'http://dj.39.test/api/',
+    '/api/': {
+      target: 'http://dj.39.test/',
       changeOrigin: true,
-      pathRewrite: { '^/api': '' },
+      // pathRewrite: { '^/api': '' },
     },
   },
 };

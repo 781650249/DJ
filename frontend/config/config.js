@@ -1,5 +1,4 @@
 import defaultSettings from './defaultSettings'; // https://umijs.org/config/
-
 import slash from 'slash2';
 import themePluginConfig from './themePluginConfig'; // import darkTheme from '@ant-design/dark-theme';
 
@@ -105,10 +104,10 @@ export default {
           component: '../layouts/BasicLayout',
           authority: ['admin', 'user'],
           routes: [
-            // {
-            //   path: '/',
-            //   redirect: '/GoodList',
-            // },
+            {
+              path: '/',
+              redirect: '/GoodList',
+            },
             // {
             //   path: '/GoodList',
             //   name: '商品列表',
@@ -133,25 +132,25 @@ export default {
             //   icon: 'global',
             //   component: './LogisOrder',
             // },
-            // {
-            //   path: './Personal',
-            //   name: '个人中心',
-            //   icon: 'user',
-            //   component: './Personal',
-            // },
+            {
+              path: './Personal',
+              name: '个人中心',
+              icon: 'user',
+              component: './Personal',
+            },
 
-            {
-              path: '/upload_example',
-              name: '文件上传示例',
-              icon: 'upload',
-              component: './FileUPloadExample',
-            },
-            {
-              path: '/welcome',
-              name: 'welcome',
-              icon: 'smile',
-              component: './Welcome',
-            },
+            // {
+            //   path: '/upload_example',
+            //   name: '文件上传示例',
+            //   icon: 'upload',
+            //   component: './FileUPloadExample',
+            // },
+            // {
+            //   path: '/welcome',
+            //   name: 'welcome',
+            //   icon: 'smile',
+            //   component: './Welcome',
+            // },
             {
               path: '/admin',
               name: 'admin',

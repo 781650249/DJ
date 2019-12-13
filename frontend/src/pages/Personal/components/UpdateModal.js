@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, notification, Icon, Modal } from 'antd';
+import { Form, Input, Button, notification, Icon, Modal, Alert } from 'antd';
 import { connect } from 'dva';
 
 const FormItem = Form.Item;
@@ -9,7 +9,7 @@ const FormItem = Form.Item;
   submitting: loading.effects['user/changePwd'],
 }))
 class UpdateModal extends React.Component {
-  state = { visible: false };
+  state = { visible: false, errorMessage: null };
 
   handleUpdate = e => {
     e.preventDefault();
@@ -27,6 +27,14 @@ class UpdateModal extends React.Component {
           if (response.response.status === 200) {
             notification.success({
               message: '修改成功',
+            });
+
+            this.setState({
+              visible: false,
+            });
+          } else {
+            this.setState({
+              errorMessage: '旧密码错误',
             });
           }
           this.props.form.resetFields();
@@ -66,6 +74,7 @@ class UpdateModal extends React.Component {
   render() {
     const { form } = this.props;
     const { getFieldDecorator } = form;
+    const { errorMessage } = this.state;
     return (
       <div>
         <Button style={{ marginLeft: '10px' }} type="dashed" onClick={this.showModal}>
@@ -89,6 +98,7 @@ class UpdateModal extends React.Component {
         >
           <div>
             <Form hideRequiredMark>
+              {errorMessage && <Alert message={errorMessage} />}
               <FormItem colon="false" label="旧密码">
                 {getFieldDecorator('old_password', {
                   rules: [
@@ -113,7 +123,7 @@ class UpdateModal extends React.Component {
                   ],
                   validateFirst: true,
                 })(
-                  <Input
+                  <Input.Password
                     prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     type="password"
                     placeholder="新密码"
@@ -131,7 +141,7 @@ class UpdateModal extends React.Component {
                     },
                   ],
                 })(
-                  <Input
+                  <Input.Password
                     prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     type="password"
                     placeholder="确认密码"

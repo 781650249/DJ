@@ -72,7 +72,7 @@ class UpdateModal extends React.Component {
   };
 
   render() {
-    const { form } = this.props;
+    const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
     const { errorMessage } = this.state;
     return (
@@ -91,14 +91,20 @@ class UpdateModal extends React.Component {
             <Button key="back" onClick={this.handleCancel}>
               退出
             </Button>,
-            <Button key="confirm" type="primary" htmlType="submit" onClick={this.handleUpdate}>
+            <Button
+              loading={submitting}
+              key="confirm"
+              type="primary"
+              htmlType="submit"
+              onClick={this.handleUpdate}
+            >
               确认
             </Button>,
           ]}
         >
           <div>
             <Form hideRequiredMark>
-              {errorMessage && <Alert message={errorMessage} />}
+              {errorMessage && <Alert type="error" message={errorMessage} />}
               <FormItem colon="false" label="旧密码">
                 {getFieldDecorator('old_password', {
                   rules: [

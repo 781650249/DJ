@@ -54,6 +54,15 @@ class UpdateModal extends React.Component {
     this.props.form.resetFields();
   };
 
+  handleConfirmPassword = (rule, value, callback) => {
+    const { getFieldValue } = this.props.form;
+    console.log(value);
+    if (value && value !== getFieldValue('new_password')) {
+      callback('两次输入不一致！');
+    }
+    callback();
+  };
+
   render() {
     const { form } = this.props;
     const { getFieldDecorator } = form;
@@ -79,8 +88,8 @@ class UpdateModal extends React.Component {
           ]}
         >
           <div>
-            <Form>
-              <FormItem>
+            <Form hideRequiredMark>
+              <FormItem colon="false" label="旧密码">
                 {getFieldDecorator('old_password', {
                   rules: [
                     { required: true, message: '密码不能为空' },
@@ -96,7 +105,7 @@ class UpdateModal extends React.Component {
                 )}
               </FormItem>
 
-              <FormItem>
+              <FormItem colon="false" label="新密码">
                 {getFieldDecorator('new_password', {
                   rules: [
                     { required: true, message: '密码不能为空' },
@@ -112,13 +121,15 @@ class UpdateModal extends React.Component {
                 )}
               </FormItem>
 
-              <FormItem>
+              <FormItem colon="false" label="确认密码">
                 {getFieldDecorator('confirm_password', {
                   rules: [
                     { required: true, message: '密码不能为空' },
                     { min: 6, message: '密码至少为6位组成' },
+                    {
+                      validator: this.handleConfirmPassword,
+                    },
                   ],
-                  validateFirst: true,
                 })(
                   <Input
                     prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}

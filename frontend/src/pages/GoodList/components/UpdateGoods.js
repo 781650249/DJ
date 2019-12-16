@@ -6,7 +6,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
   // eslint-disable-next-line react/prefer-stateless-function
   class extends React.Component {
     render() {
-      const { visible, onCancel, onCreate, form, data = {} } = this.props;
+      const { visible, onCancel, onCreate, form, data = {}, loading } = this.props;
       const { getFieldDecorator } = form;
       const { TextArea } = Input;
       const formItemLayout = {
@@ -27,6 +27,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
           okText="确定"
           onCancel={onCancel}
           onOk={onCreate}
+          confirmLoading={loading}
         >
           <div style={{ boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.349019607843137) ' }}>
             <div style={{ padding: 35 }}>
@@ -172,6 +173,9 @@ export default class UpdateGoods extends React.Component {
       if (err) {
         return;
       }
+      this.setState({
+        loading: true,
+      });
       dispatch({
         type: 'Goods/updateGoods',
         payload: {
@@ -181,6 +185,9 @@ export default class UpdateGoods extends React.Component {
         callback: () => {
           notification.success({
             message: '修改成功',
+          });
+          this.setState({
+            loading: false,
           });
           // 刷新
           dispatch({
@@ -203,6 +210,7 @@ export default class UpdateGoods extends React.Component {
 
   render() {
     const { data } = this.props;
+    const { loading } = this.state;
     return (
       <div>
         <Button title="编辑" icon="edit" type="link" onClick={this.showModal}></Button>
@@ -212,6 +220,7 @@ export default class UpdateGoods extends React.Component {
           visible={this.state.visible}
           onCreate={this.handleCreate}
           onCancel={this.handleCancel}
+          loading={loading}
         />
       </div>
     );

@@ -164,7 +164,7 @@ export default class GoodList extends Component {
     ];
 
     const { selectedRowKeys, id } = this.state;
-
+    const { submitting } = this.props;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
@@ -190,6 +190,7 @@ export default class GoodList extends Component {
                     style={{ marginLeft: 2 }}
                     type="danger"
                     onClick={this.bDelete}
+                    loading={submitting}
                   >
                     删除
                   </Button>

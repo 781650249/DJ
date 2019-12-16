@@ -45,7 +45,6 @@ export default class GoodList extends Component {
           },
         });
       },
-      onCancel() {},
     });
   };
 

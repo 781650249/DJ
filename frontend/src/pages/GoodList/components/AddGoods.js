@@ -6,7 +6,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
   // eslint-disable-next-line react/prefer-stateless-function
   class extends React.Component {
     render() {
-      const { visible, onCancel, onCreate, form } = this.props;
+      const { visible, onCancel, onCreate, form, loading } = this.props;
       const { getFieldDecorator } = form;
       const { TextArea } = Input;
       const formItemLayout = {
@@ -27,6 +27,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
           okText="添加"
           onCancel={onCancel}
           onOk={onCreate}
+          confirmLoading={loading}
         >
           <div style={{ boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.349019607843137) ' }}>
             <div style={{ padding: 35 }}>
@@ -142,6 +143,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
 export default class AddGoods extends React.Component {
   state = {
     visible: false,
+    loading: false,
   };
 
   showModal = () => {
@@ -155,11 +157,14 @@ export default class AddGoods extends React.Component {
   handleCreate = () => {
     const { form } = this.formRef.props;
     const { dispatch } = this.props;
+
     form.validateFields((err, values) => {
       if (err) {
         return;
       }
-
+      this.setState({
+        loading: true,
+      });
       dispatch({
         type: 'Goods/addGoods',
         payload: {
@@ -170,6 +175,10 @@ export default class AddGoods extends React.Component {
             notification.success({
               message: '添加成功',
             });
+            this.setState({
+              loading: false,
+            });
+
             dispatch({
               type: 'Goods/fetchGoods',
               payload: {
@@ -191,6 +200,7 @@ export default class AddGoods extends React.Component {
 
   render() {
     const { submitting } = this.props;
+    const { loading } = this.state;
     return (
       <div>
         <Button loading={submitting} type="primary" onClick={this.showModal}>
@@ -201,6 +211,7 @@ export default class AddGoods extends React.Component {
           visible={this.state.visible}
           onCreate={this.handleCreate}
           onCancel={this.handleCancel}
+          loading={loading}
         />
       </div>
     );

@@ -190,7 +190,6 @@ export default class GoodList extends Component {
                     style={{ marginLeft: 2 }}
                     type="danger"
                     onClick={this.bDelete}
-                    loading={submitting}
                   >
                     删除
                   </Button>
@@ -203,7 +202,12 @@ export default class GoodList extends Component {
               showIcon
             ></Alert>
           </div>
-          <Table rowSelection={rowSelection} columns={columns} dataSource={datas} />
+          <Table
+            loading={submitting}
+            rowSelection={rowSelection}
+            columns={columns}
+            dataSource={datas}
+          />
         </div>
       </div>
     );

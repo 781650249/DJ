@@ -1,4 +1,4 @@
-import { Button, Modal, Form, Input, Select, notification, InputNumber } from 'antd';
+import { Button, Modal, Form, Input, Select, notification, InputNumber, Alert } from 'antd';
 import { connect } from 'dva';
 import React from 'react';
 
@@ -6,7 +6,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
   // eslint-disable-next-line react/prefer-stateless-function
   class extends React.Component {
     render() {
-      const { visible, onCancel, onCreate, form, data = {}, loading } = this.props;
+      const { visible, onCancel, onCreate, form, data = {}, loading, errorMessage } = this.props;
       const { getFieldDecorator } = form;
       const { TextArea } = Input;
       const formItemLayout = {
@@ -24,12 +24,13 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
         <Modal
           visible={visible}
           title="修改商品信息"
-          okText="确定"
+          okText="保存"
           onCancel={onCancel}
           onOk={onCreate}
           confirmLoading={loading}
         >
-          <div style={{ boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.349019607843137) ' }}>
+          <div style={{ boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.349019607843137)', padding: 12 }}>
+            {errorMessage && <Alert type="error" message={errorMessage} />}
             <div style={{ padding: 35 }}>
               <Form {...formItemLayout} layout="vertical">
                 <Form.Item label="标题">
@@ -117,7 +118,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                   {getFieldDecorator('double_side', {
                     initialValue: change(data.double_side),
                   })(
-                    <Select placeholder="单" initialValue="单" type="textarea">
+                    <Select placeholder="单" type="textarea">
                       <Select.Option value="0">单</Select.Option>
                       <Select.Option value="1">双</Select.Option>
                     </Select>,
@@ -156,6 +157,8 @@ function change(data) {
 export default class UpdateGoods extends React.Component {
   state = {
     visible: false,
+    loading: false,
+    errorMessage: null,
   };
 
   showModal = () => {
@@ -173,32 +176,42 @@ export default class UpdateGoods extends React.Component {
       if (err) {
         return;
       }
-      this.setState({
-        loading: true,
-      });
+      const { double_side: doubleSide } = values;
       dispatch({
         type: 'Goods/updateGoods',
         payload: {
           id: this.props.id,
           ...values,
+          double_side: doubleSide === '单' ? '0' : '1',
         },
-        callback: () => {
-          notification.success({
-            message: '修改成功',
+        callback: response => {
+          this.setState({
+            loading: true,
           });
+          if (response.response.status === 200) {
+            notification.success({
+              message: '修改成功',
+            });
+            // 刷新
+            dispatch({
+              type: 'Goods/fetchGoods',
+              payload: {
+                page: 1,
+                page_size: '',
+              },
+            });
+
+            form.resetFields();
+            this.setState({ visible: false });
+          } else {
+            this.setState({
+              errorMessage: '修改失败，该sku已存在',
+            });
+          }
+
           this.setState({
             loading: false,
           });
-          // 刷新
-          dispatch({
-            type: 'Goods/fetchGoods',
-            payload: {
-              page: 1,
-              page_size: '',
-            },
-          });
-          form.resetFields();
-          this.setState({ visible: false });
         },
       });
     });
@@ -210,11 +223,14 @@ export default class UpdateGoods extends React.Component {
 
   render() {
     const { data } = this.props;
-    const { loading } = this.state;
+    const { loading, errorMessage } = this.state;
     return (
       <div>
-        <Button title="编辑" icon="edit" type="link" onClick={this.showModal}></Button>
+        <Button title="编辑" type="link" onClick={this.showModal}>
+          编辑
+        </Button>
         <CollectionCreateForm
+          errorMessage={errorMessage}
           data={data}
           wrappedComponentRef={this.saveFormRef}
           visible={this.state.visible}

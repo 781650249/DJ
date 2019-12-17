@@ -1,4 +1,4 @@
-import { Button, Modal, Form, Input, Select, notification, InputNumber } from 'antd';
+import { Button, Modal, Form, Input, Select, notification, InputNumber, Alert } from 'antd';
 import { connect } from 'dva';
 import React from 'react';
 
@@ -6,7 +6,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
   // eslint-disable-next-line react/prefer-stateless-function
   class extends React.Component {
     render() {
-      const { visible, onCancel, onCreate, form, loading } = this.props;
+      const { visible, onCancel, onCreate, form, loading, errorMessage } = this.props;
       const { getFieldDecorator } = form;
       const { TextArea } = Input;
       const formItemLayout = {
@@ -29,7 +29,8 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
           onOk={onCreate}
           confirmLoading={loading}
         >
-          <div style={{ boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.349019607843137) ' }}>
+          <div style={{ boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.349019607843137)', padding: 12 }}>
+            {errorMessage && <Alert type="error" message={errorMessage} />}
             <div style={{ padding: 35 }}>
               <Form {...formItemLayout} layout="vertical">
                 <Form.Item label="标题">
@@ -144,6 +145,7 @@ export default class AddGoods extends React.Component {
   state = {
     visible: false,
     loading: false,
+    errorMessage: null,
   };
 
   showModal = () => {
@@ -175,9 +177,6 @@ export default class AddGoods extends React.Component {
             notification.success({
               message: '添加成功',
             });
-            this.setState({
-              loading: false,
-            });
 
             dispatch({
               type: 'Goods/fetchGoods',
@@ -186,9 +185,18 @@ export default class AddGoods extends React.Component {
                 page_size: '',
               },
             });
+
+            form.resetFields();
+            this.setState({ visible: false });
+            this.setState({ errorMessage: null });
+          } else {
+            this.setState({
+              errorMessage: 'sku已存在',
+            });
           }
-          form.resetFields();
-          this.setState({ visible: false });
+          this.setState({
+            loading: false,
+          });
         },
       });
     });
@@ -199,14 +207,15 @@ export default class AddGoods extends React.Component {
   };
 
   render() {
-    const { submitting } = this.props;
-    const { loading } = this.state;
+    const { loading, errorMessage } = this.state;
+
     return (
       <div>
-        <Button loading={submitting} type="primary" onClick={this.showModal}>
-          +添加商品
+        <Button type="primary" onClick={this.showModal}>
+          + 添加商品
         </Button>
         <CollectionCreateForm
+          errorMessage={errorMessage}
           wrappedComponentRef={this.saveFormRef}
           visible={this.state.visible}
           onCreate={this.handleCreate}

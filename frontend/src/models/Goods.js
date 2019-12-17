@@ -43,7 +43,6 @@ export default {
       if (callback) callback(response);
     },
     *updateGoods({ payload, callback }, { call }) {
-      console.log(payload);
       const response = yield call(updGoods, payload);
       if (callback) callback(response);
     },

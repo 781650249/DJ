@@ -1,10 +1,8 @@
-import { Modal, notification, Button, Alert, Table } from 'antd';
+import { notification, Button, Alert, Table, Popconfirm } from 'antd';
 import { connect } from 'dva';
 import React, { Component } from 'react';
 import Search from './components/Search';
 import UpdateGoods from './components/UpdateGoods';
-
-const { confirm } = Modal;
 
 @connect(({ Goods, loading }) => ({
   Goods,
@@ -22,26 +20,21 @@ export default class GoodList extends Component {
 
   showConfirm = id => {
     const { dispatch } = this.props;
-    confirm({
-      title: '你确定要删除这项数据吗',
-      onOk() {
+    dispatch({
+      type: 'Goods/deleteGoods',
+      payload: {
+        id,
+      },
+      callback: () => {
+        notification.success({
+          message: '删除成功',
+        });
+        // 刷新
         dispatch({
-          type: 'Goods/deleteGoods',
+          type: 'Goods/fetchGoods',
           payload: {
-            id,
-          },
-          callback: () => {
-            notification.success({
-              message: '删除成功',
-            });
-            // 刷新
-            dispatch({
-              type: 'Goods/fetchGoods',
-              payload: {
-                page: 1,
-                page_size: '',
-              },
-            });
+            page: 1,
+            page_size: '',
           },
         });
       },
@@ -103,6 +96,8 @@ export default class GoodList extends Component {
     });
   };
 
+  cancel = () => {};
+
   render() {
     const columns = [
       {
@@ -151,12 +146,12 @@ export default class GoodList extends Component {
         dataIndex: 'id',
         render: (id, it) => (
           <div style={{ display: 'flex' }}>
-            <Button
-              title="删除"
-              onClick={() => this.showConfirm(id)}
-              icon="delete"
-              type="link"
-            ></Button>
+            <Popconfirm title="你确定要删除此项数据吗" onConfirm={() => this.showConfirm(id)}>
+              <Button title="删除" type="link">
+                删除
+              </Button>
+            </Popconfirm>
+
             <UpdateGoods data={it} id={id} />
           </div>
         ),
@@ -177,22 +172,23 @@ export default class GoodList extends Component {
       <div style={{ minWidth: 400 }}>
         <Search />
         <div>
-          <div style={{ marginBottom: 30, marginTop: 20, width: '100%' }}>
+          <div style={{ marginBottom: 10, marginTop: 20, width: '100%' }}>
             <Alert
               message={
                 <span>
                   <Button size="small" disabled={!hasSelected} type="primary" onClick={this.start}>
                     取消全选
                   </Button>
-                  <Button
-                    disabled={!hasSelected}
-                    size="small"
-                    style={{ marginLeft: 2 }}
-                    type="danger"
-                    onClick={this.bDelete}
-                  >
-                    删除
-                  </Button>
+                  <span style={{ marginLeft: 20 }}>
+                    <Popconfirm
+                      title="你确定要删除吗"
+                      disabled={!hasSelected}
+                      onCancel={this.start}
+                      onConfirm={this.bDelete}
+                    >
+                      <a href="#">删除</a>
+                    </Popconfirm>
+                  </span>
                   <span style={{ marginLeft: 12 }}>
                     {hasSelected ? `当前选中了 ${selectedRowKeys.length} 项` : ''}
                   </span>
@@ -207,6 +203,9 @@ export default class GoodList extends Component {
             rowSelection={rowSelection}
             columns={columns}
             dataSource={datas}
+            pagination={{
+              showQuickJumper: true,
+            }}
           />
         </div>
       </div>

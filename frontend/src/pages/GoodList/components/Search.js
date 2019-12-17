@@ -11,6 +11,7 @@ import LeadGoods from '@/components/GoodList/LeadGoods';
 export default class Search extends Component {
   state = {
     InputValue: '',
+    isLoading: false,
   };
 
   handleGetInputValue = event => {
@@ -23,7 +24,9 @@ export default class Search extends Component {
     if (e) e.preventDefault();
     const { dispatch } = this.props;
     const { InputValue } = this.state;
-
+    this.setState({
+      isLoading: true,
+    });
     dispatch({
       type: 'Goods/fetchGoods',
       payload: {
@@ -34,24 +37,34 @@ export default class Search extends Component {
         },
       },
     });
+    setTimeout(() => {
+      this.setState({
+        isLoading: false,
+      });
+    }, 500);
   };
 
   render() {
+    const { isLoading } = this.state;
     return (
       <div>
         <Row type="flex" justify="start">
           <Col>
-            {' '}
+            <span style={{ marginRight: 16 }}>商品编码/sku名称 :</span>
             <Input
               value={this.state.InputValue}
               onChange={this.handleGetInputValue}
-              style={{ width: 400 }}
-              addonBefore="商品编码/sku名称"
+              style={{ width: 200 }}
               placeholder="请输入商品编码/sku名称"
             />
           </Col>
           <Col>
-            <Button onClick={this.onSearch} style={{ marginLeft: 20 }} type="primary">
+            <Button
+              loading={isLoading}
+              onClick={this.onSearch}
+              style={{ marginLeft: 20 }}
+              type="primary"
+            >
               查询
             </Button>
           </Col>

@@ -92,7 +92,6 @@ class LoadGoods extends Component {
 
   render() {
     const { file, errorMessage, subming } = this.state;
-
     return (
       <Card bordered>
         <div style={{ width: '100%' }}>

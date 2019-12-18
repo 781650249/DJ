@@ -1,6 +1,6 @@
 import { Modal, Button } from 'antd';
 import React from 'react';
-import LoadGoods from './components/LoadGoods';
+import LoadGoods from './components/LoadExcel';
 
 class LeadGoods extends React.Component {
   state = {
@@ -18,12 +18,11 @@ class LeadGoods extends React.Component {
     this.setState({
       confirmLoading: true,
     });
-    setTimeout(() => {
-      this.setState({
-        visible: false,
-        confirmLoading: false,
-      });
-    }, 1000);
+
+    this.setState({
+      visible: false,
+      confirmLoading: false,
+    });
   };
 
   handleCancel = () => {
@@ -46,7 +45,7 @@ class LeadGoods extends React.Component {
           onCancel={this.handleCancel}
           footer={[]}
         >
-          <LoadGoods props={this.state} />
+          <LoadGoods props={this.state} onCancel={this.handleCancel} />
         </Modal>
       </div>
     );

@@ -19,4 +19,19 @@ class ActivityLog extends Model
     const TYPE_PRODUCT_IMPORT_UPDATE = 'PRODUCT_IMPORT_UPDATE'; // 导入更新
     const TYPE_PRODUCT_BATCH_DELETE = 'PRODUCT_BATCH_DELETE'; // 批量删除中删除商品
     const TYPE_PRODUCTS_BATCH_DEL = 'PRODUCTS_BATCH_DEL'; // 商品批量删除
+
+    /************* 订单管理 *****************/
+    const TYPE_ORDER_ADD = 'ORDER_ADD'; // 添加订单
+
+    /************* customer ****************/
+    const TYPE_CUSTOMER_ADD = 'CUSTOMER_ADD';
+    const TYPE_CUSTOMER_UPDATE = 'CUSTOMER_UPDATE';
+    const TYPE_CUSTOMER_DELETE = 'CUSTOMER_DELETE';
+
+    /************* file ********************/
+    const TYPE_DOWNLOAD_ZIP = 'DOWNLOAD_ZIP'; // 下载原始zip文件
+    const TYPE_DOWNLOAD_ZIP_FAILED = 'DOWNLOAD_ZIP_FAILED'; // 下载zip文件失败
+    const TYPE_UNZIP_FILE = 'UNZIP_FILE'; // 解压zip文件
+    const TYPE_UNZIP_FILE_FAILED = 'UNZIP_FILE_FAILED'; // 解压zip文件失败
+
 }

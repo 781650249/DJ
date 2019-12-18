@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'zn',
 
     /*
     |--------------------------------------------------------------------------
@@ -177,6 +177,8 @@ return [
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
 
+        Chumper\Zipper\ZipperServiceProvider::class
+
     ],
 
     /*
@@ -229,6 +231,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        // 解压缩插件
+        'Zipper' => Chumper\Zipper\Zipper::class
     ],
 
 ];

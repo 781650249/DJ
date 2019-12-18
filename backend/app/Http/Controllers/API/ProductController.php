@@ -30,7 +30,8 @@ class ProductController extends Controller
                 AllowedFilter::scope('keyword'),
                 AllowedFilter::scope('weight'),
                 AllowedFilter::scope('purchase_price')
-            );
+            )
+        ->defaultSort('-created_at');
 
         return $query;
     }

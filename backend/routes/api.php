@@ -41,8 +41,10 @@ Route::group(['middleware' => 'auth:api', 'namespace'  => 'API'], function ($api
 
     $api->resource('/products', 'ProductController');
 
-    /**** 示例 *****/
-    $api->post('/example/upload', 'TestController@upload');
+    /***************** 订单 ******************************************/
+    $api->resource('/orders', 'OrderController');
 
+    /***************** 顾客 ******************************************/
+    $api->resource('/customer', 'CustomerController');
 });
 

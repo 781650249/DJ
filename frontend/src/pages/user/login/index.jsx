@@ -4,7 +4,6 @@ import { connect } from 'dva';
 import { Link } from 'umi';
 
 const FormItem = Form.Item;
-
 @connect(({ login, loading }) => ({
   userLogin: login,
   submitting: loading.effects['login/login'],
@@ -30,7 +29,6 @@ class Login extends Component {
           notification.success({
             message: '登陆成功',
           });
-
           window.location.href = '/';
         },
       });
@@ -49,9 +47,10 @@ class Login extends Component {
   );
 
   render() {
-    const { form, submitting } = this.props;
-    const { getFieldDecorator } = form;
-
+    const {
+      form: { getFieldDecorator },
+      submitting,
+    } = this.props;
     return (
       <div style={{ margin: '0 auto', width: 300, maxWidth: '100vw' }}>
         <Form onSubmit={this.handleSubmit}>

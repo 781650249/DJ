@@ -16,7 +16,6 @@ class Register extends Component {
       if (err) {
         return;
       }
-
       dispatch({
         type: 'user/register',
         payload: {
@@ -44,7 +43,10 @@ class Register extends Component {
   };
 
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const {
+      submitting,
+      form: { getFieldDecorator },
+    } = this.props;
     return (
       <div style={{ margin: '0 auto', width: 300, maxWidth: '100vw' }}>
         <Form onSubmit={this.onRegister}>
@@ -86,7 +88,7 @@ class Register extends Component {
             })(<Input.Password placeholder="密码" type="password" />)}
           </Form.Item>
           <Form.Item>
-            <Button htmlType="submit" type="primary">
+            <Button loading={submitting} htmlType="submit" type="primary">
               注册
             </Button>
             <Link style={{ float: 'right' }} to="/user/login">

@@ -9,3 +9,10 @@ export async function queryCurrent() {
 export async function queryNotices() {
   return request('/api/notices');
 }
+
+export async function changePwd(params) {
+  return request('/api/me/password', {
+    method: 'PUT',
+    data: params,
+  });
+}

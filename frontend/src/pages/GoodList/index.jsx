@@ -1,8 +1,10 @@
-import { notification, Button, Alert, Table, Popconfirm } from 'antd';
+import { notification, Button, Alert, Table } from 'antd';
 import { connect } from 'dva';
 import React, { Component } from 'react';
+import router from 'umi/router';
 import Search from './components/Search';
 import UpdateGoods from './components/UpdateGoods';
+import DeleteConfirmButton from '@/components/DeleteConfirmButton';
 
 @connect(({ Goods, loading }) => ({
   Goods,
@@ -15,12 +17,12 @@ export default class GoodList extends Component {
   };
 
   componentDidMount() {
-    this.onInitGoods();
+    this.changeNum();
   }
 
-  showConfirm = id => {
+  delete = async id => {
     const { dispatch } = this.props;
-    dispatch({
+    await dispatch({
       type: 'Goods/deleteGoods',
       payload: {
         id,
@@ -34,21 +36,19 @@ export default class GoodList extends Component {
           type: 'Goods/fetchGoods',
           payload: {
             page: 1,
-            page_size: '',
           },
         });
       },
     });
   };
 
-  onInitGoods = e => {
-    if (e) e.preventDefault();
+  changeNum = newPage => {
     const { dispatch } = this.props;
     dispatch({
       type: 'Goods/fetchGoods',
       payload: {
-        page: 1,
-        page_size: '',
+        page: newPage,
+        page_size: 10,
       },
     });
   };
@@ -68,10 +68,10 @@ export default class GoodList extends Component {
     });
   };
 
-  bDelete = () => {
+  bDelete = async () => {
     const { id } = this.state;
     const { dispatch } = this.props;
-    dispatch({
+    await dispatch({
       type: 'Goods/bdeleteGoods',
       payload: {
         ids: { ...id },
@@ -85,12 +85,12 @@ export default class GoodList extends Component {
             type: 'Goods/fetchGoods',
             payload: {
               page: 1,
-              page_size: '',
             },
           });
           this.setState({
             selectedRowKeys: [],
           });
+          router.push('/');
         }
       },
     });
@@ -145,14 +145,19 @@ export default class GoodList extends Component {
         title: '操作',
         dataIndex: 'id',
         render: (id, it) => (
-          <div style={{ display: 'flex' }}>
-            <Popconfirm title="你确定要删除此项数据吗" onConfirm={() => this.showConfirm(id)}>
-              <Button title="删除" type="link">
-                删除
-              </Button>
-            </Popconfirm>
-
-            <UpdateGoods data={it} id={id} />
+          <div style={{ minWidth: '113px' }}>
+            <DeleteConfirmButton
+              content="你确定要删除吗?"
+              onConfirm={() => this.delete(id)}
+              button={{
+                title: '删除该条记录',
+                icon: 'delete',
+                shape: 'circle',
+                size: 'small',
+                type: 'primary',
+              }}
+            />
+            <UpdateGoods style={{ marginLeft: '10px' }} data={it} id={id} />
           </div>
         ),
       },
@@ -165,49 +170,65 @@ export default class GoodList extends Component {
       onChange: this.onSelectChange,
       id,
     };
+
     const hasSelected = selectedRowKeys.length > 0;
-    const datas = this.props.Goods.result.data; // 更新后的数据
+    const {
+      Goods: { result },
+    } = this.props;
+    const { data: datas } = result;
+    const { total } = result;
+    const { current } = result;
 
     return (
       <div style={{ minWidth: 400 }}>
         <Search />
-        <div>
-          <div style={{ marginBottom: 10, marginTop: 20, width: '100%' }}>
-            <Alert
-              message={
-                <span>
-                  <Button size="small" disabled={!hasSelected} type="primary" onClick={this.start}>
-                    取消全选
-                  </Button>
-                  <span style={{ marginLeft: 20 }}>
-                    <Popconfirm
-                      title="你确定要删除吗"
-                      disabled={!hasSelected}
-                      onCancel={this.start}
-                      onConfirm={this.bDelete}
-                    >
-                      <a href="#">删除</a>
-                    </Popconfirm>
-                  </span>
-                  <span style={{ marginLeft: 12 }}>
-                    {hasSelected ? `当前选中了 ${selectedRowKeys.length} 项` : ''}
-                  </span>
+        <div style={{ marginBottom: 10, marginTop: 20, width: '100%' }}>
+          <Alert
+            message={
+              <span>
+                <Button size="small" disabled={!hasSelected} type="primary" onClick={this.start}>
+                  取消全选
+                </Button>
+                <span style={{ marginLeft: 20 }}>
+                  <DeleteConfirmButton
+                    content="你确定要删除吗?"
+                    disabled={!hasSelected}
+                    onCancel={this.start}
+                    onConfirm={this.bDelete}
+                    button={{
+                      title: '删除该条记录',
+                      icon: 'delete',
+                      shape: 'circle',
+                      size: 'small',
+                      type: 'danger',
+                    }}
+                  />
                 </span>
-              }
-              type="info"
-              showIcon
-            ></Alert>
-          </div>
-          <Table
-            loading={submitting}
-            rowSelection={rowSelection}
-            columns={columns}
-            dataSource={datas}
-            pagination={{
-              showQuickJumper: true,
-            }}
-          />
+                <span style={{ marginLeft: 12 }}>
+                  {hasSelected ? `当前选中了 ${selectedRowKeys.length} 项` : ''}
+                </span>
+              </span>
+            }
+            type="info"
+            showIcon
+          ></Alert>
         </div>
+        <Table
+          rowKey="id"
+          loading={submitting}
+          rowSelection={rowSelection}
+          columns={columns}
+          dataSource={datas}
+          pagination={{
+            showQuickJumper: true,
+            current,
+            total,
+            pageSizeOptions: ['10', '20', '30'],
+            showSizeChanger: true,
+            onChange: this.changeNum,
+            showTotal: totals => `总共有${totals}条记录`,
+          }}
+        />
       </div>
     );
   }

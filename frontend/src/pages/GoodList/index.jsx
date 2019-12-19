@@ -96,8 +96,6 @@ export default class GoodList extends Component {
     });
   };
 
-  cancel = () => {};
-
   render() {
     const columns = [
       {
@@ -175,10 +173,10 @@ export default class GoodList extends Component {
     const {
       Goods: { result },
     } = this.props;
+
     const { data: datas } = result;
     const { total } = result;
-    const { current } = result;
-
+    const { page } = result;
     return (
       <div style={{ minWidth: 400 }}>
         <Search />
@@ -221,10 +219,8 @@ export default class GoodList extends Component {
           dataSource={datas}
           pagination={{
             showQuickJumper: true,
-            current,
+            current: page,
             total,
-            pageSizeOptions: ['10', '20', '30'],
-            showSizeChanger: true,
             onChange: this.changeNum,
             showTotal: totals => `总共有${totals}条记录`,
           }}

@@ -1,6 +1,6 @@
 import { Modal, Button } from 'antd';
 import React from 'react';
-import LoadGoods from './components/LoadExcel';
+import LoadExcel from './components/LoadExcel';
 
 class LeadGoods extends React.Component {
   state = {
@@ -45,7 +45,7 @@ class LeadGoods extends React.Component {
           onCancel={this.handleCancel}
           footer={[]}
         >
-          <LoadGoods props={this.state} onCancel={this.handleCancel} />
+          <LoadExcel props={this.state} onCancel={this.handleCancel} />
         </Modal>
       </div>
     );

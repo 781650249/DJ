@@ -123,4 +123,32 @@ class Util {
             'is_read_able'  => $isReadAble
         ];
     }
+
+    /**
+     * excel的时间格式话，excel的开始时间是1900-01-01 00:00:00
+     * unix的开始时间是1970-01-01 00:00:00
+     * 1、判断传参是否为时间格式
+     * 2、数字的话，尝试转换成时间格式
+     * 3、gmdata 格式转换成utc时间， date是转换成本地时间
+     * @param $data
+     * @param string $format
+     * @return bool|false|string
+     */
+    public static function formatExcelDate($data, $format='Y-m-d H:i:s') {
+        if (is_string($data)) {
+            if (strtotime($data)) {
+                return date($format, strtotime($data));
+            }
+            else {
+                return false;
+            }
+        }
+
+        if (is_numeric($data)) {
+            $n = intval(($data - 25569) * 3600 * 24);
+            return gmdate($format, $n);
+        }
+
+        return false;
+    }
 }

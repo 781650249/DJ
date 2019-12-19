@@ -15,11 +15,11 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name')->index()->comment('订单号');
-            $table->string('number')->unique()->comment('订单编号');
+            $table->string('oid')->unique()->index()->comment('订单编号');
+            $table->string('number')->index()->comment('订单号');
             $table->string('file_url')->nullable()->comment('素材文件地址');
             $table->string('status')->comment('状态');
-            $table->text('note')->comment('备注');
+            $table->text('note')->nullable()->comment('备注');
             $table->dateTime('published_at')->nullable()->comment('发稿时间');
             $table->dateTime('produced_at')->nullable()->comment('生产时间');
             $table->string('sku')->index()->comment('sku码');

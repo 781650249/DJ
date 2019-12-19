@@ -42,9 +42,14 @@ Route::group(['middleware' => 'auth:api', 'namespace'  => 'API'], function ($api
     $api->resource('/products', 'ProductController');
 
     /***************** 订单 ******************************************/
+    $api->post('/orders/import', 'OrderController@import');
+
     $api->resource('/orders', 'OrderController');
 
     /***************** 顾客 ******************************************/
     $api->resource('/customer', 'CustomerController');
+
+    /***************** 日志 *******************************************/
+    $api->get('/activity_log', 'ActivityController@index');
 });
 

@@ -28,7 +28,7 @@ class Order extends Model
 
     //
     protected $fillable = [
-        'name',
+        'oid',
         'number',
         'file_url',
         'status',

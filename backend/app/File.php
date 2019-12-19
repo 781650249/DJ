@@ -21,4 +21,9 @@ class File extends Model
         'note',
         'extension'
     ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
 }

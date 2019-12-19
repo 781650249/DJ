@@ -322,7 +322,7 @@ class ProductController extends Controller
         if (count($data) > 1) {
             return response()->json([
                 'message' => '仅支持一个工作表导入，请删除多余的工作表后再试'
-            ], 200);
+            ], 422);
         }
 
         // 循环，不支持分页
@@ -358,7 +358,8 @@ class ProductController extends Controller
 
                         return response()
                             ->json([
-                                'message' => '您上传的表缺少关键标题，请核对，或者下载模板并根据模板提示填写，然后上传！'
+                                'message' => '导入失败',
+                                'error'   => '您上传的表缺少关键标题，请核对，或者下载模板并根据模板提示填写，然后上传！'
                             ], 422);
                     }
 

@@ -16,7 +16,7 @@ class CreateCustomersTable extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name')->index()->comment('客户名称');
-            $table->string('email')->index()->comment('客户邮箱');
+            $table->string('email')->index()->nullable()->comment('客户邮箱');
             $table->string('phone')->index()->nullable()->comment('客户电话');
             $table->string('country')->index()->nullable()->comment('国家（简码）');
             $table->string('province')->nullable()->comment('省份');

@@ -84,7 +84,7 @@ class DownloadZipFileJob implements ShouldQueue
             if ($contType && $contType == 'application/zip') {
                 $file = $res->getBody();
 
-                $orderName = $order->number;
+                $orderName = $order->oid;
 
                 // 将.换成下划线
                 $orderName = str_replace('.', '_', $orderName);

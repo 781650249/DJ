@@ -30,18 +30,20 @@ export default class Search extends Component {
     dispatch({
       type: 'Goods/fetchGoods',
       payload: {
-        page: '',
-        page_size: '',
+        page: 1,
+        page_size: 10,
         filter: {
           keyword: InputValue,
         },
       },
+      callback: response => {
+        if (response.response.status === 200) {
+          this.setState({
+            isLoading: false,
+          });
+        }
+      },
     });
-    setTimeout(() => {
-      this.setState({
-        isLoading: false,
-      });
-    }, 500);
   };
 
   render() {

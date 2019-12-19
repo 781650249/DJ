@@ -6,12 +6,12 @@ export default {
     condition: {
       double_side: 0,
       keyword: '',
-      page: 1,
+      page: '',
       limit: 10,
     },
     result: {
-      total: 0, // 总货物量
-      data: [],
+      total: 0, // 总数据量
+      data: [], // 当前页数据
     },
   },
   reducers: {
@@ -22,6 +22,7 @@ export default {
       };
     },
   },
+
   effects: {
     *addGoods({ payload, callback }, { call }) {
       const response = yield call(addGoods, payload);
@@ -31,10 +32,11 @@ export default {
       const response = yield call(getGoods, payload);
       if (callback) callback(response);
       yield put({
-        type: 'setResult',
+        type: 'setResult', // 获取到的数据传到reducer让它来更改状态
         payload: {
           total: response.data.total,
           data: response.data.data,
+          page: response.data.current_page,
         },
       });
     },
@@ -48,11 +50,10 @@ export default {
     },
     *bdeleteGoods({ payload, callback }, { call }) {
       const response = yield call(bdelGoods, payload);
-      console.log(payload, 22222);
       if (callback) callback(response);
     },
     *import({ payload, callback }, { call }) {
-      const res = yield call(formData, 'Goods/import', payload);
+      const res = yield call(formData, 'products/import', payload);
       const { data, response } = res;
       if (response.status === 200) {
         if (callback) callback(data);

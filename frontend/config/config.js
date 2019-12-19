@@ -108,12 +108,12 @@ export default {
               path: '/',
               redirect: '/GoodList',
             },
-            // {
-            //   path: '/GoodList',
-            //   name: '商品列表',
-            //   icon: 'unordered-list',
-            //   component: './GoodList',
-            // },
+            {
+              path: '/GoodList',
+              name: '商品列表',
+              icon: 'unordered-list',
+              component: './GoodList',
+            },
             // {
             //   path: './OrderManage',
             //   name: '订单管理',

@@ -64,7 +64,6 @@ class UpdateModal extends React.Component {
 
   handleConfirmPassword = (rule, value, callback) => {
     const { getFieldValue } = this.props.form;
-    console.log(value);
     if (value && value !== getFieldValue('new_password')) {
       callback('两次输入不一致！');
     }

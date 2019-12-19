@@ -1,4 +1,4 @@
-import { Button, Modal, Form, Input, Select, notification, InputNumber, Alert } from 'antd';
+import { Button, Modal, Form, Input, Select, notification, InputNumber, Alert, Icon } from 'antd';
 import { connect } from 'dva';
 import React from 'react';
 
@@ -29,7 +29,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
           onOk={onCreate}
           confirmLoading={loading}
         >
-          <div style={{ boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.349019607843137)', padding: 12 }}>
+          <div style={{ boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.35)', padding: 12 }}>
             {errorMessage && <Alert type="error" message={errorMessage} />}
             <div style={{ padding: 35 }}>
               <Form {...formItemLayout} layout="vertical">
@@ -211,8 +211,9 @@ export default class AddGoods extends React.Component {
 
     return (
       <div>
-        <Button type="primary" onClick={this.showModal}>
-          + 添加商品
+        <Button icon="" type="primary" onClick={this.showModal}>
+          <Icon type="plus" />
+          添加商品
         </Button>
         <CollectionCreateForm
           errorMessage={errorMessage}

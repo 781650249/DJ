@@ -44,11 +44,17 @@ export default class GoodList extends Component {
 
   changeNum = newPage => {
     const { dispatch } = this.props;
+    const {
+      result: { filter },
+    } = this.props.Goods;
     dispatch({
       type: 'Goods/fetchGoods',
       payload: {
         page: newPage,
         page_size: 10,
+        filter: {
+          ...filter,
+        },
       },
     });
   };

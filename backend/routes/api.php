@@ -44,6 +44,9 @@ Route::group(['middleware' => 'auth:api', 'namespace'  => 'API'], function ($api
     /***************** 订单 ******************************************/
     $api->post('/orders/import', 'OrderController@import');
 
+    // 更新状态
+    $api->put('/orders/status/{id}', 'OrderController@updateStatus');
+
     $api->resource('/orders', 'OrderController');
 
     /***************** 顾客 ******************************************/

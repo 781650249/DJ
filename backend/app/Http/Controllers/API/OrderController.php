@@ -447,6 +447,10 @@ class OrderController extends Controller {
         $inArray = [];
 
         foreach (Order::ORDER_STATUS as $key => $item) {
+            if ($item === Order::STATUS_UN_DOWNLOAD || $item === Order::STATUS_DOWNLOADED) {
+                continue;
+            }
+
             $inArray[] = $key;
         }
 
@@ -498,6 +502,7 @@ class OrderController extends Controller {
      * 上传完成图
      * @param Request $request
      * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function uploadFinishImg(Request $request, $id) {
         $validator = Validator::make($request->all(), [

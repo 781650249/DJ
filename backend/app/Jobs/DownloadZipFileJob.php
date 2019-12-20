@@ -110,6 +110,10 @@ class DownloadZipFileJob implements ShouldQueue
                             ]
                         );
 
+                    $order->update([
+                        'status'    => Order::STATUS_DOWNLOADED
+                    ]);
+
                     activity(ActivityLog::TYPE_DOWNLOAD_ZIP)
                         ->performedOn($order)
                         ->withProperties($fileInfo)

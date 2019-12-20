@@ -26,6 +26,10 @@ class Order extends Model
         self::STATUS_PRODUCED    => '已生产',
     ];
 
+    protected $appends = [
+        'order_status'
+    ];
+
     //
     protected $fillable = [
         'oid',
@@ -88,5 +92,11 @@ class Order extends Model
         return $query->whereHas('customer', function ($q) use ($val) {
             $q->where('name', 'like', "%{$val}%");
         });
+    }
+
+    public function getOrderStatusAttribute() {
+        if ($this->status) {
+            return self::ORDER_STATUS[$this->status];
+        }
     }
 }

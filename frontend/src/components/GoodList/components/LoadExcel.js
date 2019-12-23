@@ -73,18 +73,21 @@ class LoadGoods extends Component {
       payload: {
         files: file,
       },
-      callback: data => {
-        if (data.message === '导入成功' && data.new_count === 0) {
+      callback: (data, response) => {
+        console.log(data);
+        if (response.status === 200) {
           notification.success({
-            message: `已成功导入${data.success_count}条,没有新增`,
-          });
-        } else if (data.message === '导入成功') {
-          notification.success({
-            message: `已成功导入${data.success_count}条,新增了${data.new_count}`,
-          });
-        } else {
-          notification.error({
-            message: '仅支持一个工作表导入，请删除多余的工作表后再试',
+            message: `${data.message}`,
+            description: (
+              <>
+                <p>
+                  成功: {data.success_count}条 失败: {data.error_count}条
+                </p>
+                <p>
+                  新增: {data.new_count}条 更新: {data.update_count}条
+                </p>
+              </>
+            ),
           });
         }
         onCancel();

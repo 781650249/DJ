@@ -39,6 +39,7 @@ class LeadGoods extends React.Component {
           导入商品
         </Button>
         <Modal
+          //  maskClosable={false}
           title="导入商品"
           visible={visible}
           confirmLoading={confirmLoading}

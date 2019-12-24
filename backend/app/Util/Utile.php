@@ -38,9 +38,10 @@ class Util {
 
         // 真实路径
         $realPath = Storage::disk('public')->path($path);
+        $unzipPath = Storage::disk('public')->path($dirPath);
 
         try {
-            $zip->make($realPath)->extractTo("storage/$dirPath");
+            $zip->make($realPath)->extractTo($unzipPath);
         }
 
         catch (\Exception $exception) {

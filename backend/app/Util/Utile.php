@@ -45,8 +45,8 @@ class Util {
 
         catch (\Exception $exception) {
             return [
-                'success'  => false,
-                'messaghe' => $exception->getMessage()
+                'success' => false,
+                'message' => $exception->getMessage()
             ];
         }
 

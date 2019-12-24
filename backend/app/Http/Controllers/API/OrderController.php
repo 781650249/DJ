@@ -29,7 +29,8 @@ class OrderController extends Controller {
             ->allowedFilters(
                 AllowedFilter::exact('status'),
                 AllowedFilter::scope('email'),
-                AllowedFilter::scope('name')
+                AllowedFilter::scope('name'),
+                AllowedFilter::scope('keyword')
             )
             ->defaultSort('-created_at');
 
@@ -447,7 +448,7 @@ class OrderController extends Controller {
         $inArray = [];
 
         foreach (Order::ORDER_STATUS as $key => $item) {
-            if ($item === Order::STATUS_UN_DOWNLOAD || $item === Order::STATUS_DOWNLOADED) {
+            if ($key === Order::STATUS_UN_DOWNLOAD || $key === Order::STATUS_DOWNLOADED) {
                 continue;
             }
 

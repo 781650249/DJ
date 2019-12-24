@@ -119,22 +119,6 @@ class CustomerController extends Controller
             ], 422);
         }
 
-        $customer = Customer::where([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'phone'    => $request->phone,
-            'address1' => $request->address1
-        ])
-            ->where('id', '<>', $id)
-            ->first();
-
-        if (!empty($customer)) {
-            return response()->json([
-                'message' => '修改失败',
-                'error'   => '已经存在类似信息的客户信息'
-            ], 422);
-        }
-
         $customer = Customer::find($id);
 
         if (empty($customer)) {
@@ -163,8 +147,13 @@ class CustomerController extends Controller
      * 删除顾客信息
      * @param Request $request
      * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Request $request, $id) {
+        return response()->json([
+            'message'   => '还未开放此接口'
+        ], 422);
+
         $customer = Customer::find($id);
 
         if (empty($customer)) {

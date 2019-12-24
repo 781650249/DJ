@@ -15,15 +15,19 @@ class Order extends Model
     const STATUS_PUBLISHED = 'published';
     const STATUS_CONFIRMED = 'confirmed';
     const STATUS_PRODUCED = 'produced';
+    const STATUS_FROZEN = 'frozen';
+    const STATUS_WAIT_CHANGE = 'wait_change';
 
     const ORDER_STATUS = [
         self::STATUS_UN_DOWNLOAD => '未下载',
         self::STATUS_DOWNLOADED  => '已下载',
         self::STATUS_PROCESSING  => '处理中',
         self::STATUS_PROCESSED   => '处理完成',
-        self::STATUS_PUBLISHED   => '以发稿',
+        self::STATUS_PUBLISHED   => '已发稿',
         self::STATUS_CONFIRMED   => '已确认',
         self::STATUS_PRODUCED    => '已生产',
+        self::STATUS_FROZEN      => '冻结',
+        self::STATUS_WAIT_CHANGE => '待修改'
     ];
 
     protected $appends = [
@@ -81,6 +85,17 @@ class Order extends Model
         return $query->whereHas('customer', function ($q) use ($val) {
             $q->where('email', 'like', "%{$val}%");
         });
+    }
+
+    /**
+     * 关键字搜索
+     * @param $query
+     * @param $val
+     * @return mixed
+     */
+    public function scopeKeyword($query, $val) {
+        return $query->where('oid', 'like', "%{$val}%")
+            ->orWhere('number', 'like', "%{$val}%");
     }
 
     /**

@@ -300,6 +300,8 @@ class OrderController extends Controller {
                         activity(ActivityLog::TYPE_IMPORT_ORDER_CREATE_CUSTOMER)
                             ->performedOn($customer)
                             ->withProperties([
+                                'ip'        => $request->ip(),
+                                'agent'     => $request->userAgent(),
                                 'file_name' => $fileName,
                                 'file_type' => $fileType,
                                 'file_size' => $fileSize
@@ -318,6 +320,8 @@ class OrderController extends Controller {
                         activity(ActivityLog::TYPE_IMPORT_ORDER_UPDATE_CUSTOMER)
                             ->performedOn($customer)
                             ->withProperties([
+                                'ip'        => $request->ip(),
+                                'agent'     => $request->userAgent(),
                                 'file_name' => $fileName,
                                 'file_type' => $fileType,
                                 'file_size' => $fileSize
@@ -345,6 +349,8 @@ class OrderController extends Controller {
                         activity(ActivityLog::TYPE_IMPORT_ORDER_CREATE)
                             ->performedOn($order)
                             ->withProperties([
+                                'ip'        => $request->ip(),
+                                'agent'     => $request->userAgent(),
                                 'file_name' => $fileName,
                                 'file_type' => $fileType,
                                 'file_size' => $fileSize
@@ -370,6 +376,8 @@ class OrderController extends Controller {
                         activity(ActivityLog::TYPE_IMPORT_ORDER_UPDATE)
                             ->performedOn($order)
                             ->withProperties([
+                                'ip'        => $request->ip(),
+                                'agent'     => $request->userAgent(),
                                 'file_name' => $fileName,
                                 'file_type' => $fileType,
                                 'file_size' => $fileSize
@@ -418,6 +426,8 @@ class OrderController extends Controller {
 
         activity(ActivityLog::TYPE_IMPORT_ORDER)
             ->withProperties([
+                'ip'            => $request->ip(),
+                'agent'         => $request->userAgent(),
                 'file_name'     => $fileName,
                 'file_type'     => $fileType,
                 'file_size'     => $fileSize,

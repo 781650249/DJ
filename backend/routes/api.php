@@ -52,6 +52,13 @@ Route::group(['middleware' => 'auth:api', 'namespace'  => 'API'], function ($api
     /***************** 顾客 ******************************************/
     $api->resource('/customer', 'CustomerController');
 
+    /**************** 订单物流 ***************************************/
+    // 导入物流订单
+    $api->post('/shipping/import', 'ShippingController@import');
+
+    // 资源api
+    $api->resource('/shipping', 'ShippingController');
+
     /***************** 日志 *******************************************/
     $api->get('/activity_log', 'ActivityController@index');
 });

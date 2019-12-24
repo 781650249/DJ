@@ -49,6 +49,12 @@ class ActivityLog extends Model
     const TYPE_UNZIP_FILE = 'UNZIP_FILE'; // 解压zip文件
     const TYPE_UNZIP_FILE_FAILED = 'UNZIP_FILE_FAILED'; // 解压zip文件失败
 
+    /************ shipping ****************/
+    const TYPE_SHIPPING_IMPORT = 'SHIPPING_IMPORT';
+    const TYPE_SHIPPING_IMPORT_ADD = 'SHIPPING_IMPORT_ADD';
+    const TYPE_SHIPPING_IMPORT_UPDATE = 'SHIPPING_IMPORT_UPDATE';
+    const TYPE_SHIPPING_IMPORT_FAILED = 'SHIPPING_IMPORT_FAILED';
+
     public function causer(): MorphTo {
         return $this->morphTo('causer', 'causer_type', 'causer_id');
     }

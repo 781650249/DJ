@@ -49,6 +49,10 @@ class Order extends Model
         'created_at'
     ];
 
+    protected $hidden = [
+        'updated_at'
+    ];
+
     public function customer() {
         return $this->belongsTo(Customer::class, 'customer_id');
     }

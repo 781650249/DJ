@@ -35,6 +35,10 @@ class ActivityLog extends Model
     const TYPE_IMPORT_ORDER_UPDATE = 'IMPORT_ORDER_UPDATE';
 
     const TYPE_ORDER_UPDATE_STATUS = 'ORDER_UPDATE_STATUS';
+    const TYPE_ORDER_MARK_URGENT = 'ORDER_MARK_URGENT'; // 标记为加急
+    const TYPE_ORDER_BATCH_MARK_URGENT = 'ORDER_BATCH_MARK_URGENT'; // 批量标记加急
+    const TYPE_ORDER_BATCH_MARK_URGENT_FAILED = 'ORDER_BATCH_MARK_URGENT_FAILED'; // 批量标记失败
+    const TYPE_ORDER_CANCEL_URGENT = 'ORDER_CANCEL_URGENT'; // 取消加急
 
     /************* customer ****************/
     const TYPE_CUSTOMER_ADD = 'CUSTOMER_ADD';

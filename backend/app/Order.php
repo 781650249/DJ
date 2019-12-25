@@ -46,7 +46,8 @@ class Order extends Model
         'sku',
         'quantity',
         'customer_id',
-        'created_at'
+        'created_at',
+        'urgent'
     ];
 
     protected $hidden = [

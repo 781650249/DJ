@@ -588,6 +588,38 @@ class OrderController extends Controller {
     }
 
     /**
+     * 取消订单标记
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function cancelMarkUrgent(Request $request, $id) {
+        $order = Order::find($id);
+
+        if (empty($order)) {
+            return response()->json([
+                'message' => '未找到该id的订单'
+            ], 422);
+        }
+
+        $order->update([
+            'urgent' => 0
+        ]);
+
+        activity(ActivityLog::TYPE_ORDER_CANCEL_URGENT)
+            ->performedOn($order)
+            ->withProperties([
+                'ip'    => $request->ip(),
+                'agent' => $request->userAgent()
+            ])
+            ->log("取消订单 {$order->oid} 的紧急标记");
+
+        return response()->json([
+            'message' => '取消成功'
+        ], 200);
+    }
+
+    /**
      * 批量标记为加急
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -655,6 +687,64 @@ class OrderController extends Controller {
                     'agent' => $request->userAgent()
                 ])
                 ->log("订单 {$order->oid} 成功标记为加急");
+        }
+
+        return response()->json([
+            'message'         => '标记完成',
+            'success_of_time' => $successOfTimes,
+            'error_of_time'   => $errorOfTimes,
+            'orders_count'    => count($orders)
+        ], 200);
+    }
+
+    /**
+     * 批量取消标记
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function batchCancelUrgent(Request $request) {
+        $ids = $request->input('ids', null);
+
+        if (!$ids || !is_array($ids)) {
+            return response()->json([
+                'message' => '批量取消标记失败',
+                'error'   => 'ids 参数不是要求的数组'
+            ], 422);
+        }
+
+        $orders = Order::whereIn('id', $ids)->get();
+
+        if (count($orders) == 0) {
+            return response()->json([
+                'message' => '批量取消标记失败',
+                'error'   => '未找到任何订单, 请确认后再试'
+            ], 422);
+        }
+
+        if (count($orders) > 300) {
+            return response()->json([
+                'message' => '批量取消标记被拒绝',
+                'error'   => '你要修改的订单数超过300条，请分批次操作'
+            ], 422);
+        }
+
+        $successOfTimes = 0;
+        $errorOfTimes = 0;
+
+        foreach ($orders as $order) {
+            $order->update([
+                'urgent' => 0
+            ]);
+
+            activity(ActivityLog::TYPE_ORDER_BATCH_CANCEL_URGENT)
+                ->performedOn($order)
+                ->withProperties([
+                    'ip'    => $request->ip(),
+                    'agent' => $request->userAgent()
+                ])
+                ->log("取消订单 {$order->oid} 的紧急标记");
+
+            $successOfTimes++;
         }
 
         return response()->json([

@@ -45,12 +45,14 @@ Route::group(['middleware' => 'auth:api', 'namespace'  => 'API'], function ($api
     $api->post('/orders/import', 'OrderController@import');
 
     // 更新状态
-    $api->put('/orders/status/{id}', 'OrderController@updateStatus');
+    $api->put('/order/status/{id}', 'OrderController@updateStatus');
 
     // 标记为加急
-    $api->put('/orders/urgent/{id}', 'OrderController@markUrgent');
+    $api->put('/order/urgent/{id}', 'OrderController@markUrgent');
 
     $api->post('/orders/batch_urgent', 'OrderController@batchMarkUrgent');
+
+    $api->put('/order/cancel_urgent/{id}', 'OrderController@cancelMarkUrgent');
 
     $api->resource('/orders', 'OrderController');
 

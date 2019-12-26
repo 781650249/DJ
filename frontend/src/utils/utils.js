@@ -1,5 +1,6 @@
 import { parse } from 'querystring';
 import pathRegexp from 'path-to-regexp';
+import moment from 'moment';
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
 
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -33,3 +34,40 @@ export const getAuthorityFromRouter = (router = [], pathname) => {
   if (authority) return authority;
   return undefined;
 };
+
+/**
+ * 将约束条件转换成laravel-query-builder要求的格式
+ */
+export function formatCriteria(fields) {
+  const formatted = {};
+  Object.keys(fields).forEach(key => {
+    const newKey = key.replace('-', '.');
+    formatted[newKey] = fields[key];
+    if (formatted[key] instanceof Array) {
+      // console.log('key', key)
+      if (fields[key][0] instanceof moment) {
+        formatted[key] = `${fields[key][0].format('YYYY-MM-DD HH:mm:ss')},${fields[key][1].format(
+          'YYYY-MM-DD HH:mm:ss',
+        )}`;
+      }
+    }
+
+    // console.log('item', key, formatted[key])
+  });
+  return formatted;
+}
+
+/**
+ * 格式化时间
+ * @param {*} val
+ */
+export function formatDateRange(val) {
+  if (val instanceof Array && val[0] && val[1]) {
+    // console.log('key', key)
+    if (val[0] instanceof moment && val[1] instanceof moment) {
+      return `${val[0].format('YYYY-MM-DD HH:mm:ss')}～${val[1].format('YYYY-MM-DD HH:mm:ss')}`;
+    }
+  }
+
+  return val;
+}

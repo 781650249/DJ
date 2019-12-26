@@ -126,12 +126,12 @@ export default {
             //   icon: 'pie-chart',
             //   component: './OperationLog',
             // },
-            // {
-            //   path: './LogisOrder',
-            //   name: '物流订单',
-            //   icon: 'global',
-            //   component: './LogisOrder',
-            // },
+            {
+              path: './Shipping',
+              name: '物流订单',
+              icon: 'global',
+              component: './Shipping',
+            },
             {
               path: './Personal',
               name: '个人中心',
@@ -216,7 +216,7 @@ export default {
   // 开发接口代理
   proxy: {
     '/api/': {
-      target: 'http://dj.39.test/',
+      target: 'http://192.168.16.39/',
       changeOrigin: true,
       // pathRewrite: { '^/api': '' },
     },

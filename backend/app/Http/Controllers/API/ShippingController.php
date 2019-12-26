@@ -22,7 +22,7 @@ class ShippingController extends Controller
             ->allowedFilters(
                 'track_number',
                 'order_number',
-                AllowedFilter::scope('shipping_date'),
+                AllowedFilter::scope('created_at'),
                 AllowedFilter::scope('has_order')
             )
             ->defaultSort('-created_at');

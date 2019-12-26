@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Table, Button, Alert } from 'antd';
+import { connect } from 'dva';
 import Header from './components/Header';
 // eslint-disable-next-line import/no-unresolved
 import UpdateCustomer from './components/updateCustomer';
@@ -7,7 +8,6 @@ import UpdOrderStatus from './components/UpdOrderStatus';
 import OriginImg from './components/OriginImg';
 import SingHurryOrder from './components/SingHurryOrder';
 import HurryOrder from './components/HurryOrder';
-import { connect } from 'dva';
 
 @connect(({ orders, loading }) => ({
   orders,

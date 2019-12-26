@@ -12,6 +12,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class DownloadZipFileJob implements ShouldQueue
@@ -146,10 +147,11 @@ class DownloadZipFileJob implements ShouldQueue
                     }
 
                     else {
+                        Log::info($unZipRes);
                         activity(ActivityLog::TYPE_UNZIP_FILE_FAILED)
                             ->performedOn($order)
                             ->withProperties([
-                                'message' => $unZipRes['message']
+                                'message' => $unZipRes['message'] ?? ''
                             ])
                             ->log('解压文件失败');
                     }

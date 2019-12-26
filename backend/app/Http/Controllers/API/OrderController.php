@@ -29,7 +29,8 @@ class OrderController extends Controller {
             ->allowedFilters(
                 AllowedFilter::exact('status'),
                 AllowedFilter::scope('email'),
-                AllowedFilter::scope('name')
+                AllowedFilter::scope('name'),
+                AllowedFilter::scope('keyword')
             )
             ->defaultSort('-created_at');
 
@@ -299,6 +300,8 @@ class OrderController extends Controller {
                         activity(ActivityLog::TYPE_IMPORT_ORDER_CREATE_CUSTOMER)
                             ->performedOn($customer)
                             ->withProperties([
+                                'ip'        => $request->ip(),
+                                'agent'     => $request->userAgent(),
                                 'file_name' => $fileName,
                                 'file_type' => $fileType,
                                 'file_size' => $fileSize
@@ -317,6 +320,8 @@ class OrderController extends Controller {
                         activity(ActivityLog::TYPE_IMPORT_ORDER_UPDATE_CUSTOMER)
                             ->performedOn($customer)
                             ->withProperties([
+                                'ip'        => $request->ip(),
+                                'agent'     => $request->userAgent(),
                                 'file_name' => $fileName,
                                 'file_type' => $fileType,
                                 'file_size' => $fileSize
@@ -344,6 +349,8 @@ class OrderController extends Controller {
                         activity(ActivityLog::TYPE_IMPORT_ORDER_CREATE)
                             ->performedOn($order)
                             ->withProperties([
+                                'ip'        => $request->ip(),
+                                'agent'     => $request->userAgent(),
                                 'file_name' => $fileName,
                                 'file_type' => $fileType,
                                 'file_size' => $fileSize
@@ -369,6 +376,8 @@ class OrderController extends Controller {
                         activity(ActivityLog::TYPE_IMPORT_ORDER_UPDATE)
                             ->performedOn($order)
                             ->withProperties([
+                                'ip'        => $request->ip(),
+                                'agent'     => $request->userAgent(),
                                 'file_name' => $fileName,
                                 'file_type' => $fileType,
                                 'file_size' => $fileSize
@@ -417,6 +426,8 @@ class OrderController extends Controller {
 
         activity(ActivityLog::TYPE_IMPORT_ORDER)
             ->withProperties([
+                'ip'            => $request->ip(),
+                'agent'         => $request->userAgent(),
                 'file_name'     => $fileName,
                 'file_type'     => $fileType,
                 'file_size'     => $fileSize,
@@ -447,7 +458,7 @@ class OrderController extends Controller {
         $inArray = [];
 
         foreach (Order::ORDER_STATUS as $key => $item) {
-            if ($item === Order::STATUS_UN_DOWNLOAD || $item === Order::STATUS_DOWNLOADED) {
+            if ($key === Order::STATUS_UN_DOWNLOAD || $key === Order::STATUS_DOWNLOADED) {
                 continue;
             }
 
@@ -506,15 +517,241 @@ class OrderController extends Controller {
      */
     public function uploadFinishImg(Request $request, $id) {
         $validator = Validator::make($request->all(), [
-            'files' => ['required', 'mimes:jpeg,bmp,png,jpg'],
+            'files' => [
+                'required',
+                'mimes:jpeg,bmp,png,jpg'
+            ],
             'note'  => ['max:140']
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'message'   => '上传失败',
-                'error'     => $validator->errors()->first()
+                'message' => '上传失败',
+                'error'   => $validator->errors()->first()
             ], 422);
         }
+
+        return response()->json([
+            'message' => '该功能未开放'
+        ], 500);
+    }
+
+    /**
+     * 标记紧急
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function markUrgent(Request $request, $id) {
+        $order = Order::find($id);
+
+        if (empty($order)) {
+            return response()->json([
+                'message' => '未找到该id的订单'
+            ], 422);
+        }
+
+        if ($order->urgent) {
+            return response()->json([
+                'message' => '标记失败',
+                'error'   => '该订单已经标记为加急，不需要重复标记'
+            ], 422);
+        }
+
+        $orderStatusArr = [
+            Order::STATUS_PUBLISHED,
+        ];
+
+        $orderStatus = $order->status;
+
+        if (in_array($orderStatus, $orderStatusArr)) {
+            return response()->json([
+                'message' => '标记失败',
+                'error'   => "该订单 ‘{$order->order_status}’, 不需要标记为加急"
+            ], 422);
+        }
+
+        $order->update([
+            'urgent'    => 1
+        ]);
+
+        activity(ActivityLog::TYPE_ORDER_MARK_URGENT)
+            ->performedOn($order)
+            ->withProperties([
+                'ip'         => $request->ip(),
+                'agent'      => $request->userAgent(),
+            ])
+            ->log("订单 {$order->oid} 标记为加急");
+
+        return response()->json([
+            'message'   => '标记成功'
+        ], 200);
+    }
+
+    /**
+     * 取消订单标记
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function cancelMarkUrgent(Request $request, $id) {
+        $order = Order::find($id);
+
+        if (empty($order)) {
+            return response()->json([
+                'message' => '未找到该id的订单'
+            ], 422);
+        }
+
+        $order->update([
+            'urgent' => 0
+        ]);
+
+        activity(ActivityLog::TYPE_ORDER_CANCEL_URGENT)
+            ->performedOn($order)
+            ->withProperties([
+                'ip'    => $request->ip(),
+                'agent' => $request->userAgent()
+            ])
+            ->log("取消订单 {$order->oid} 的紧急标记");
+
+        return response()->json([
+            'message' => '取消成功'
+        ], 200);
+    }
+
+    /**
+     * 批量标记为加急
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function batchMarkUrgent(Request $request) {
+        $ids = $request->input('ids', null);
+
+        if (!$ids || !is_array($ids)) {
+            return response()->json([
+                'message' => '批量标记失败',
+                'error'   => 'ids 参数不是要求的数组'
+            ], 422);
+        }
+
+        $orders = Order::whereIn('id', $ids)->get();
+
+        if (count($orders) == 0) {
+            return response()->json([
+                'message' => '批量标记失败',
+                'error'   => '未找到任何订单, 请确认后再试'
+            ], 422);
+        }
+
+        if (count($orders) > 300) {
+            return response()->json([
+                'message' => '标记被拒绝',
+                'error'   => '你要修改的订单数超过300条，请分批次操作'
+            ], 422);
+        }
+
+        $successOfTimes = 0;
+        $errorOfTimes = 0;
+
+        $orderStatusArr = [
+            Order::STATUS_PUBLISHED,
+        ];
+
+        foreach ($orders as $order) {
+            $orderStatus = $order->status;
+
+            // 已发稿的订单不需要标记为加急
+            if (in_array($orderStatus, $orderStatusArr)) {
+                $errorOfTimes++;
+                activity(ActivityLog::TYPE_ORDER_BATCH_MARK_URGENT_FAILED)
+                    ->performedOn($order)
+                    ->withProperties([
+                        'ip'    => $request->ip(),
+                        'agent' => $request->userAgent(),
+                    ])
+                    ->log("订单 {$order->oid} {$order->order_status}, 不能标记为加急");
+
+                continue;
+            }
+
+            $order->update([
+                'urgent' => 1
+            ]);
+
+            $successOfTimes++;
+
+            activity(ActivityLog::TYPE_ORDER_BATCH_MARK_URGENT)
+                ->performedOn($order)
+                ->withProperties([
+                    'ip'    => $request->ip(),
+                    'agent' => $request->userAgent()
+                ])
+                ->log("订单 {$order->oid} 成功标记为加急");
+        }
+
+        return response()->json([
+            'message'         => '标记完成',
+            'success_of_time' => $successOfTimes,
+            'error_of_time'   => $errorOfTimes,
+            'orders_count'    => count($orders)
+        ], 200);
+    }
+
+    /**
+     * 批量取消标记
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function batchCancelUrgent(Request $request) {
+        $ids = $request->input('ids', null);
+
+        if (!$ids || !is_array($ids)) {
+            return response()->json([
+                'message' => '批量取消标记失败',
+                'error'   => 'ids 参数不是要求的数组'
+            ], 422);
+        }
+
+        $orders = Order::whereIn('id', $ids)->get();
+
+        if (count($orders) == 0) {
+            return response()->json([
+                'message' => '批量取消标记失败',
+                'error'   => '未找到任何订单, 请确认后再试'
+            ], 422);
+        }
+
+        if (count($orders) > 300) {
+            return response()->json([
+                'message' => '批量取消标记被拒绝',
+                'error'   => '你要修改的订单数超过300条，请分批次操作'
+            ], 422);
+        }
+
+        $successOfTimes = 0;
+        $errorOfTimes = 0;
+
+        foreach ($orders as $order) {
+            $order->update([
+                'urgent' => 0
+            ]);
+
+            activity(ActivityLog::TYPE_ORDER_BATCH_CANCEL_URGENT)
+                ->performedOn($order)
+                ->withProperties([
+                    'ip'    => $request->ip(),
+                    'agent' => $request->userAgent()
+                ])
+                ->log("取消订单 {$order->oid} 的紧急标记");
+
+            $successOfTimes++;
+        }
+
+        return response()->json([
+            'message'         => '标记完成',
+            'success_of_time' => $successOfTimes,
+            'error_of_time'   => $errorOfTimes,
+            'orders_count'    => count($orders)
+        ], 200);
     }
 }

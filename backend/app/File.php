@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class File extends Model
 {
@@ -22,8 +23,18 @@ class File extends Model
         'extension'
     ];
 
+    protected $appends = [
+        'file_path'
+    ];
+
     protected $hidden = [
         'created_at',
         'updated_at'
     ];
+
+    public function getFilePathAttribute() {
+        if ($this->path) {
+            return Storage::disk('public')->url($this->path);
+        }
+    }
 }

@@ -35,6 +35,11 @@ class ActivityLog extends Model
     const TYPE_IMPORT_ORDER_UPDATE = 'IMPORT_ORDER_UPDATE';
 
     const TYPE_ORDER_UPDATE_STATUS = 'ORDER_UPDATE_STATUS';
+    const TYPE_ORDER_MARK_URGENT = 'ORDER_MARK_URGENT'; // 标记为加急
+    const TYPE_ORDER_BATCH_MARK_URGENT = 'ORDER_BATCH_MARK_URGENT'; // 批量标记加急
+    const TYPE_ORDER_BATCH_MARK_URGENT_FAILED = 'ORDER_BATCH_MARK_URGENT_FAILED'; // 批量标记失败
+    const TYPE_ORDER_CANCEL_URGENT = 'ORDER_CANCEL_URGENT'; // 取消加急
+    const TYPE_ORDER_BATCH_CANCEL_URGENT = 'ORDER_BATCH_CANCEL_URGENT'; // 批量取消加急
 
     /************* customer ****************/
     const TYPE_CUSTOMER_ADD = 'CUSTOMER_ADD';
@@ -48,6 +53,12 @@ class ActivityLog extends Model
     const TYPE_DOWNLOAD_ZIP_FAILED = 'DOWNLOAD_ZIP_FAILED'; // 下载zip文件失败
     const TYPE_UNZIP_FILE = 'UNZIP_FILE'; // 解压zip文件
     const TYPE_UNZIP_FILE_FAILED = 'UNZIP_FILE_FAILED'; // 解压zip文件失败
+
+    /************ shipping ****************/
+    const TYPE_SHIPPING_IMPORT = 'SHIPPING_IMPORT';
+    const TYPE_SHIPPING_IMPORT_ADD = 'SHIPPING_IMPORT_ADD';
+    const TYPE_SHIPPING_IMPORT_UPDATE = 'SHIPPING_IMPORT_UPDATE';
+    const TYPE_SHIPPING_IMPORT_FAILED = 'SHIPPING_IMPORT_FAILED';
 
     public function causer(): MorphTo {
         return $this->morphTo('causer', 'causer_type', 'causer_id');

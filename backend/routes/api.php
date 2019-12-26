@@ -67,6 +67,6 @@ Route::group(['middleware' => 'auth:api', 'namespace'  => 'API'], function ($api
     $api->resource('/shipping', 'ShippingController');
 
     /***************** 日志 *******************************************/
-    $api->get('/activity_log', 'ActivityController@index');
+    $api->get('/activity_log/{log_type}', 'ActivityController@index');
 });
 

@@ -26,7 +26,7 @@ class OrderShipping extends Model {
      * @return mixed
      */
     public function scopeShippingDate($query, ...$val) {
-        return $query->whereBetween('shipping_date', $val);
+        return $query->whereBetween('created_at', $val);
     }
 
     /**

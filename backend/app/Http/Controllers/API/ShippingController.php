@@ -111,8 +111,7 @@ class ShippingController extends Controller
                 foreach ($items as $index => $item) {
                     if (
                         !array_key_exists('order_number', $item) ||
-                        !array_key_exists('track_number', $item) ||
-                        !array_key_exists('shipping_date', $item)
+                        !array_key_exists('track_number', $item)
                     ) {
                         return response()
                             ->json([
@@ -129,10 +128,6 @@ class ShippingController extends Controller
                         'track_number'  => [
                             'required',
                             'max:32'
-                        ],
-                        'shipping_date' => [
-                            'required',
-                            new DateRule
                         ]
                     ]);
 
@@ -150,7 +145,7 @@ class ShippingController extends Controller
 
                     $trackNumber = $item['track_number'];
                     $orderNumber = $item['order_number'];
-                    $shippingDate = $item['shipping_date'];
+
                     $note = $item['note'] ?? null;
 
                     $shipping = OrderShipping::where('track_number', $trackNumber)
@@ -160,7 +155,6 @@ class ShippingController extends Controller
                         $shipping = OrderShipping::create([
                             'track_number'  => $trackNumber,
                             'order_number'  => $orderNumber,
-                            'shipping_date' => Util::formatExcelDate($shippingDate),
                             'note'          => $note
                         ]);
 
@@ -180,7 +174,6 @@ class ShippingController extends Controller
                     else {
                         $shipping->update([
                             'order_number'  => $orderNumber,
-                            'shipping_date' => Util::formatExcelDate($shippingDate),
                             'note'          => $note
                         ]);
 

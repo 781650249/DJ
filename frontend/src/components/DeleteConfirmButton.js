@@ -1,9 +1,3 @@
-/**
- * 删除确认按钮
- * 采用组件
- * popover 气泡卡片
- * button 按钮
- */
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Popover, Button } from 'antd';
@@ -55,10 +49,10 @@ class DeleteConfirmButton extends Component {
       } catch (e) {
         console.log(e);
       }
-      //   this.setState({
-      //     visible: false,
-      //     loading: false,
-      //   });
+      // this.setState({
+      //   visible: false,
+      //   loading: false,
+      // });
     }
   };
 

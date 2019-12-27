@@ -117,10 +117,32 @@ class ActivityLog extends Model
     }
 
     public function subject(): MorphTo {
-        return $this->morphTo('subject', 'subjetc_type', 'subject_id');
+        return $this->morphTo('subject', 'subject_type', 'subject_id');
     }
 
     public function getTypeNameAttribute() {
         return self::LOG_TYPE[$this->log_name] ?? $this->log_name;
+    }
+
+    /**
+     * Morph 搜索
+     * @param $query
+     * @param $val
+     */
+    public function scopeOid($query, $val) {
+        $query->whereHasMorph('subject', Order::class, function ($q) use ($val) {
+                $q->where('oid', 'like', "%{$val}%");
+            });
+    }
+
+    /**
+     * 用户筛选
+     * @param $query
+     * @param $val
+     */
+    public function scopeUserName($query, $val) {
+        $query->whereHasMorph('causer', User::class, function ($q) use ($val) {
+            $q->where('name', 'like', "%{$val}%");
+        });
     }
 }

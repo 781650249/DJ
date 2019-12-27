@@ -121,12 +121,6 @@ export default {
             //   component: './OrderManage',
             // },
             // {
-            //   path: './OperationLog',
-            //   name: '操作日志',
-            //   icon: 'pie-chart',
-            //   component: './OperationLog',
-            // },
-            // {
             //   path: './LogisOrder',
             //   name: '物流订单',
             //   icon: 'global',
@@ -151,6 +145,12 @@ export default {
             //   icon: 'smile',
             //   component: './Welcome',
             // },
+            {
+              path: 'operate_log',
+              name: '操作日志',
+              icon: 'pie-chart',
+              component: './OrderOperateLog',
+            },
             {
               path: '/admin',
               name: 'admin',

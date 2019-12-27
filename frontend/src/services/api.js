@@ -2,6 +2,7 @@
  * api 请求
  */
 import request from '@/utils/request';
+import { stringify } from 'qs';
 
 // 文件上传
 export const formData = async (resource, params) => {
@@ -14,3 +15,11 @@ export const formData = async (resource, params) => {
     data: fileForm,
   });
 };
+
+/**
+ * Resource的查询接口
+ */
+export async function query(resource, params) {
+  // console.log('params', params);
+  return request(`/api/${resource}?${stringify(params)}`);
+}

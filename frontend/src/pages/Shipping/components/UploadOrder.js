@@ -77,7 +77,7 @@ class UploadOrder extends Component {
     });
 
     await dispatch({
-      type: 'upload/upload',
+      type: 'shipping/upload',
       payload: {
         files: file,
       },

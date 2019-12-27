@@ -11,7 +11,7 @@ const { RangePicker } = DatePicker;
 
 @Form.create()
 @connect(({ loading }) => ({
-  fething: loading.effects['shipping/fetch'],
+  fetching: loading.effects['shipping/fetch'],
 }))
 export default class ShippingList extends Component {
   state = {
@@ -118,14 +118,22 @@ export default class ShippingList extends Component {
     });
   };
 
+  // 导入物流订单，并提交
+  handleUploadSubmit = () => {
+    this.handleCancel();
+    this.fetch();
+  };
+
   // 获取数据
   fetch = params => {
     const { dispatch } = this.props;
+    const { pageSize } = this.state;
+
     dispatch({
       type: 'shipping/fetch',
       payload: {
         page: 1,
-        page_size: 10,
+        page_size: pageSize,
         ...params,
       },
       callback: res => {
@@ -142,7 +150,7 @@ export default class ShippingList extends Component {
   };
 
   // 更新时间排序
-  handleTableChange = (a, b, sorter) => {
+  handleTableChange = (pagination, filter, sorter) => {
     // console.log('sorter....', sorter);
     const { dispatch } = this.props;
     const { page, pageSize } = this.state;
@@ -188,11 +196,6 @@ export default class ShippingList extends Component {
       page: 1,
       page_size: size,
     });
-  };
-
-  handleUploadSubmit = () => {
-    this.handleCancel();
-    this.fetch();
   };
 
   render() {
@@ -301,7 +304,7 @@ export default class ShippingList extends Component {
       },
     ];
 
-    const { fething } = this.props;
+    const { fetching } = this.props;
     const { data, total, page, pageSize } = this.state;
     return (
       <div>
@@ -309,7 +312,7 @@ export default class ShippingList extends Component {
         {upload}
         <Table
           style={{ marginTop: '50px' }}
-          loading={fething}
+          loading={fetching}
           rowKey="id"
           columns={columns}
           dataSource={data}

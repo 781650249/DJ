@@ -16,7 +16,7 @@ export default class Shipping extends Component {
             <TabPane tab="上传物流订单号" key="1" style={{ marginTop: '15px' }}>
               <ShippingList />
             </TabPane>
-            <TabPane tab="上传错误记录" key="2">
+            <TabPane tab="上传日志信息" key="2">
               <LogInfo />
             </TabPane>
           </Tabs>

@@ -18,7 +18,8 @@ class ShippingController extends Controller
 {
     //
     public function baseSearch(Request $request) {
-        return QueryBuilder::for(OrderShipping::query())
+        return QueryBuilder::for(OrderShipping::class)
+            ->allowedSorts('created_at')
             ->allowedFilters(
                 'track_number',
                 'order_number',

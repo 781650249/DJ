@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class ActivityController extends Controller
@@ -25,6 +26,26 @@ class ActivityController extends Controller
         $logTypeArr = [ActivityLog::TYPE_SHIPPING_IMPORT];
 
         return QueryBuilder::for(ActivityLog::whereIn('log_name', $logTypeArr))
+            ->allowedSorts('created_at')
+            ->defaultSort('-created_at');
+    }
+
+    public function orderOperateLog(Request $request) {
+        $logTypeArr = [
+            ActivityLog::TYPE_ORDER_UPDATE_STATUS,
+            ActivityLog::TYPE_ORDER_MARK_URGENT,
+            ActivityLog::TYPE_ORDER_BATCH_MARK_URGENT,
+            ActivityLog::TYPE_ORDER_BATCH_MARK_URGENT_FAILED,
+            ActivityLog::TYPE_ORDER_CANCEL_URGENT,
+            ActivityLog::TYPE_ORDER_BATCH_CANCEL_URGENT
+        ];
+
+        return QueryBuilder::for(ActivityLog::whereIn('log_name', $logTypeArr))
+            ->allowedSorts('created_at')
+            ->allowedFilters(
+                AllowedFilter::scope('oid'),
+                AllowedFilter::scope('user_name')
+            )
             ->defaultSort('-created_at');
     }
 
@@ -40,6 +61,9 @@ class ActivityController extends Controller
         switch ($logType) {
             case 'shipping_import':
                 $query = $this->importShippingLog($request);
+                break;
+            case 'order_operate':
+                $query = $this->orderOperateLog($request);
                 break;
             default: $query = $this->baseSearch($request);
         }

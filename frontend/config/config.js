@@ -152,6 +152,12 @@ export default {
             //   component: './Welcome',
             // },
             {
+              path: 'operate_log',
+              name: '操作日志',
+              icon: 'pie-chart',
+              component: './OrderOperateLog',
+            },
+            {
               path: '/admin',
               name: 'admin',
               icon: 'crown',

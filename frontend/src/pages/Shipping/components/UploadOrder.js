@@ -71,7 +71,7 @@ class UploadOrder extends Component {
   submit = async () => {
     // console.log('提交');
     const { file } = this.state;
-    const { dispatch } = this.props;
+    const { dispatch, submit } = this.props;
     this.setState({
       subming: true,
     });
@@ -98,6 +98,8 @@ class UploadOrder extends Component {
           this.setState({
             file: null,
           });
+          // 成功提交，调用父组件
+          submit();
         } else {
           // console.log('res.response...', res.response)
           // console.log(res.data)

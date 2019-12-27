@@ -36,8 +36,8 @@ export default class ShippingList extends Component {
     const { dispatch } = this.props;
     validateFields((err, values) => {
       if (!err) {
-        console.log('Form data... ', values);
-        console.log('format values', formatCriteria(values));
+        // console.log('Form data... ', values);
+        // console.log('format values', formatCriteria(values));
         const formatValues = formatCriteria(values);
         this.setState({
           formatValues,
@@ -118,30 +118,6 @@ export default class ShippingList extends Component {
     });
   };
 
-  // 匹配订单
-  handleMatchChange = value => {
-    // console.log(value)
-    const { dispatch } = this.props;
-    const { formatValues } = this.state;
-    dispatch({
-      type: 'shipping/fetch',
-      payload: {
-        filter: {
-          ...formatValues,
-          has_order: value,
-        },
-      },
-      callback: res => {
-        const { data, total } = res.data;
-        // console.log('res....', res)
-        this.setState({
-          data,
-          total,
-        });
-      },
-    });
-  };
-
   // 获取数据
   fetch = params => {
     const { dispatch } = this.props;
@@ -182,6 +158,18 @@ export default class ShippingList extends Component {
           filter: {},
           sort: `${order}${sorter.field}`,
         },
+        callback: res => {
+          // console.log(res)
+          const {
+            data: { data, total },
+          } = res;
+          // console.log(data)
+          // console.log(total)
+          this.setState({
+            data,
+            total,
+          });
+        },
       });
     }
   };
@@ -202,12 +190,17 @@ export default class ShippingList extends Component {
     });
   };
 
+  handleUploadSubmit = () => {
+    this.handleCancel();
+    this.fetch();
+  };
+
   render() {
     // 搜索订单
     const {
       form: { getFieldDecorator },
     } = this.props;
-    const renderForm = (
+    const query = (
       <Form onSubmit={this.handleSearch} layout="inline">
         <FormItem label="订单">
           {getFieldDecorator('order_number')(
@@ -239,12 +232,7 @@ export default class ShippingList extends Component {
         </FormItem>
         <FormItem label="是否匹配：">
           {getFieldDecorator('has_order')(
-            <Select
-              style={{ width: 80 }}
-              placeholder="不限"
-              allowClear
-              onChange={this.handleMatchChange}
-            >
+            <Select style={{ width: 80 }} placeholder="不限" allowClear>
               <Option value={1}>是</Option>
               <Option value={0}>否</Option>
             </Select>,
@@ -278,7 +266,7 @@ export default class ShippingList extends Component {
           onCancel={this.handleCancel}
           footer={null}
         >
-          <UploadOrder />
+          <UploadOrder submit={this.handleUploadSubmit} />
         </Modal>
       </div>
     );
@@ -317,7 +305,7 @@ export default class ShippingList extends Component {
     const { data, total, page, pageSize } = this.state;
     return (
       <div>
-        {renderForm}
+        {query}
         {upload}
         <Table
           style={{ marginTop: '50px' }}

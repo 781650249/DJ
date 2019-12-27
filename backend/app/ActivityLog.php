@@ -145,4 +145,13 @@ class ActivityLog extends Model
             $q->where('name', 'like', "%{$val}%");
         });
     }
+
+    /**
+     * 时间范围筛选
+     * @param $query
+     * @param array ...$val
+     */
+    public function scopeCreatedAt($query, ...$val) {
+        $query->whereBetween('created_at', $val);
+    }
 }

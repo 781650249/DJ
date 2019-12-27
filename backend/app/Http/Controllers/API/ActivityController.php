@@ -44,7 +44,8 @@ class ActivityController extends Controller
             ->allowedSorts('created_at')
             ->allowedFilters(
                 AllowedFilter::scope('oid'),
-                AllowedFilter::scope('user_name')
+                AllowedFilter::scope('user_name'),
+                AllowedFilter::scope('created_at')
             )
             ->defaultSort('-created_at');
     }

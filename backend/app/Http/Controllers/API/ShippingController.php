@@ -41,6 +41,7 @@ class ShippingController extends Controller
     /**
      * 导入
      * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function import(Request $request) {
         // excel格式

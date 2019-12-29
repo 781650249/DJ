@@ -133,6 +133,12 @@ export default {
               component: './Shipping',
             },
             {
+              path: 'operate_log',
+              name: '操作日志',
+              icon: 'pie-chart',
+              component: './OrderOperateLog',
+            },
+            {
               path: './Personal',
               name: '个人中心',
               icon: 'user',
@@ -151,12 +157,6 @@ export default {
             //   icon: 'smile',
             //   component: './Welcome',
             // },
-            {
-              path: 'operate_log',
-              name: '操作日志',
-              icon: 'pie-chart',
-              component: './OrderOperateLog',
-            },
             {
               path: '/admin',
               name: 'admin',

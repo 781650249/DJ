@@ -122,14 +122,11 @@ export default class ShippingList extends Component {
 
   // 更新时间排序
   handleTableChange = (pagination, filter, sorter) => {
-    const { pageSize } = this.state;
-
     if (sorter.field) {
       const order = sorter.order === 'ascend' ? '' : '-';
 
       this.fetch({
         page: 1,
-        page_size: pageSize,
         sort: `${order}${sorter.field}`,
       });
     }

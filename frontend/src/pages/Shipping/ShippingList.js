@@ -27,28 +27,6 @@ export default class ShippingList extends Component {
     this.fetch();
   }
 
-  // 搜索订单
-  handleSearch = e => {
-    e.preventDefault();
-    const {
-      form: { validateFields },
-    } = this.props;
-
-    validateFields((err, values) => {
-      if (!err) {
-        const formatValues = formatCriteria(values);
-        this.setState({
-          filter: formatValues,
-        });
-
-        this.fetch({
-          page: 1,
-          filter: formatValues,
-        });
-      }
-    });
-  };
-
   // fetch
   fetch = async params => {
     const { page, pageSize, filter } = this.state;
@@ -75,6 +53,28 @@ export default class ShippingList extends Component {
     });
   };
 
+  // 搜索订单
+  handleSearch = e => {
+    e.preventDefault();
+    const {
+      form: { validateFields },
+    } = this.props;
+
+    validateFields((err, values) => {
+      if (!err) {
+        const formatValues = formatCriteria(values);
+        this.setState({
+          filter: formatValues,
+        });
+
+        this.fetch({
+          page: 1,
+          filter: formatValues,
+        });
+      }
+    });
+  };
+
   // 重置搜索
   handleReset = async () => {
     await this.setState({
@@ -82,28 +82,15 @@ export default class ShippingList extends Component {
     });
 
     const {
-      dispatch,
+      // dispatch,
       form: { resetFields },
     } = this.props;
     const { formatValues } = this.state;
     resetFields();
 
-    dispatch({
-      type: 'shipping/fetch',
-      payload: {
-        filter: {
-          ...formatValues,
-        },
-      },
-      callback: res => {
-        const {
-          data: { data, total },
-        } = res;
-
-        this.setState({
-          data,
-          total,
-        });
+    this.fetch({
+      filter: {
+        ...formatValues,
       },
     });
   };
@@ -135,29 +122,15 @@ export default class ShippingList extends Component {
 
   // 更新时间排序
   handleTableChange = (pagination, filter, sorter) => {
-    const { dispatch } = this.props;
-    const { page, pageSize } = this.state;
+    const { pageSize } = this.state;
 
     if (sorter.field) {
       const order = sorter.order === 'ascend' ? '' : '-';
 
-      dispatch({
-        type: 'shipping/fetch',
-        payload: {
-          page,
-          page_size: pageSize,
-          filter: {},
-          sort: `${order}${sorter.field}`,
-        },
-        callback: res => {
-          const {
-            data: { data, total },
-          } = res;
-          this.setState({
-            data,
-            total,
-          });
-        },
+      this.fetch({
+        page: 1,
+        page_size: pageSize,
+        sort: `${order}${sorter.field}`,
       });
     }
   };

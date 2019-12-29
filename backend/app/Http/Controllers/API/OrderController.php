@@ -30,7 +30,16 @@ class OrderController extends Controller {
                 AllowedFilter::exact('status'),
                 AllowedFilter::scope('email'),
                 AllowedFilter::scope('name'),
-                AllowedFilter::scope('keyword')
+                AllowedFilter::scope('keyword'),
+                AllowedFilter::scope('created_at'),
+                AllowedFilter::scope('published_at'),
+                AllowedFilter::scope('produced_at')
+            )
+            ->allowedSorts(
+                'created_at',
+                'produced_at',
+                'published_at',
+                'oid'
             )
             ->defaultSort('-created_at');
 
@@ -53,7 +62,6 @@ class OrderController extends Controller {
                 'product',
                 'zipFile',
                 'unZipFiles',
-                'finishFiles'
             ])
             ->paginate($pageSize);
     }
@@ -490,9 +498,25 @@ class OrderController extends Controller {
             ]);
         }
 
-        $order->update([
-            'status' => $request->status
-        ]);
+        $orderStatus = $request->input('status');
+
+        if ($orderStatus == Order::STATUS_PUBLISHED) {
+            $order->update([
+                'status'       => $request->status,
+                'published_at' => Carbon::now()
+            ]);
+        }
+        if ($orderStatus === Order::STATUS_PRODUCED) {
+            $order->update([
+                'status'      => $request->status,
+                'produced_at' => Carbon::now()
+            ]);
+        }
+        else {
+            $order->update([
+                'status' => $request->status
+            ]);
+        }
 
         activity(ActivityLog::TYPE_ORDER_UPDATE_STATUS)
             ->performedOn($order)
@@ -502,7 +526,7 @@ class OrderController extends Controller {
                 'old_status' => $oldStatus,
                 'new_status' => $request->status
             ])
-            ->log('将该订单状态改为：' . $request->status);
+            ->log('订单状态改为：' . $request->status);
 
         return response()->json([
             'message' => '修改成功'

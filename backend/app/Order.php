@@ -2,9 +2,11 @@
 
 namespace App;
 
+use App\Util\Util;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Storage;
 
 class Order extends Model
 {
@@ -31,7 +33,8 @@ class Order extends Model
     ];
 
     protected $appends = [
-        'order_status'
+        'order_status',
+        'finish_files'
     ];
 
     //
@@ -76,10 +79,10 @@ class Order extends Model
             ->where('type', File::TYPE_UNZIP_FILE);
     }
 
-    public function finishFiles() {
-        return $this->hasMany(File::class, 'order_id')
-            ->where('type', File::TYPE_FINISH_FILE);
-    }
+    //public function finishFiles() {
+    //    return $this->hasMany(File::class, 'order_id')
+    //        ->where('type', File::TYPE_FINISH_FILE);
+    //}
 
     /**
      * 邮箱搜索
@@ -114,9 +117,71 @@ class Order extends Model
         });
     }
 
+    /**
+     * 订单时间
+     * @param $query
+     * @param array ...$val
+     * @return mixed
+     */
+    public function scopeCreatedAt($query, ...$val) {
+        return $query->whereBetween('created_at', $val);
+    }
+
+    /**
+     * 发稿时间范围筛选
+     * @param $query
+     * @param array ...$val
+     * @return mixed
+     */
+    public function scopePublishedAt($query, ...$val) {
+        return $query->whereBetween('published_at', $val);
+    }
+
+    /**
+     * 生产时间范围筛选
+     * @param $query
+     * @param array ...$val
+     * @return mixed
+     */
+    public function scopeProducedAt($query, ...$val) {
+        return $query->whereBetween('produced_at', $val);
+    }
+
+
     public function getOrderStatusAttribute() {
         if ($this->status) {
             return self::ORDER_STATUS[$this->status];
         }
+    }
+
+    public function getFinishFilesAttribute() {
+        $dirPath = 'file/' . str_replace('.', '_', $this->oid) . '/finish';
+
+        $fileList = Storage::disk('public')->files($dirPath);
+
+        if (!$fileList || count($fileList) == 0) {
+            return null;
+        }
+
+        $response = [];
+
+        foreach ($fileList as $item) {
+            $fileInfo = Util::getFileInfo($item);
+
+            // 文件不存在的跳过
+            if (!$fileInfo) {
+                continue;
+            }
+
+            // 如果是文件夹的跳过
+            if ($fileInfo['type'] !== 'file')
+            {
+                continue;
+            }
+
+            $response[] = $fileInfo;
+        }
+
+        return $response;
     }
 }

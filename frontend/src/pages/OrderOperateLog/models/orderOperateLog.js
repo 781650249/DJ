@@ -21,7 +21,6 @@ export default {
       const { response, data } = res;
 
       if (response.status && response.status === 200) {
-        console.log(data);
         yield put({
           type: 'save',
           payload: data,

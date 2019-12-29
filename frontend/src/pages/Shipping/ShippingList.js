@@ -20,7 +20,7 @@ export default class ShippingList extends Component {
     total: 0,
     page: 1,
     pageSize: 10,
-    formatValues: null,
+    filter: {},
   };
 
   componentDidMount() {
@@ -33,32 +33,45 @@ export default class ShippingList extends Component {
     const {
       form: { validateFields },
     } = this.props;
-    const { dispatch } = this.props;
+
     validateFields((err, values) => {
       if (!err) {
         const formatValues = formatCriteria(values);
         this.setState({
-          formatValues,
+          filter: formatValues,
         });
 
-        dispatch({
-          type: 'shipping/fetch',
-          payload: {
-            filter: {
-              ...formatValues,
-            },
-          },
-          callback: res => {
-            const {
-              data: { data, total },
-            } = res;
-            this.setState({
-              data,
-              total,
-            });
-          },
+        this.fetch({
+          page: 1,
+          filter: formatValues,
         });
       }
+    });
+  };
+
+  // fetch
+  fetch = async params => {
+    const { page, pageSize, filter } = this.state;
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: 'shipping/fetch',
+      payload: {
+        page,
+        page_size: pageSize,
+        filter,
+        ...params,
+      },
+      callback: res => {
+        const { data } = res;
+
+        this.setState({
+          data: data.data,
+          page: data.current_page,
+          pageSize: data.per_page,
+          total: data.total,
+        });
+      },
     });
   };
 
@@ -118,30 +131,6 @@ export default class ShippingList extends Component {
   handleUploadSubmit = () => {
     this.handleCancel();
     this.fetch();
-  };
-
-  // 获取数据
-  fetch = params => {
-    const { dispatch } = this.props;
-    const { pageSize } = this.state;
-
-    dispatch({
-      type: 'shipping/fetch',
-      payload: {
-        page: 1,
-        page_size: pageSize,
-        ...params,
-      },
-      callback: res => {
-        const { data } = res;
-        this.setState({
-          data: res.data.data,
-          total: res.data.total,
-          page: data.current_page,
-          pageSize: parseInt(data.per_page, 10),
-        });
-      },
-    });
   };
 
   // 更新时间排序

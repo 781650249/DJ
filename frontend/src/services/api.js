@@ -4,7 +4,9 @@
 import request from '@/utils/request';
 import { stringify } from 'qs';
 
-// 文件上传
+/**
+ * 文件上传接口
+ */
 export const formData = async (resource, params) => {
   const fileForm = new FormData();
 

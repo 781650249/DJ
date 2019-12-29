@@ -17,6 +17,7 @@ import SearchPane from './components/SearchForm';
 class OrderPerateLog extends Component {
   state = {
     filter: {},
+    sort: '-created_at',
   };
 
   columns = [
@@ -32,6 +33,7 @@ class OrderPerateLog extends Component {
       title: '操作时间',
       dataIndex: 'created_at',
       rander: date => moment(date).format('lll'),
+      sorter: true,
     },
     {
       title: '操作事项',
@@ -45,7 +47,7 @@ class OrderPerateLog extends Component {
 
   fetch = async params => {
     const { dispatch, pagination } = this.props;
-    const { filter } = this.state;
+    const { filter, sort } = this.state;
 
     await dispatch({
       type: 'orderOperateLog/fetch',
@@ -53,14 +55,9 @@ class OrderPerateLog extends Component {
         page: pagination.page,
         page_size: pagination.pageSize,
         filter,
+        sort,
         ...params,
       },
-    });
-  };
-
-  handlePaginationChange = page => {
-    this.fetch({
-      page,
     });
   };
 
@@ -69,6 +66,35 @@ class OrderPerateLog extends Component {
       page: 1,
       page_size: pageSize,
     });
+  };
+
+  /**
+   * 表格变化
+   */
+  handleTableChange = (pagination, _, sorter) => {
+    const { field, order } = sorter;
+    const { current, pageSize } = pagination;
+    let sort = null;
+
+    if (field && order) {
+      sort = `${order === 'ascend' ? '' : '-'}${field}`;
+      this.setState({
+        sort,
+      });
+    }
+
+    if (sort) {
+      this.fetch({
+        sort,
+        page: current,
+        page_size: pageSize,
+      });
+    } else {
+      this.fetch({
+        page: current,
+        page_size: pageSize,
+      });
+    }
   };
 
   handleSearch = params => {
@@ -96,6 +122,7 @@ class OrderPerateLog extends Component {
             loading={loading}
             dataSource={logLists}
             columns={this.columns}
+            onChange={this.handleTableChange}
             pagination={{
               size: 'small',
               showSizeChanger: true,
@@ -105,8 +132,6 @@ class OrderPerateLog extends Component {
               total: pagination.total,
               current: pagination.page,
               pageSize: pagination.pageSize,
-              onChange: this.handlePaginationChange,
-              onShowSizeChange: this.handlePaginationSizeChange,
             }}
           />
         </Card>

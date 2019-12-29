@@ -36,8 +36,6 @@ export default class ShippingList extends Component {
     const { dispatch } = this.props;
     validateFields((err, values) => {
       if (!err) {
-        // console.log('Form data... ', values);
-        // console.log('format values', formatCriteria(values));
         const formatValues = formatCriteria(values);
         this.setState({
           formatValues,
@@ -51,8 +49,6 @@ export default class ShippingList extends Component {
             },
           },
           callback: res => {
-            // console.log('搜索订单 res.response', res.response);
-            // console.log('搜索订单 res.data', res.data);
             const {
               data: { data, total },
             } = res;
@@ -138,7 +134,6 @@ export default class ShippingList extends Component {
       },
       callback: res => {
         const { data } = res;
-        // console.log('data...', data);
         this.setState({
           data: res.data.data,
           total: res.data.total,
@@ -151,7 +146,6 @@ export default class ShippingList extends Component {
 
   // 更新时间排序
   handleTableChange = (pagination, filter, sorter) => {
-    // console.log('sorter....', sorter);
     const { dispatch } = this.props;
     const { page, pageSize } = this.state;
 
@@ -167,12 +161,9 @@ export default class ShippingList extends Component {
           sort: `${order}${sorter.field}`,
         },
         callback: res => {
-          // console.log(res)
           const {
             data: { data, total },
           } = res;
-          // console.log(data)
-          // console.log(total)
           this.setState({
             data,
             total,
@@ -184,14 +175,11 @@ export default class ShippingList extends Component {
 
   // 页码发生变化后
   handlePageChange = page => {
-    // console.log('page', page)
     this.fetch({ page });
   };
 
   // 修改每页订单条数
   handleShowSizeChange = (current, size) => {
-    // console.log('current', current);
-    // console.log('size', size);
     this.fetch({
       page: 1,
       page_size: size,
@@ -258,7 +246,7 @@ export default class ShippingList extends Component {
 
     // 导入订单
     const upload = (
-      <div style={{ marginTop: '25px', display: 'inline-block' }}>
+      <div style={{ marginTop: '10px', display: 'inline-block' }}>
         <Button type="primary" onClick={this.showModal} style={{ width: '126px' }}>
           导入物流订单号
         </Button>
@@ -269,7 +257,7 @@ export default class ShippingList extends Component {
           onCancel={this.handleCancel}
           footer={null}
         >
-          <UploadOrder submit={this.handleUploadSubmit} />
+          <UploadOrder onFetch={this.handleUploadSubmit} />
         </Modal>
       </div>
     );
@@ -311,7 +299,7 @@ export default class ShippingList extends Component {
         {query}
         {upload}
         <Table
-          style={{ marginTop: '50px' }}
+          style={{ marginTop: '30px' }}
           loading={fetching}
           rowKey="id"
           columns={columns}
@@ -323,7 +311,9 @@ export default class ShippingList extends Component {
             pageSize,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: totals => `总共有 ${totals} 条记录`,
+            showTotal: totals => (
+              <p style={{ position: 'absolute', left: 0 }}>总共有 {totals} 条记录</p>
+            ),
             onChange: this.handlePageChange,
             onShowSizeChange: this.handleShowSizeChange,
           }}

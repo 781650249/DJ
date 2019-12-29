@@ -23,8 +23,6 @@ class UploadOrder extends Component {
     file: null,
     errorMessage: null,
     subming: false,
-    resMessage: null,
-    resError: null,
   };
 
   handleBeforeUpload = file => {
@@ -35,7 +33,6 @@ class UploadOrder extends Component {
       this.setState({
         errorMessage: '文件格式暂时不支持，请核对后再试。',
         file: null,
-        resMessage: null,
       });
 
       return false;
@@ -45,7 +42,6 @@ class UploadOrder extends Component {
       this.setState({
         errorMessage: `文件过大，文件大小不能超过${acceptFileSize}M`,
         file: null,
-        resMessage: null,
       });
 
       return false;
@@ -55,7 +51,6 @@ class UploadOrder extends Component {
       file,
       errorMessage: null,
       subming: false,
-      resMessage: null,
     });
 
     return false;
@@ -69,9 +64,8 @@ class UploadOrder extends Component {
 
   // 提交
   submit = async () => {
-    // console.log('提交');
     const { file } = this.state;
-    const { dispatch, submit } = this.props;
+    const { dispatch, onFetch } = this.props;
     this.setState({
       subming: true,
     });
@@ -82,7 +76,6 @@ class UploadOrder extends Component {
         files: file,
       },
       callback: res => {
-        // console.log('response...', res);
         if (res.response.status === 200) {
           notification.success({
             message: res.data.message,
@@ -98,15 +91,12 @@ class UploadOrder extends Component {
           this.setState({
             file: null,
           });
-          // 成功提交，调用父组件
-          submit();
+          // 成功提交，调用父组件 onFetch
+          onFetch();
         } else {
-          // console.log('res.response...', res.response)
-          // console.log(res.data)
-          const { message, error } = res.data;
+          const { error } = res.data;
           this.setState({
-            resMessage: message,
-            resError: error,
+            errorMessage: error,
           });
         }
       },

@@ -5,7 +5,7 @@ import { connect } from 'dva';
 @connect(({ loading }) => ({
   fetching: loading.effects['logMsg/fetch'],
 }))
-export default class OrderList extends Component {
+export default class ShippingLog extends Component {
   state = {
     data: null,
     total: 0,
@@ -32,8 +32,6 @@ export default class OrderList extends Component {
         const {
           data: { data, total },
         } = res;
-        // console.log(res)
-        // console.log(data)
         this.setState({
           data,
           total,
@@ -46,14 +44,11 @@ export default class OrderList extends Component {
 
   // 页码发生变化后
   handlePageChange = page => {
-    // console.log('page', page)
     this.fetch({ page });
   };
 
   // 修改每页订单条数
   handleShowSizeChange = (current, size) => {
-    // console.log('current', current);
-    // console.log('size', size);
     this.fetch({
       page: 1,
       page_size: size,
@@ -113,7 +108,9 @@ export default class OrderList extends Component {
           pageSize,
           showSizeChanger: true,
           showQuickJumper: true,
-          showTotal: totals => `总共有${totals}条记录`,
+          showTotal: totals => (
+            <p style={{ position: 'absolute', left: 0 }}>总共有 {totals} 条记录</p>
+          ),
           onChange: this.handlePageChange,
           onShowSizeChange: this.handleShowSizeChange,
         }}

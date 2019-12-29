@@ -10,11 +10,11 @@ export default {
   effects: {
     *fetch({ payload, callback }, { call }) {
       const res = yield call(query, 'shipping', payload);
+
       if (callback) callback(res);
     },
     *upload({ payload, callback }, { call }) {
       const res = yield call(formData, 'shipping/import', payload);
-      // console.log(res);
 
       if (callback) callback(res);
     },

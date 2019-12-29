@@ -38,6 +38,18 @@ class SearchPane extends Component {
     });
   };
 
+  clear = () => {
+    const { form, onSearch } = this.props;
+
+    form.resetFields();
+
+    if (onSearch) {
+      onSearch({
+        page: 1,
+      });
+    }
+  };
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -50,7 +62,7 @@ class SearchPane extends Component {
             <Col xs={12} md={8} lg={6}>
               <FormItem label="订单编号">
                 {getFieldDecorator('oid')(
-                  <Input style={{ width: '100%' }} placeholder="订单编号" />,
+                  <Input style={{ width: '100%' }} placeholder="订单编号" allowClear />,
                 )}
               </FormItem>
             </Col>
@@ -58,7 +70,7 @@ class SearchPane extends Component {
             <Col xs={12} md={8} lg={6}>
               <FormItem label="人员姓名">
                 {getFieldDecorator('user_name')(
-                  <Input style={{ width: '100%' }} placeholder="人员姓名" />,
+                  <Input style={{ width: '100%' }} placeholder="人员姓名" allowClear />,
                 )}
               </FormItem>
             </Col>
@@ -90,7 +102,7 @@ class SearchPane extends Component {
               <Button htmlType="summit" type="primary" loading={loading}>
                 搜索
               </Button>
-              <Button style={{ marginLeft: 8 }} disabled={loading}>
+              <Button onClick={this.clear} style={{ marginLeft: 8 }} disabled={loading}>
                 重置
               </Button>
             </Col>

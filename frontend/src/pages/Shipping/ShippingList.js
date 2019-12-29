@@ -21,6 +21,7 @@ export default class ShippingList extends Component {
     page: 1,
     pageSize: 10,
     filter: {},
+    sort: '-created_at',
   };
 
   componentDidMount() {
@@ -29,7 +30,7 @@ export default class ShippingList extends Component {
 
   // fetch
   fetch = async params => {
-    const { page, pageSize, filter } = this.state;
+    const { page, pageSize, filter, sort } = this.state;
     const { dispatch } = this.props;
 
     dispatch({
@@ -38,16 +39,16 @@ export default class ShippingList extends Component {
         page,
         page_size: pageSize,
         filter,
+        sort,
         ...params,
       },
       callback: res => {
         const { data } = res;
-
         this.setState({
           data: data.data,
-          page: data.current_page,
-          pageSize: data.per_page,
-          total: data.total,
+          page: parseInt(data.current_page, 10),
+          pageSize: parseInt(data.per_page, 10),
+          total: parseInt(data.total, 10),
         });
       },
     });
@@ -82,7 +83,6 @@ export default class ShippingList extends Component {
     });
 
     const {
-      // dispatch,
       form: { resetFields },
     } = this.props;
     const { formatValues } = this.state;
@@ -120,29 +120,31 @@ export default class ShippingList extends Component {
     this.fetch();
   };
 
-  // 更新时间排序
-  handleTableChange = (pagination, filter, sorter) => {
-    if (sorter.field) {
-      const order = sorter.order === 'ascend' ? '' : '-';
+  // 排序、分页、分页大小
+  handleTableChange = (pagination, _, sorter) => {
+    const { field, order } = sorter;
+    const { current, pageSize } = pagination;
+    let sort = null;
 
-      this.fetch({
-        page: 1,
-        sort: `${order}${sorter.field}`,
+    if (field && order) {
+      sort = `${order === 'ascend' ? '' : '-'}${field}`;
+      this.setState({
+        sort,
       });
     }
-  };
 
-  // 页码发生变化后
-  handlePageChange = page => {
-    this.fetch({ page });
-  };
-
-  // 修改每页订单条数
-  handleShowSizeChange = (current, size) => {
-    this.fetch({
-      page: 1,
-      page_size: size,
-    });
+    if (sort) {
+      this.fetch({
+        sort,
+        page: current,
+        page_size: pageSize,
+      });
+    } else {
+      this.fetch({
+        page: current,
+        page_size: pageSize,
+      });
+    }
   };
 
   render() {
@@ -273,8 +275,6 @@ export default class ShippingList extends Component {
             showTotal: totals => (
               <p style={{ position: 'absolute', left: 0 }}>总共有 {totals} 条记录</p>
             ),
-            onChange: this.handlePageChange,
-            onShowSizeChange: this.handleShowSizeChange,
           }}
         />
       </div>

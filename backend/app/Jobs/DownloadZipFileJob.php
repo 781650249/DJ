@@ -95,6 +95,9 @@ class DownloadZipFileJob implements ShouldQueue
                 // 保存
                 Storage::disk('public')->put($fileName, $file);
 
+                // 创建finish文件夹
+                Storage::disk('public')->makeDirectory("file/{$orderName}/finish");
+
                 $fileInfo = Util::getFileInfo($fileName);
 
                 if ($fileInfo) {

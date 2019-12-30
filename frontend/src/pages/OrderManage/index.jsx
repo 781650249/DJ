@@ -4,11 +4,10 @@ import { connect } from 'dva';
 import Header from './components/Header';
 // eslint-disable-next-line import/no-unresolved
 import UpdateCustomer from './components/updateCustomer';
-import UpdOrderStatus from './components/UpdOrderStatus';
 import OriginImg from './components/OriginImg';
 import SingHurryOrder from './components/SingHurryOrder';
 import HurryOrder from './components/HurryOrder';
-
+import UpdateOrderStatus from './components/UpdateOrderStatus';
 @connect(({ orders, loading }) => ({
   orders,
   submitting: loading.effects['orders/fetchOrders'],
@@ -23,7 +22,7 @@ export default class Content extends Component {
     this.initOrder();
   }
 
-  initOrder = () => {
+  initOrder = newPage => {
     const { dispatch } = this.props;
     const {
       result: { filter },
@@ -31,7 +30,7 @@ export default class Content extends Component {
     dispatch({
       type: 'orders/fetchOrders',
       payload: {
-        page: 1,
+        page: newPage,
         page_size: 10,
         filter: {
           ...filter,
@@ -141,15 +140,7 @@ export default class Content extends Component {
                 <Button size="small" disabled={!hasSelected} type="primary" onClick={this.start}>
                   取消全选
                 </Button>
-                <Button
-                  disabled={!hasSelected}
-                  size="small"
-                  style={{ marginLeft: 2 }}
-                  type="danger"
-                  onClick={this.bDelete}
-                >
-                  删除
-                </Button>
+
                 <span style={{ marginLeft: 12 }}>
                   {hasSelected ? `当前选中了 ${selectedRowKeys.length} 项` : ''}
                 </span>
@@ -164,7 +155,7 @@ export default class Content extends Component {
                 <HurryOrder hasSelected={hasSelected} id={selectedRowKeys}>
                   加急标记
                 </HurryOrder>
-                <UpdOrderStatus hasSelected={hasSelected} id={selectedRowKeys} />
+                <UpdateOrderStatus hasSelected={hasSelected} id={selectedRowKeys} />
               </div>
             }
             type="error"
@@ -177,7 +168,7 @@ export default class Content extends Component {
               showQuickJumper: true,
               current: page,
               total,
-              onChange: this.changeNum,
+              onChange: this.initOrder,
               showTotal: totals => `总共有${totals}条记录`,
             }}
             size="small"

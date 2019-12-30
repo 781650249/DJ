@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Modal, notification } from 'antd';
-import { setInterval } from 'timers';
 
 @connect(() => ({}))
 class ButtonModel extends Component {

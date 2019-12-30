@@ -1,4 +1,4 @@
-import { Alert, Form, Input, Button, notification } from 'antd';
+import { Alert, Form, Input, Button, notification, Icon } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Link } from 'umi';
@@ -60,7 +60,12 @@ class Login extends Component {
                 { required: true, message: '邮箱不能为空' },
                 { pattern: /\w+@\w+(\.\w+){1,2}/, message: '邮箱不正确' },
               ],
-            })(<Input placeholder="邮箱" />)}
+            })(
+              <Input
+                placeholder="邮箱"
+                prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              />,
+            )}
           </FormItem>
 
           <FormItem>
@@ -69,7 +74,13 @@ class Login extends Component {
                 { required: true, message: '密码不能为空' },
                 { min: 6, message: '密码至少为6位组成' },
               ],
-            })(<Input type="password" placeholder="密码" />)}
+            })(
+              <Input
+                type="password"
+                placeholder="密码"
+                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              />,
+            )}
           </FormItem>
           <FormItem>
             <Button loading={submitting} type="primary" htmlType="submit">

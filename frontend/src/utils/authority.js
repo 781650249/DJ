@@ -103,3 +103,11 @@ export function getToken() {
 
   return accessToken;
 }
+
+export function clearToken() {
+  localStorage.removeItem('access-token');
+  localStorage.removeItem('access-token-expires');
+
+  const { outline } = authRole;
+  return [outline];
+}

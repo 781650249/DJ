@@ -1,7 +1,7 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'querystring';
 import { fakeAccountLogin, getFakeCaptcha } from '@/services/login';
-import { setAuthorityByToken } from '@/utils/authority';
+import { setAuthorityByToken, clearToken } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 
 const Model = {
@@ -32,6 +32,9 @@ const Model = {
 
     *logout(_, { put }) {
       const { redirect } = getPageQuery(); // redirect
+
+      // 清除token信息
+      clearToken();
 
       if (window.location.pathname !== '/user/login' && !redirect) {
         yield put(

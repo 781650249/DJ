@@ -1,7 +1,9 @@
 import request from '@/utils/request';
 import { stringify } from 'qs';
 
-// 订单管理的excel上传
+/**
+ * 文件上传接口
+ */
 export const formData = async (resource, params) => {
   const fileForm = new FormData();
   Object.keys(params).map(key => fileForm.append(key, params[key]));

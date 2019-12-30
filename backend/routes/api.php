@@ -41,8 +41,35 @@ Route::group(['middleware' => 'auth:api', 'namespace'  => 'API'], function ($api
 
     $api->resource('/products', 'ProductController');
 
-    /**** 示例 *****/
-    $api->post('/example/upload', 'TestController@upload');
+    /***************** 订单 ******************************************/
+    $api->post('/orders/import', 'OrderController@import');
 
+    // 更新状态
+    $api->put('/order/status/{id}', 'OrderController@updateStatus');
+
+    // 标记为加急
+    $api->put('/order/urgent/{id}', 'OrderController@markUrgent');
+
+    $api->post('/orders/batch_urgent', 'OrderController@batchMarkUrgent');
+
+    $api->put('/order/cancel_urgent/{id}', 'OrderController@cancelMarkUrgent');
+
+    // 批量取消加急
+    $api->post('/order/batch_cancel_urgent', 'OrderController@batchCancelUrgent');
+
+    $api->resource('/orders', 'OrderController');
+
+    /***************** 顾客 ******************************************/
+    $api->resource('/customer', 'CustomerController');
+
+    /**************** 订单物流 ***************************************/
+    // 导入物流订单
+    $api->post('/shipping/import', 'ShippingController@import');
+
+    // 资源api
+    $api->resource('/shipping', 'ShippingController');
+
+    /***************** 日志 *******************************************/
+    $api->get('/activity_log/{log_type}', 'ActivityController@index');
 });
 

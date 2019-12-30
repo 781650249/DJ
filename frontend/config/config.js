@@ -121,11 +121,17 @@ export default {
             //   component: './OrderManage',
             // },
             // {
-            //   path: './LogisOrder',
-            //   name: '物流订单',
-            //   icon: 'global',
-            //   component: './LogisOrder',
+            //   path: './OperationLog',
+            //   name: '操作日志',
+            //   icon: 'pie-chart',
+            //   component: './OperationLog',
             // },
+            {
+              path: './Shipping',
+              name: '物流订单',
+              icon: 'global',
+              component: './Shipping',
+            },
             {
               path: 'operate_log',
               name: '操作日志',
@@ -216,7 +222,7 @@ export default {
   // 开发接口代理
   proxy: {
     '/api/': {
-      target: 'http://dj.39.test/',
+      target: 'http://192.168.16.39/',
       changeOrigin: true,
       // pathRewrite: { '^/api': '' },
     },

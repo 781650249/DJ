@@ -2,10 +2,11 @@ import {
   formData,
   cancelUrgent,
   getOrders,
-  updorders,
+  updCustomer,
   updorderStatus,
   HurryOrders,
   SingleHurryOrder,
+  BcancelUrgent,
 } from '@/services/api';
 
 export default {
@@ -49,6 +50,7 @@ export default {
       yield put({
         type: 'setResult', // 获取到的数据传到reducer让它来更改状态
         payload: {
+          // 这里是把订单存到仓库里 前端分页处理 包括搜索分页
           data: data.data,
           total: data.total,
           page: data.current_page,
@@ -57,11 +59,11 @@ export default {
         },
       });
     },
-    *updateorders({ payload, callback }, { call }) {
-      const response = yield call(updorders, payload);
+    *updateCustomer({ payload, callback }, { call }) {
+      const response = yield call(updCustomer, payload);
       if (callback) callback(response);
     },
-    *updOrderStatus({ payload, callback }, { call }) {
+    *updateStatus({ payload, callback }, { call }) {
       const response = yield call(updorderStatus, payload);
       if (callback) callback(response);
     },
@@ -87,6 +89,10 @@ export default {
       { call },
     ) {
       const response = yield call(cancelUrgent, id);
+      if (callback) callback(response);
+    },
+    *batchCancelUrgent({ payload, callback }, { call }) {
+      const response = yield call(BcancelUrgent, payload);
       if (callback) callback(response);
     },
   },

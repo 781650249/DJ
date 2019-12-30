@@ -22,6 +22,17 @@ export default class HurryOrder extends Component {
     });
   }
 
+  componentWillReceiveProps(newProps) {
+    const newData = newProps.data;
+    const { urgent } = this.state;
+
+    if (newData && newData.urgent !== urgent) {
+      this.setState({
+        urgent: newData.urgent,
+      });
+    }
+  }
+
   setUrgent = () => {
     const {
       data: { id },

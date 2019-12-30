@@ -110,9 +110,9 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
 
 @connect(({ orders, loading }) => ({
   orders,
-  submitting: loading.effects['orders/updateorders'],
+  submitting: loading.effects['orders/updateCustomer'],
 }))
-export default class Updateorders extends React.Component {
+export default class updateCustomer extends React.Component {
   state = {
     visible: false,
     loading: false,
@@ -132,7 +132,6 @@ export default class Updateorders extends React.Component {
       dispatch,
       data: { id },
     } = this.props;
-    console.log(this.props);
     form.validateFields((err, values) => {
       if (err) {
         return;
@@ -141,7 +140,7 @@ export default class Updateorders extends React.Component {
         loading: true,
       });
       dispatch({
-        type: 'orders/updateorders',
+        type: 'orders/updateCustomer',
         payload: {
           id,
           ...values,
@@ -160,9 +159,6 @@ export default class Updateorders extends React.Component {
               },
             });
             form.resetFields();
-            dispatch({
-              type: 'Goods/fetchOrders',
-            });
           }
           this.setState({
             loading: false,

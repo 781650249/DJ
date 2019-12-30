@@ -117,7 +117,10 @@ export default class ShippingList extends Component {
   // 导入物流订单，并提交
   handleUploadSubmit = () => {
     this.handleCancel();
-    this.fetch();
+    this.fetch({
+      page: 1,
+      sort: '-created_at',
+    });
   };
 
   // 排序、分页、分页大小

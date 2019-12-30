@@ -112,6 +112,26 @@ class UploadOrder extends Component {
 
     return (
       <div style={{ margin: '0 5px', width: 'auto' }}>
+        <div style={{ marginBottom: '10px' }}>
+          <p>
+            <span style={{ color: 'red' }}>*</span>{' '}
+            只支持解析一个工作表（sheet），上传前，请删除多余的工作表；
+          </p>
+          <p>
+            <span style={{ color: 'red' }}>*</span>{' '}
+            解析内容是根据第一行的标题来解析，不要删除或修改第一行内容；
+          </p>
+          <p>
+            <span style={{ color: 'red' }}>*</span>{' '}
+            上传前，请务必删除包括本行在内的所有的注释说明内容；
+          </p>
+          <span>
+            <a href="/storage/excel/order_shipping_01.xlsx" style={{ color: 'red' }}>
+              <Icon type="paper-clip" />
+              下载模板
+            </a>
+          </span>
+        </div>
         <Dragger
           beforeUpload={this.handleBeforeUpload}
           onRemove={this.handleRemove}

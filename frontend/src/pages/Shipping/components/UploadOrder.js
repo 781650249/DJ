@@ -122,7 +122,7 @@ class UploadOrder extends Component {
             解析内容是根据第一行的标题来解析，不要删除或修改第一行内容；
           </p>
           <p style={{ display: 'inline-block' }}>
-            <span style={{ color: 'red' }}>*</span> 上传前，请务必删除包括本行在内的所有的注释说明；
+            <span style={{ color: 'red' }}>*</span> 请下载模板，根据模板提示填入数据；
           </p>
           <span>
             <a href="/storage/excel/order_shipping_01.xlsx" style={{ color: 'red' }}>

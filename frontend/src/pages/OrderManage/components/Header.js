@@ -29,8 +29,8 @@ export default class Header extends React.Component {
           page_size: 10,
           filter: values,
         },
-        callback: response => {
-          if (response.status === 200) {
+        callback: (response, data) => {
+          if (data.status === 200) {
             this.setState({
               isLoading: false,
             });
@@ -95,12 +95,12 @@ export default class Header extends React.Component {
               <Form>
                 <Form.Item>
                   {getFieldDecorator('status', {})(
-                    <Select placeholder="不限" style={{ width: 120 }}>
-                      <Option disabled value="un_download">
-                        未下载{' '}
+                    <Select allowClear placeholder="不限" style={{ width: 120 }}>
+                      <Option value="un_download" disabled>
+                        未下载
                       </Option>
-                      <Option disabled value="downloaded">
-                        已下载{' '}
+                      <Option value="downloaded" disabled>
+                        已下载
                       </Option>
                       <Option value="processing"> 处理中</Option>
                       <Option value="processed">处理完成</Option>

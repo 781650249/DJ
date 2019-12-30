@@ -54,6 +54,9 @@ Route::group(['middleware' => 'auth:api', 'namespace'  => 'API'], function ($api
 
     $api->put('/order/cancel_urgent/{id}', 'OrderController@cancelMarkUrgent');
 
+    // 批量取消加急
+    $api->post('/order/batch_cancel_urgent', 'OrderController@batchCancelUrgent');
+
     $api->resource('/orders', 'OrderController');
 
     /***************** 顾客 ******************************************/

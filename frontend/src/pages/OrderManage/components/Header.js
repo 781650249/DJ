@@ -74,7 +74,7 @@ export default class Header extends React.Component {
               <FormItem>
                 {getFieldDecorator('keyword', {
                   rules: [{ required: true, message: '订单号不能为空' }],
-                })(<Input addonBefore="订单编号" placeholder="请输入" />)}
+                })(<Input addonBefore="订单编号" placeholder="请输入" allowClear />)}
               </FormItem>
             </Form>
           </Col>
@@ -83,7 +83,7 @@ export default class Header extends React.Component {
               <FormItem>
                 {getFieldDecorator('email', {
                   rules: [{ pattern: /\w+@\w+(\.\w+){1,2}/, message: '邮箱不正确' }],
-                })(<Input placeholder="请输入" addonBefore="客户邮箱" />)}
+                })(<Input placeholder="请输入" addonBefore="客户邮箱" allowClear />)}
               </FormItem>
             </Form>
           </Col>
@@ -91,7 +91,7 @@ export default class Header extends React.Component {
             <Form>
               <FormItem>
                 {getFieldDecorator('name', {})(
-                  <Input placeholder="请输入" addonBefore="客户名称" />,
+                  <Input placeholder="请输入" addonBefore="客户名称" allowClear />,
                 )}
               </FormItem>
             </Form>

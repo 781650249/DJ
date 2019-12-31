@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Modal, notification } from 'antd';
-import router from 'umi/router';
 
 @connect(({ orders, loading }) => ({
   orders,
@@ -42,9 +41,12 @@ class ButtonModel extends Component {
         status,
       },
       callback: response => {
+        const {
+          data: { message },
+        } = response;
         if (response.response.status === 200) {
           notification.success({
-            message: '修改成功',
+            message: `${message}`,
           });
           dispatch({
             type: 'orders/fetchOrders',
@@ -54,7 +56,6 @@ class ButtonModel extends Component {
             },
           });
           id.length = 0;
-          router.push('/OrderManage');
           this.setState({
             loading: false,
             visible: false,
@@ -66,7 +67,6 @@ class ButtonModel extends Component {
 
   render() {
     const { visible, loading } = this.state;
-    console.log(this.props, 11111);
     const { children, color } = this.props;
 
     return (

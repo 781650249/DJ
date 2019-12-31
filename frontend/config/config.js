@@ -114,12 +114,12 @@ export default {
               icon: 'unordered-list',
               component: './GoodList',
             },
-            // {
-            //   path: './OrderManage',
-            //   name: '订单管理',
-            //   icon: 'mail',
-            //   component: './OrderManage',
-            // },
+            {
+              path: './OrderManage',
+              name: '订单管理',
+              icon: 'mail',
+              component: './OrderManage',
+            },
             // {
             //   path: './OperationLog',
             //   name: '操作日志',

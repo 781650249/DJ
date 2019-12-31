@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Alert, Dropdown, Menu } from 'antd';
+import { Dropdown, Menu } from 'antd';
 import ButtonModel from './ButtomModel';
 
 const MenuItem = Menu.Item;
@@ -48,29 +48,24 @@ class UpdateOrderStatus extends Component {
   ];
 
   render() {
-    console.log(this.props);
-    const { id } = this.props;
+    const { id, hasSelected } = this.props;
     return (
       <div>
-        <Alert
-          message={
-            <Dropdown
-              overlay={
-                <Menu>
-                  {this.orderStatus.map(item => (
-                    <MenuItem key={item.key}>
-                      <ButtonModel id={id} status={item.key} key={item.key} color={item.color}>
-                        {item.value}
-                      </ButtonModel>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              }
-            >
-              <a>修改订单状态</a>
-            </Dropdown>
+        <Dropdown
+          overlay={
+            <Menu>
+              {this.orderStatus.map(item => (
+                <MenuItem disabled={!hasSelected} key={item.key}>
+                  <ButtonModel id={id} status={item.key} key={item.key} color={item.color}>
+                    {item.value}
+                  </ButtonModel>
+                </MenuItem>
+              ))}
+            </Menu>
           }
-        ></Alert>
+        >
+          <a>修改订单状态</a>
+        </Dropdown>
       </div>
     );
   }

@@ -44,11 +44,7 @@ class UrgentConfirmButton extends Component {
       this.setState({
         loading: true,
       });
-      try {
-        await onConfirm();
-      } catch (e) {
-        console.log(e);
-      }
+      onConfirm();
       this.setState({
         visible: false,
         loading: false,
@@ -75,9 +71,8 @@ class UrgentConfirmButton extends Component {
   };
 
   render() {
-    const { children, button, title, disabled } = this.props;
+    const { children, button, title, dis } = this.props;
     const { loading, visible } = this.state;
-
     return (
       <Popover
         visible={visible}
@@ -86,7 +81,7 @@ class UrgentConfirmButton extends Component {
         content={this.popoverContent()}
         onVisibleChange={this.handleVisibleChange}
       >
-        <Button disabled={disabled} loading={loading} {...button}>
+        <Button style={{ height: '19' }} disabled={!dis} loading={loading} {...button}>
           {children}
         </Button>
       </Popover>

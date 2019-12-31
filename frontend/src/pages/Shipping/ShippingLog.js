@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table } from 'antd';
+import { Table, Popover, Icon } from 'antd';
 import { connect } from 'dva';
 
 @connect(({ loading }) => ({
@@ -32,6 +32,7 @@ export default class ShippingLog extends Component {
         const {
           data: { data, total },
         } = res;
+        console.log(data);
         this.setState({
           data,
           total,
@@ -56,6 +57,20 @@ export default class ShippingLog extends Component {
   };
 
   render() {
+    // 气泡卡片
+    const content = (newCount, updateCount) => (
+      <div>
+        <p>新增数：{newCount}</p>
+        <p>更新数：{updateCount}</p>
+      </div>
+    );
+    const popover = (newCount, updateCount) => (
+      <Popover content={content(newCount, updateCount)} placement="right">
+        <Icon theme="twoTone" type="question-circle" />
+      </Popover>
+    );
+
+    // 表格
     const columns = [
       {
         title: '时间',
@@ -66,24 +81,25 @@ export default class ShippingLog extends Component {
         dataIndex: 'properties.file_name',
       },
       {
+        title: '执行者',
+        dataIndex: 'causer.name',
+      },
+      {
         title: '结果描述',
         dataIndex: 'description',
       },
       {
         title: '成功数',
-        dataIndex: 'properties.success_count',
+        dataIndex: 'properties',
+        render: properties => (
+          <div>
+            {properties.success_count} {popover(properties.new_count, properties.update_count)}
+          </div>
+        ),
       },
       {
         title: '失败数',
         dataIndex: 'properties.error_count',
-      },
-      {
-        title: '新增数',
-        dataIndex: 'properties.new_count',
-      },
-      {
-        title: '更新数',
-        dataIndex: 'properties.update_count',
       },
       {
         title: '错误摘要',

@@ -125,7 +125,7 @@ class UploadOrder extends Component {
             <span style={{ color: 'red' }}>*</span> 请下载模板，根据模板提示填入数据；
           </p>
           <span>
-            <a href="/storage/excel/order_shipping_01.xlsx" style={{ color: 'red' }}>
+            <a href="/storage/excel/import_shipping_excel_01.xlsx" style={{ color: 'red' }}>
               <Icon type="paper-clip" />
               下载模板
             </a>

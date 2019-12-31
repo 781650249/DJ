@@ -58,22 +58,31 @@ export default class ShippingList extends Component {
   // 搜索订单
   handleSearch = e => {
     e.preventDefault();
-    const {
-      form: { validateFields },
-    } = this.props;
+    const { form } = this.props;
+    const { validateFields } = form;
 
     validateFields((err, values) => {
-      if (!err) {
-        const formatValues = formatCriteria(values);
-        this.setState({
-          filter: formatValues,
-        });
+      if (err) return;
 
-        this.fetch({
-          page: 1,
-          filter: formatValues,
-        });
+      const tmpValus = values;
+
+      if (values.created_at && values.created_at.length) {
+        tmpValus.created_at = [
+          moment(values.created_at[0]).startOf('day'),
+          moment(values.created_at[1]).endOf('day'),
+        ];
       }
+
+      const formatValues = formatCriteria(tmpValus);
+
+      this.setState({
+        filter: formatValues,
+      });
+
+      this.fetch({
+        page: 1,
+        filter: formatValues,
+      });
     });
   };
 
@@ -175,14 +184,10 @@ export default class ShippingList extends Component {
             </FormItem>
           </Col>
           <Col xs={12} md={8} lg={8} xl={5}>
-            <FormItem label="操作时间">
+            <FormItem label="导入时间">
               {getFieldDecorator('created_at')(
                 <RangePicker
                   style={{ width: '100%' }}
-                  defaultPickerValue={[
-                    moment('2019/12/1', 'YYYY/MM/DD'),
-                    moment('2019/12/1', 'YYYY/MM/DD'),
-                  ]}
                   showTime
                   format="YYYY/MM/DD"
                   ranges={{
@@ -273,7 +278,7 @@ export default class ShippingList extends Component {
         render: order => (order ? <span>是</span> : <span>否</span>),
       },
       {
-        title: '更新时间',
+        title: '导入时间',
         dataIndex: 'created_at',
         sorter: true,
       },

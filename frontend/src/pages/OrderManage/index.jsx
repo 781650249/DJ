@@ -140,7 +140,6 @@ export default class Content extends Component {
                 <Button size="small" disabled={!hasSelected} type="primary" onClick={this.start}>
                   取消全选
                 </Button>
-
                 <span style={{ marginLeft: 12 }}>
                   {hasSelected ? `当前选中了 ${selectedRowKeys.length} 项` : ''}
                 </span>
@@ -148,14 +147,15 @@ export default class Content extends Component {
             }
             type="info"
             showIcon
-          ></Alert>
+          />
+
           <Alert
             message={
-              <div style={{ display: 'flex', verticalAlign: 'middle' }}>
-                <HurryOrder hasSelected={hasSelected} id={selectedRowKeys}>
-                  加急标记
-                </HurryOrder>
+              <div style={{ display: 'flex' }}>
                 <UpdateOrderStatus hasSelected={hasSelected} id={selectedRowKeys} />
+                <span style={{ marginLeft: '20px' }}>
+                  <HurryOrder hasSelected={hasSelected} id={selectedRowKeys} />
+                </span>
               </div>
             }
             type="error"

@@ -32,7 +32,6 @@ export default class ShippingLog extends Component {
         const {
           data: { data, total },
         } = res;
-        console.log(data);
         this.setState({
           data,
           total,

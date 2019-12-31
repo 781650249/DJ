@@ -69,8 +69,8 @@ export default class Header extends React.Component {
         onSubmit={this.handleSearch}
       >
         <Row type="flex">
-          <Col span={4}>
-            <Form>
+          <Col xs={12} md={8} lg={4}>
+            <Form layout="inline">
               <FormItem>
                 {getFieldDecorator('keyword', {
                   rules: [{ required: true, message: '订单号不能为空' }],
@@ -78,7 +78,7 @@ export default class Header extends React.Component {
               </FormItem>
             </Form>
           </Col>
-          <Col span={4} offset={2}>
+          <Col xs={12} md={8} lg={4} offset={2}>
             <Form>
               <FormItem>
                 {getFieldDecorator('email', {
@@ -87,7 +87,7 @@ export default class Header extends React.Component {
               </FormItem>
             </Form>
           </Col>
-          <Col span={4} offset={2}>
+          <Col xs={12} md={8} lg={4} offset={2}>
             <Form>
               <FormItem>
                 {getFieldDecorator('name', {})(
@@ -124,7 +124,7 @@ export default class Header extends React.Component {
           <div style={{ display: count > 8 ? 'block' : 'none' }}>
             <Row type="flex" justify="start">
               <Col xs={12} md={8} lg={6}>
-                <FormItem label="操作时间">
+                <FormItem labelAlign="left" label="订单时间">
                   {getFieldDecorator('created_at')(
                     <RangePicker
                       style={{ width: '100%' }}
@@ -139,8 +139,8 @@ export default class Header extends React.Component {
                 </FormItem>
               </Col>
 
-              <Col xs={12} md={8} lg={6}>
-                <FormItem label="操作时间">
+              <Col offset={3} xs={12} md={8} lg={6}>
+                <FormItem labelAlign="left" label="发稿时间">
                   {getFieldDecorator('published_at')(
                     <RangePicker
                       style={{ width: '100%' }}
@@ -155,8 +155,8 @@ export default class Header extends React.Component {
                 </FormItem>
               </Col>
 
-              <Col xs={12} md={8} lg={6}>
-                <FormItem label="操作时间">
+              <Col offset={3} xs={12} md={8} lg={6}>
+                <FormItem labelAlign="left" label="生产时间">
                   {getFieldDecorator('produced_at')(
                     <RangePicker
                       style={{ width: '100%' }}
@@ -175,7 +175,7 @@ export default class Header extends React.Component {
 
           <div span={24} style={{ position: 'absolute', right: 5, top: 0 }}>
             <Button loading={isLoading} type="primary" htmlType="submit">
-              Search
+              查询
             </Button>
             <a style={{ marginLeft: 8, fontSize: 12 }} onClick={this.toggle}>
               Collapse <Icon type={this.state.expand ? 'up' : 'down'} />

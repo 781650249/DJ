@@ -56,7 +56,13 @@ class UpdateOrderStatus extends Component {
             <Menu>
               {this.orderStatus.map(item => (
                 <MenuItem disabled={!hasSelected} key={item.key}>
-                  <ButtonModel id={id} status={item.key} key={item.key} color={item.color}>
+                  <ButtonModel
+                    dis={hasSelected}
+                    id={id}
+                    status={item.key}
+                    key={item.key}
+                    color={item.color}
+                  >
                     {item.value}
                   </ButtonModel>
                 </MenuItem>

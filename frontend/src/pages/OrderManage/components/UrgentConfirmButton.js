@@ -10,7 +10,7 @@ class UrgentConfirmButton extends Component {
   };
 
   popoverContent = () => {
-    const { content } = this.props;
+    const { content, dis } = this.props;
     const { loading } = this.state;
 
     return (
@@ -26,6 +26,7 @@ class UrgentConfirmButton extends Component {
             size="small"
             onClick={this.confirm}
             style={{ marginLeft: 5 }}
+            disabled={!dis}
           >
             确认
           </Button>

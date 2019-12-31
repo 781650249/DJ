@@ -67,7 +67,7 @@ class ButtonModel extends Component {
 
   render() {
     const { visible, loading } = this.state;
-    const { children, color } = this.props;
+    const { children, color, dis } = this.props;
 
     return (
       <div>
@@ -75,6 +75,7 @@ class ButtonModel extends Component {
           . {children}
         </div>
         <Modal
+          okButtonProps={{ disabled: !dis }}
           visible={visible}
           title="确认修改"
           onCancel={this.cancel}

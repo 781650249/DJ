@@ -12,6 +12,13 @@ export const formData = async (resource, params) => {
     data: fileForm,
   });
 };
+/**
+ * Resource的查询接口
+ */
+export async function query(resource, params) {
+  // console.log('params', params);
+  return request(`/api/${resource}?${stringify(params)}`);
+}
 
 // 订单的获取搜索
 export async function getOrders(params) {

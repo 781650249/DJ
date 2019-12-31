@@ -23,6 +23,9 @@ Route::group(['namespace'   => 'API'], function ($api) {
 
     // 注册
     $api->post('/user/register', 'UserController@store');
+
+    // 下载导出的订单excel
+    $api->get('/orders/download_excel/{token}', 'OrderController@downloadExcel');
 });
 
 // 登陆验证路由
@@ -56,6 +59,9 @@ Route::group(['middleware' => 'auth:api', 'namespace'  => 'API'], function ($api
 
     // 批量取消加急
     $api->post('/order/batch_cancel_urgent', 'OrderController@batchCancelUrgent');
+
+    // 导出订单
+    $api->get('/orders/export', 'OrderController@export');
 
     $api->resource('/orders', 'OrderController');
 

@@ -65,6 +65,10 @@ class Order extends Model
         return $this->belongsTo(Products::class, 'sku', 'sku');
     }
 
+    public function shipping() {
+        return $this->hasOne(OrderShipping::class, 'order_number', 'order_number');
+    }
+
     public function files() {
         return $this->hasMany(File::class, 'order_id');
     }

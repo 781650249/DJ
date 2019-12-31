@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Row, Col, Input, Button, Icon, Select, DatePicker } from 'antd';
-import LoadOrder from '@/components/OrderManage/LoadOrder';
+import LeadOrders from '@/components/OrderManage/LeadOrders';
 import { connect } from 'dva';
 import ExportGoods from './Export';
 import moment from 'moment';
@@ -120,72 +120,68 @@ export default class Header extends React.Component {
               </Form.Item>
             </Form>
           </Col>
-
-          <div style={{ display: count > 8 ? 'block' : 'none' }}>
-            <Row type="flex" justify="start">
-              <Col xs={12} md={8} lg={6}>
-                <FormItem labelAlign="left" label="订单时间">
-                  {getFieldDecorator('created_at')(
-                    <RangePicker
-                      style={{ width: '100%' }}
-                      showTime
-                      ranges={{
-                        今天: [moment().startOf('day'), moment().endOf('day')],
-                        '7天内': [moment().subtract(7, 'days'), moment()],
-                        '1个月内': [moment().subtract(30, 'days'), moment()],
-                      }}
-                    />,
-                  )}
-                </FormItem>
-              </Col>
-
-              <Col offset={3} xs={12} md={8} lg={6}>
-                <FormItem labelAlign="left" label="发稿时间">
-                  {getFieldDecorator('published_at')(
-                    <RangePicker
-                      style={{ width: '100%' }}
-                      showTime
-                      ranges={{
-                        今天: [moment().startOf('day'), moment().endOf('day')],
-                        '7天内': [moment().subtract(7, 'days'), moment()],
-                        '1个月内': [moment().subtract(30, 'days'), moment()],
-                      }}
-                    />,
-                  )}
-                </FormItem>
-              </Col>
-
-              <Col offset={3} xs={12} md={8} lg={6}>
-                <FormItem labelAlign="left" label="生产时间">
-                  {getFieldDecorator('produced_at')(
-                    <RangePicker
-                      style={{ width: '100%' }}
-                      showTime
-                      ranges={{
-                        今天: [moment().startOf('day'), moment().endOf('day')],
-                        '7天内': [moment().subtract(7, 'days'), moment()],
-                        '1个月内': [moment().subtract(30, 'days'), moment()],
-                      }}
-                    />,
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-          </div>
-
-          <div span={24} style={{ position: 'absolute', right: 5, top: 0 }}>
-            <Button loading={isLoading} type="primary" htmlType="submit">
-              查询
-            </Button>
-            <a style={{ marginLeft: 8, fontSize: 12 }} onClick={this.toggle}>
-              Collapse <Icon type={this.state.expand ? 'up' : 'down'} />
-            </a>
-          </div>
         </Row>
+        <div style={{ display: count > 8 ? 'block' : 'none' }}>
+          <Row type="flex" justify="start">
+            <Form layout="inline">
+              <FormItem labelAlign="left" label="订单时间">
+                {getFieldDecorator('created_at')(
+                  <RangePicker
+                    style={{ width: '100%' }}
+                    showTime
+                    ranges={{
+                      今天: [moment().startOf('day'), moment().endOf('day')],
+                      '7天内': [moment().subtract(7, 'days'), moment()],
+                      '1个月内': [moment().subtract(30, 'days'), moment()],
+                    }}
+                  />,
+                )}
+              </FormItem>
+
+              <FormItem labelAlign="left" label="发稿时间">
+                {getFieldDecorator('published_at')(
+                  <RangePicker
+                    style={{ width: '100%' }}
+                    showTime
+                    ranges={{
+                      今天: [moment().startOf('day'), moment().endOf('day')],
+                      '7天内': [moment().subtract(7, 'days'), moment()],
+                      '1个月内': [moment().subtract(30, 'days'), moment()],
+                    }}
+                  />,
+                )}
+              </FormItem>
+
+              <FormItem labelAlign="left" label="生产时间">
+                {getFieldDecorator('produced_at')(
+                  <RangePicker
+                    style={{ width: '100%' }}
+                    showTime
+                    ranges={{
+                      今天: [moment().startOf('day'), moment().endOf('day')],
+                      '7天内': [moment().subtract(7, 'days'), moment()],
+                      '1个月内': [moment().subtract(30, 'days'), moment()],
+                    }}
+                  />,
+                )}
+              </FormItem>
+            </Form>
+          </Row>
+        </div>
+
+        <div span={24} style={{ position: 'absolute', right: 5, top: 0 }}>
+          <Button loading={isLoading} type="primary" htmlType="submit">
+            查询
+          </Button>
+          <a style={{ marginLeft: 8, fontSize: 12 }} onClick={this.toggle}>
+            Collapse <Icon type={this.state.expand ? 'up' : 'down'} />
+          </a>
+        </div>
+        {/* </Row> */}
 
         <Row style={{ marginTop: '20px' }} type="flex" justify="start">
           <Col>
-            <LoadOrder />
+            <LeadOrders />
           </Col>
           <Col offset={1}>
             <ExportGoods />

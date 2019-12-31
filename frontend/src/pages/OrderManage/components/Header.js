@@ -62,6 +62,49 @@ export default class Header extends React.Component {
     } = this.props;
     const { Option } = Select;
     const count = this.state.expand ? 10 : 6;
+    const orderStatus = [
+      {
+        key: 'un_download',
+        value: '未下载',
+      },
+      {
+        key: 'downloaded',
+        value: '已下载',
+      },
+      {
+        key: 'processing',
+        value: '处理中',
+      },
+      {
+        key: 'processed',
+        value: '已处理',
+      },
+      {
+        key: 'published',
+        value: '已发稿',
+      },
+      {
+        key: 'confirmed',
+        value: '已确认',
+      },
+      {
+        key: 'produced',
+        value: '已生产',
+      },
+      {
+        key: 'frozen',
+        value: '已冻结',
+      },
+      {
+        key: 'wait_change',
+        value: '待修改',
+      },
+    ];
+    const menu = orderStatus.map(item => (
+      <Option value={item.key} key={item.value}>
+        {item.value}
+      </Option>
+    ));
 
     return (
       <Form
@@ -69,52 +112,31 @@ export default class Header extends React.Component {
         onSubmit={this.handleSearch}
       >
         <Row type="flex">
-          <Col xs={12} md={8} lg={4}>
-            <Form layout="inline">
-              <FormItem>
-                {getFieldDecorator('keyword')(
-                  <Input addonBefore="订单编号" placeholder="请输入" allowClear />,
-                )}
-              </FormItem>
-            </Form>
-          </Col>
-          <Col xs={12} md={8} lg={4} offset={2}>
-            <Form>
-              <FormItem>
-                {getFieldDecorator('email')(
-                  <Input placeholder="请输入" addonBefore="客户邮箱" allowClear />,
-                )}
-              </FormItem>
-            </Form>
-          </Col>
-          <Col xs={12} md={8} lg={4} offset={2}>
-            <Form>
-              <FormItem>
-                {getFieldDecorator('name', {})(
-                  <Input placeholder="请输入" addonBefore="客户名称" allowClear />,
-                )}
-              </FormItem>
-            </Form>
-          </Col>
+          <Form layout="inline">
+            <FormItem labelAlign="left" label="订单编号">
+              {getFieldDecorator('keyword')(
+                <Input placeholder="请输入" style={{ width: '260px' }} allowClear />,
+              )}
+            </FormItem>
 
-          <Col offset={2}>
+            <FormItem labelAlign="left" label="客户邮箱">
+              {getFieldDecorator('email')(
+                <Input placeholder="请输入" style={{ width: '260px' }} allowClear />,
+              )}
+            </FormItem>
+
+            <FormItem labelAlign="left" label="客户名称">
+              {getFieldDecorator('name', {})(
+                <Input placeholder="请输入" style={{ width: '260px' }} allowClear />,
+              )}
+            </FormItem>
+          </Form>
+          <Col offset={1}>
             <Form>
               <Form.Item>
                 {getFieldDecorator('status', {})(
-                  <Select allowClear placeholder="不限" style={{ width: 120 }}>
-                    <Option value="un_download" disabled>
-                      未下载
-                    </Option>
-                    <Option value="downloaded" disabled>
-                      已下载
-                    </Option>
-                    <Option value="processing"> 处理中</Option>
-                    <Option value="processed">处理完成</Option>
-                    <Option value="published"> 已发稿</Option>
-                    <Option value="confirmed">已确认</Option>
-                    <Option value="produced">已生产</Option>
-                    <Option value="frozen">冻结</Option>
-                    <Option value="wait_change">待修改</Option>
+                  <Select allowClear placeholder="不限" style={{ width: 100 }}>
+                    {menu}
                   </Select>,
                 )}
               </Form.Item>
@@ -127,7 +149,7 @@ export default class Header extends React.Component {
               <FormItem labelAlign="left" label="订单时间">
                 {getFieldDecorator('created_at')(
                   <RangePicker
-                    style={{ width: '100%' }}
+                    style={{ width: '260px' }}
                     showTime
                     ranges={{
                       今天: [moment().startOf('day'), moment().endOf('day')],
@@ -141,7 +163,7 @@ export default class Header extends React.Component {
               <FormItem labelAlign="left" label="发稿时间">
                 {getFieldDecorator('published_at')(
                   <RangePicker
-                    style={{ width: '100%' }}
+                    style={{ width: '260px' }}
                     showTime
                     ranges={{
                       今天: [moment().startOf('day'), moment().endOf('day')],
@@ -155,7 +177,7 @@ export default class Header extends React.Component {
               <FormItem labelAlign="left" label="生产时间">
                 {getFieldDecorator('produced_at')(
                   <RangePicker
-                    style={{ width: '100%' }}
+                    style={{ width: '260px' }}
                     showTime
                     ranges={{
                       今天: [moment().startOf('day'), moment().endOf('day')],
@@ -177,7 +199,6 @@ export default class Header extends React.Component {
             Collapse <Icon type={this.state.expand ? 'up' : 'down'} />
           </a>
         </div>
-        {/* </Row> */}
 
         <Row style={{ marginTop: '20px' }} type="flex" justify="start">
           <Col>

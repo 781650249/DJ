@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Table, Button, Form, Select, Input, DatePicker, Modal } from 'antd';
+import { Table, Button, Form, Select, Input, DatePicker, Modal, Row, Col } from 'antd';
 import moment from 'moment';
 import UploadOrder from './components/UploadOrder';
 import { formatCriteria } from '../../utils/utils';
+import styles from './shippingList.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -57,22 +58,31 @@ export default class ShippingList extends Component {
   // 搜索订单
   handleSearch = e => {
     e.preventDefault();
-    const {
-      form: { validateFields },
-    } = this.props;
+    const { form } = this.props;
+    const { validateFields } = form;
 
     validateFields((err, values) => {
-      if (!err) {
-        const formatValues = formatCriteria(values);
-        this.setState({
-          filter: formatValues,
-        });
+      if (err) return;
 
-        this.fetch({
-          page: 1,
-          filter: formatValues,
-        });
+      const tmpValus = values;
+
+      if (values.created_at && values.created_at.length) {
+        tmpValus.created_at = [
+          moment(values.created_at[0]).startOf('day'),
+          moment(values.created_at[1]).endOf('day'),
+        ];
       }
+
+      const formatValues = formatCriteria(tmpValus);
+
+      this.setState({
+        filter: formatValues,
+      });
+
+      this.fetch({
+        page: 1,
+        filter: formatValues,
+      });
     });
   };
 
@@ -151,60 +161,78 @@ export default class ShippingList extends Component {
   };
 
   render() {
+    const { fetching, form } = this.props;
+    const { data, total, page, pageSize } = this.state;
+
     // 搜索订单
-    const {
-      form: { getFieldDecorator },
-    } = this.props;
+    const { getFieldDecorator } = form;
     const query = (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <FormItem label="订单">
-          {getFieldDecorator('order_number')(
-            <Input placeholder="请输入" style={{ width: '260px' }} allowClear />,
-          )}
-        </FormItem>
-        <FormItem label="物流单号">
-          {getFieldDecorator('track_number')(
-            <Input placeholder="请输入" style={{ width: '260px' }} allowClear />,
-          )}
-        </FormItem>
-        <FormItem label="操作时间">
-          {getFieldDecorator('created_at')(
-            <RangePicker
-              style={{ width: '270px' }}
-              defaultPickerValue={[
-                moment('2019/12/1', 'YYYY/MM/DD'),
-                moment('2019/12/1', 'YYYY/MM/DD'),
-              ]}
-              showTime
-              format="YYYY/MM/DD"
-              ranges={{
-                今天: [moment().startOf('day'), moment().endOf('day')],
-                '7天内': [moment().subtract(7, 'days'), moment()],
-                一个月内: [moment().subtract(30, 'days'), moment()],
-              }}
-            />,
-          )}
-        </FormItem>
-        <FormItem label="是否匹配：">
-          {getFieldDecorator('has_order')(
-            <Select style={{ width: 80 }} placeholder="不限" allowClear>
-              <Option value={1}>是</Option>
-              <Option value={0}>否</Option>
-            </Select>,
-          )}
-        </FormItem>
-        <FormItem style={{ marginLeft: '100px' }}>
-          <Button type="primary" style={{ width: '80px' }} htmlType="submit">
-            查询
-          </Button>
-          ,
-        </FormItem>
-        <FormItem>
-          <Button style={{ width: '80px' }} onClick={this.handleReset}>
-            重置
-          </Button>
-          ,
-        </FormItem>
+      <Form onSubmit={this.handleSearch} layout="inline" className={styles.form}>
+        <Row gutter={16}>
+          <Col xs={12} md={8} lg={8} xl={5}>
+            <FormItem label="订单">
+              {getFieldDecorator('order_number')(
+                <Input placeholder="请输入" style={{ width: '100%' }} allowClear />,
+              )}
+            </FormItem>
+          </Col>
+          <Col xs={12} md={8} lg={8} xl={5}>
+            <FormItem label="物流单号">
+              {getFieldDecorator('track_number')(
+                <Input placeholder="请输入" style={{ width: '100%' }} allowClear />,
+              )}
+            </FormItem>
+          </Col>
+          <Col xs={12} md={8} lg={8} xl={5}>
+            <FormItem label="导入时间">
+              {getFieldDecorator('created_at')(
+                <RangePicker
+                  style={{ width: '100%' }}
+                  showTime
+                  format="YYYY/MM/DD"
+                  ranges={{
+                    今天: [moment().startOf('day'), moment().endOf('day')],
+                    '7天内': [moment().subtract(7, 'days'), moment()],
+                    一个月内: [moment().subtract(30, 'days'), moment()],
+                  }}
+                />,
+              )}
+            </FormItem>
+          </Col>
+          <Col xs={12} md={8} lg={8} xl={5}>
+            <FormItem label="是否匹配：">
+              {getFieldDecorator('has_order')(
+                <Select style={{ width: '100%' }} placeholder="不限" allowClear>
+                  <Option value={1}>是</Option>
+                  <Option value={0}>否</Option>
+                </Select>,
+              )}
+            </FormItem>
+          </Col>
+          <Col
+            xs={24}
+            md={16}
+            lg={16}
+            xl={4}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              height: 40,
+              justifyContent: 'flex-end',
+            }}
+          >
+            <FormItem>
+              <Button type="primary" htmlType="submit" loading={fetching}>
+                查询
+              </Button>
+            </FormItem>
+            <FormItem>
+              <Button style={{ marginLeft: '8px' }} onClick={this.handleReset} disabled={fetching}>
+                重置
+              </Button>
+            </FormItem>
+          </Col>
+        </Row>
       </Form>
     );
 
@@ -250,14 +278,12 @@ export default class ShippingList extends Component {
         render: order => (order ? <span>是</span> : <span>否</span>),
       },
       {
-        title: '更新时间',
+        title: '导入时间',
         dataIndex: 'created_at',
         sorter: true,
       },
     ];
 
-    const { fetching } = this.props;
-    const { data, total, page, pageSize } = this.state;
     return (
       <div>
         {query}

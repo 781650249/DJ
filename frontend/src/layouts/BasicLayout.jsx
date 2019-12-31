@@ -10,8 +10,9 @@ import { connect } from 'dva';
 import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
-import { getAuthorityFromRouter } from '@/utils/utils'; // import logo from '../assets/logo.svg';
-import img1 from '@/assets/imgs/logo.png';
+import { getAuthorityFromRouter } from '@/utils/utils';
+// import logo from '../assets/logo.svg';
+import logo from '@/assets/imgs/logo.png';
 
 const noMatch = (
   <Result
@@ -60,12 +61,11 @@ const BasicLayout = props => {
   };
   return (
     <ProLayout
-      menuHeaderRender={() => (
-        <Link style={{ textDecoration: 'none', Color: '#0096FA' }} to="/">
-          {/* {logoDom} */}
-          <img alt="_" src={img1} />
-          &nbsp; &nbsp; &nbsp;DJ Demo
-          <h2 style={{ Color: '#0096FA', fontWeight: '700', textAlign: 'left' }}> </h2>
+      logo={logo}
+      menuHeaderRender={(logoDom, titleDom) => (
+        <Link to="/">
+          {logoDom}
+          {titleDom}
         </Link>
       )}
       onCollapse={handleMenuCollapse}

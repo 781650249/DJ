@@ -18,7 +18,7 @@ class CreateOrderShippingsTable extends Migration
 
             $table->string('order_number')->index()->comment('订单号');
             $table->string('track_number')->index()->comment('物流编号');
-            $table->text('note')->comment('备注');
+            $table->text('note')->nullable()->comment('备注');
             $table->dateTime('shipping_date')->nullable()->comment('物流创建时间');
             $table->timestamps();
         });

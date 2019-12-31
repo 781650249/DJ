@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\ActivityLog;
 use App\Customer;
+use App\Exports\ExportOrderExcel;
 use App\Imports\ImportToArray;
 use App\Jobs\DownloadZipFileJob;
 use App\Order;
@@ -12,6 +13,7 @@ use App\Util\Util;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
@@ -526,7 +528,7 @@ class OrderController extends Controller {
                 'old_status' => $oldStatus,
                 'new_status' => $request->status
             ])
-            ->log('订单状态改为：' . $request->status);
+            ->log('修改订单状态为：' . (Order::ORDER_STATUS[$request->status] ?? ''));
 
         return response()->json([
             'message' => '修改成功'
@@ -710,7 +712,7 @@ class OrderController extends Controller {
                     'ip'    => $request->ip(),
                     'agent' => $request->userAgent()
                 ])
-                ->log("订单 {$order->oid} 成功标记为加急");
+                ->log("订单 {$order->oid} 标记为加急");
         }
 
         return response()->json([
@@ -777,5 +779,51 @@ class OrderController extends Controller {
             'error_of_time'   => $errorOfTimes,
             'orders_count'    => count($orders)
         ], 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function export(Request $request) {
+        $query = $this->baseSearch($request);
+
+        $orders = $query->with([
+            'customer',
+            'product',
+            'shipping'
+        ])
+            ->limit(5000)
+            ->get();
+
+        $fileName = str_random(16);
+
+        Excel::store(new ExportOrderExcel($orders), $fileName, 'tmp', \Maatwebsite\Excel\Excel::XLSX);
+
+        return response()->json([
+            'file_token' => $fileName
+        ]);
+    }
+
+    /**
+     * 下载导出的excel
+     * @param Request $request
+     * @param $token
+     * @return $this|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function downloadExcel(Request $request, $token) {
+        if (!Storage::disk('tmp')->exists($token)) {
+            return response('not found', 404);
+        }
+
+        $filePath = Storage::disk('tmp')->path($token);
+
+        $fileName = Carbon::now()->format('Y-m-d');
+
+        $fileName = $fileName . '.xlsx';
+
+        return response()
+            ->download($filePath, $fileName)
+            ->deleteFileAfterSend(true);
     }
 }

@@ -139,7 +139,7 @@ export default {
               component: './OrderOperateLog',
             },
             {
-              path: './Personal',
+              path: './personal',
               name: '个人中心',
               icon: 'user',
               component: './Personal',

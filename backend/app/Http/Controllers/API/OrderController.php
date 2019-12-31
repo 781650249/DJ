@@ -526,7 +526,7 @@ class OrderController extends Controller {
                 'old_status' => $oldStatus,
                 'new_status' => $request->status
             ])
-            ->log('订单状态改为：' . $request->status);
+            ->log('修改订单状态为：' . (Order::ORDER_STATUS[$request->status] ?? ''));
 
         return response()->json([
             'message' => '修改成功'
@@ -710,7 +710,7 @@ class OrderController extends Controller {
                     'ip'    => $request->ip(),
                     'agent' => $request->userAgent()
                 ])
-                ->log("订单 {$order->oid} 成功标记为加急");
+                ->log("订单 {$order->oid} 标记为加急");
         }
 
         return response()->json([

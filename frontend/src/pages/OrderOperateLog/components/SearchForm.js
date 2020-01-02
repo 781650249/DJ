@@ -79,7 +79,12 @@ class SearchPane extends Component {
                 {getFieldDecorator('created_at')(
                   <RangePicker
                     style={{ width: '100%' }}
-                    showTime
+                    showTime={{
+                      defaultValue: [
+                        moment('00:00:00', 'HH:mm:ss'),
+                        moment('23:59:59', 'HH:mm:ss'),
+                      ],
+                    }}
                     ranges={{
                       今天: [moment().startOf('day'), moment().endOf('day')],
                       '7天内': [moment().subtract(7, 'days'), moment()],

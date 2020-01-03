@@ -107,10 +107,7 @@ export default class Header extends React.Component {
     ));
 
     return (
-      <Form
-        className={{ padding: '24px', background: '#fbfbfb', border: '1px solid #d9d9d9' }}
-        onSubmit={this.handleSearch}
-      >
+      <Form onSubmit={this.handleSearch}>
         <Row type="flex">
           <Form layout="inline">
             <FormItem labelAlign="left" label="订单编号">
@@ -200,7 +197,7 @@ export default class Header extends React.Component {
           </a>
         </div>
 
-        <Row style={{ marginTop: '20px' }} type="flex" justify="start">
+        <Row style={{ marginTop: '10px' }} type="flex" justify="start">
           <Col>
             <LeadOrders />
           </Col>

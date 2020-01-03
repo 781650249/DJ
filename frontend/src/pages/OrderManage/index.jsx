@@ -59,7 +59,7 @@ export default class Content extends Component {
       },
       { title: '订单编号', dataIndex: 'oid', key: 'oid', width: '100px' },
       { title: '订单号', dataIndex: 'number', key: 'number' },
-      { title: '订单时间', dataIndex: 'order_date', key: 'order_date', width: '100px' },
+      { title: '订单时间', dataIndex: 'created_at', key: 'created_at', width: '100px' },
       { title: '订单状态', dataIndex: 'order_status', key: 'order_status', width: '100px' },
       { title: '发稿时间', dataIndex: 'published_at', key: 'published_at' },
       { title: '生产时间', dataIndex: 'produced_at', key: 'produced_at' },
@@ -160,7 +160,7 @@ export default class Content extends Component {
               </div>
             }
             type="error"
-            showIcon
+            // showIcon
           />
         </div>
         <Table

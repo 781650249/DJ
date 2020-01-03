@@ -2,7 +2,7 @@ import { Modal, Button } from 'antd';
 import React from 'react';
 import LoadExcel from './components/LoadExcel';
 
-class LeadGoods extends React.Component {
+class LoadOrders extends React.Component {
   state = {
     visible: false,
     confirmLoading: false,
@@ -36,11 +36,11 @@ class LeadGoods extends React.Component {
     return (
       <div>
         <Button type="primary" onClick={this.showModal}>
-          导入商品
+          导入订单
         </Button>
         <Modal
-          //  maskClosable={false}
-          title="导入商品"
+          maskClosable={false}
+          title="导入订单"
           visible={visible}
           confirmLoading={confirmLoading}
           onCancel={this.handleCancel}
@@ -52,4 +52,4 @@ class LeadGoods extends React.Component {
     );
   }
 }
-export default LeadGoods;
+export default LoadOrders;

@@ -5,13 +5,11 @@ export default {
   state: {
     condition: {
       double_side: 0,
-      keyword: '',
-      page: '',
-      limit: 10,
     },
     result: {
       total: 0, // 总数据量
       data: [], // 当前页数据
+      filter: '',
     },
   },
   reducers: {
@@ -37,6 +35,7 @@ export default {
           total: response.data.total,
           data: response.data.data,
           page: response.data.current_page,
+          filter: { ...payload.filter },
         },
       });
     },
@@ -54,10 +53,8 @@ export default {
     },
     *import({ payload, callback }, { call }) {
       const res = yield call(formData, 'products/import', payload);
-      const { data, response } = res;
-      if (response.status === 200) {
-        if (callback) callback(data);
-      }
+      const { data } = res;
+      if (callback) callback(data);
     },
   },
 };

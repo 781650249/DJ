@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Popover, Button, Alert } from 'antd';
+import { Popover, Button } from 'antd';
 
 @connect(() => ({}))
-class DeleteConfirmButton extends Component {
+class UrgentConfirmButton extends Component {
   state = {
     visible: false,
+    loading: false,
   };
 
   popoverContent = () => {
-    const { content, errorMessage, loading } = this.props;
+    const { content, dis } = this.props;
+    const { loading } = this.state;
 
     return (
       <>
-        <span> {errorMessage && <Alert type="error" message={errorMessage} />} </span>
         <div>{content}</div>
         <p style={{ textAlign: 'right', marginTop: 15 }}>
           <Button size="small" onClick={this.hide}>
@@ -25,6 +26,7 @@ class DeleteConfirmButton extends Component {
             size="small"
             onClick={this.confirm}
             style={{ marginLeft: 5 }}
+            disabled={!dis}
           >
             确认
           </Button>
@@ -40,7 +42,14 @@ class DeleteConfirmButton extends Component {
     const { onConfirm } = this.props;
 
     if (onConfirm) {
-      await onConfirm();
+      this.setState({
+        loading: true,
+      });
+      onConfirm();
+      this.setState({
+        visible: false,
+        loading: false,
+      });
     }
   };
 
@@ -63,9 +72,8 @@ class DeleteConfirmButton extends Component {
   };
 
   render() {
-    const { children, button, title, disabled } = this.props;
-    const { visible } = this.state;
-
+    const { children, button, title, dis } = this.props;
+    const { loading, visible } = this.state;
     return (
       <Popover
         visible={visible}
@@ -74,7 +82,7 @@ class DeleteConfirmButton extends Component {
         content={this.popoverContent()}
         onVisibleChange={this.handleVisibleChange}
       >
-        <Button disabled={disabled} {...button}>
+        <Button style={{ height: '19' }} disabled={!dis} loading={loading} {...button}>
           {children}
         </Button>
       </Popover>
@@ -82,4 +90,4 @@ class DeleteConfirmButton extends Component {
   }
 }
 
-export default DeleteConfirmButton;
+export default UrgentConfirmButton;

@@ -13,11 +13,11 @@ const acceptFileType = [
 ];
 const acceptFileSize = 10; // 可接受文件大小
 
-@connect(({ Goods, loading }) => ({
-  Goods,
-  submitting: loading.effects['Goods/import'],
+@connect(({ orders, loading }) => ({
+  orders,
+  submitting: loading.effects['orders/import'],
 }))
-class LoadGoods extends Component {
+class LoadExcel extends Component {
   state = {
     file: null,
     errorMessage: null,
@@ -69,12 +69,11 @@ class LoadGoods extends Component {
     });
 
     await dispatch({
-      type: 'Goods/import',
+      type: 'orders/import',
       payload: {
         files: file,
       },
       callback: (data, response) => {
-        console.log(data);
         if (response.status === 200) {
           notification.success({
             message: `${data.message}`,
@@ -89,18 +88,18 @@ class LoadGoods extends Component {
               </>
             ),
           });
-        }
-        onCancel();
 
-        dispatch({
-          type: 'Goods/fetchGoods',
-          payload: {
-            page: 1,
-          },
-        });
+          onCancel();
+
+          dispatch({
+            type: 'orders/fetchOrders',
+            payload: {
+              page: 1,
+            },
+          });
+        }
       },
     });
-
     this.setState({
       subming: false,
       file: null,
@@ -142,4 +141,4 @@ class LoadGoods extends Component {
   }
 }
 
-export default LoadGoods;
+export default LoadExcel;

@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Popover, Button, Alert } from 'antd';
+import { Popover, Button } from 'antd';
 
 @connect(() => ({}))
-class DeleteConfirmButton extends Component {
+class StatusConfirmButton extends Component {
   state = {
     visible: false,
+    loading: false,
   };
 
   popoverContent = () => {
-    const { content, errorMessage, loading } = this.props;
+    const { content } = this.props;
+    const { loading } = this.state;
 
     return (
       <>
-        <span> {errorMessage && <Alert type="error" message={errorMessage} />} </span>
         <div>{content}</div>
         <p style={{ textAlign: 'right', marginTop: 15 }}>
           <Button size="small" onClick={this.hide}>
@@ -40,7 +41,14 @@ class DeleteConfirmButton extends Component {
     const { onConfirm } = this.props;
 
     if (onConfirm) {
-      await onConfirm();
+      this.setState({
+        loading: true,
+      });
+      try {
+        await onConfirm();
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 
@@ -64,7 +72,7 @@ class DeleteConfirmButton extends Component {
 
   render() {
     const { children, button, title, disabled } = this.props;
-    const { visible } = this.state;
+    const { loading, visible } = this.state;
 
     return (
       <Popover
@@ -74,7 +82,7 @@ class DeleteConfirmButton extends Component {
         content={this.popoverContent()}
         onVisibleChange={this.handleVisibleChange}
       >
-        <Button disabled={disabled} {...button}>
+        <Button disabled={disabled} loading={loading} {...button}>
           {children}
         </Button>
       </Popover>
@@ -82,4 +90,4 @@ class DeleteConfirmButton extends Component {
   }
 }
 
-export default DeleteConfirmButton;
+export default StatusConfirmButton;

@@ -133,7 +133,7 @@ export default class Content extends Component {
     return (
       <div>
         <Header />
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 10 }}>
           <Alert
             message={
               <span>
@@ -148,10 +148,11 @@ export default class Content extends Component {
             type="info"
             showIcon
           />
-
+        </div>
+        <div style={{ marginTop: 10 }}>
           <Alert
             message={
-              <div style={{ display: 'flex' }}>
+              <div style={{ display: 'flex', marginTop: 10 }}>
                 <UpdateOrderStatus hasSelected={hasSelected} id={selectedRowKeys} />
                 <span style={{ marginLeft: '20px' }}>
                   <HurryOrder hasSelected={hasSelected} id={selectedRowKeys} />
@@ -161,35 +162,34 @@ export default class Content extends Component {
             type="error"
             showIcon
           />
-
-          <Table
-            loading={submitting}
-            pagination={{
-              showQuickJumper: true,
-              current: page,
-              total,
-              onChange: this.initOrder,
-              showTotal: totals => `总共有${totals}条记录`,
-            }}
-            size="small"
-            expandRowByClick={false}
-            rowSelection={rowSelection}
-            columns={columns}
-            rowKey="id"
-            dataSource={datas}
-            expandedRowRender={record => (
-              <Table
-                rowKey="id"
-                bordered
-                style={{ margin: '12px 0' }}
-                columns={columnSon}
-                dataSource={[record.customer]}
-                pagination={false}
-                size="small"
-              />
-            )}
-          />
         </div>
+        <Table
+          loading={submitting}
+          pagination={{
+            showQuickJumper: true,
+            current: page,
+            total,
+            onChange: this.initOrder,
+            showTotal: totals => `总共有${totals}条记录`,
+          }}
+          size="small"
+          expandRowByClick={false}
+          rowSelection={rowSelection}
+          columns={columns}
+          rowKey="id"
+          dataSource={datas}
+          expandedRowRender={record => (
+            <Table
+              rowKey="id"
+              bordered
+              style={{ margin: '20px 0' }}
+              columns={columnSon}
+              dataSource={[record.customer]}
+              pagination={false}
+              size="small"
+            />
+          )}
+        />
       </div>
     );
   }

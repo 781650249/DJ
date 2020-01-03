@@ -12,6 +12,8 @@ export default class HurryOrder extends Component {
     super(props);
     this.state = {
       urgent: 0,
+      errorMessage: null,
+      loading: false,
     };
   }
 
@@ -38,18 +40,30 @@ export default class HurryOrder extends Component {
       data: { id },
       dispatch,
     } = this.props;
+    this.setState({
+      loading: true,
+    });
     dispatch({
       type: 'orders/HurryOrder',
       payload: {
         id,
       },
       callback: response => {
+        const {
+          data: { message, error },
+        } = response;
         if (response.response.status === 200) {
           notification.success({
-            message: '标记成功',
+            message: `${message}`,
           });
           this.setState({
             urgent: 1,
+            loading: false,
+          });
+        } else {
+          this.setState({
+            errorMessage: `${error}`,
+            loading: false,
           });
         }
       },
@@ -61,18 +75,25 @@ export default class HurryOrder extends Component {
       dispatch,
       data: { id },
     } = this.props;
+    this.setState({
+      loading: true,
+    });
     dispatch({
       type: 'orders/cancelUrgentOrder',
       payload: {
         id,
       },
       callback: response => {
+        const {
+          data: { message },
+        } = response;
         if (response.response.status === 200) {
           notification.success({
-            message: '取消标记',
+            message: `${message}`,
           });
           this.setState({
             urgent: 0,
+            loading: false,
           });
         }
       },
@@ -80,11 +101,13 @@ export default class HurryOrder extends Component {
   };
 
   render() {
-    const { urgent } = this.state;
+    const { urgent, errorMessage, loading } = this.state;
     return (
       <div>
         {!urgent && (
           <DeleteConfirmButton
+            loading={loading}
+            errorMessage={errorMessage}
             content="你确定要将这条订单设为加急吗?"
             onConfirm={this.setUrgent}
             button={{
@@ -100,6 +123,7 @@ export default class HurryOrder extends Component {
           <DeleteConfirmButton
             content="你确定要将这条订单取消加急吗?"
             onConfirm={this.cancelUrgent}
+            loading={loading}
             button={{
               title: '取消加急',
               icon: 'clock-circle',

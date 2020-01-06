@@ -61,7 +61,7 @@ Route::group(['middleware' => 'auth:api', 'namespace'  => 'API'], function ($api
     $api->put('/order/cancel_urgent/{id}', 'OrderController@cancelMarkUrgent');
 
     // 批量取消加急
-    $api->post('/order/batch_cancel_urgent', 'OrderController@batchCancelUrgent');
+    $api->post('/orders/batch_cancel_urgent', 'OrderController@batchCancelUrgent');
 
     // 导出订单
     $api->get('/orders/export', 'OrderController@export');

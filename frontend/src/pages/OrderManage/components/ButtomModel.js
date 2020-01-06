@@ -1,21 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Modal, notification } from 'antd';
+import { Modal, notification, Alert } from 'antd';
 
-@connect(({ orders, loading }) => ({
-  orders,
-  submitting: loading.effects['orders/updateStatus'],
-  initing: loading.effects['orders/fetchOrders'],
-}))
+@connect(() => ({}))
 class ButtonModel extends Component {
   state = {
     visible: false,
     loading: false,
+    error: null,
   };
-
-  componentWillUnmount() {
-    clearInterval();
-  }
 
   open = () => {
     this.setState({
@@ -26,39 +19,42 @@ class ButtonModel extends Component {
   cancel = () => {
     this.setState({
       visible: false,
+      error: null,
+      loading: false,
     });
   };
 
-  handleOk = () => {
-    const { dispatch, status, id } = this.props;
+  handleOk = async () => {
+    const { dispatch, status, ids, onSuccess } = this.props;
     this.setState({
       loading: true,
+      error: null,
     });
-    dispatch({
-      type: 'orders/updateStatus',
+
+    await dispatch({
+      type: 'order/updateStatus',
       payload: {
-        id,
+        ids,
         status,
       },
       callback: response => {
-        const {
-          data: { message },
-        } = response;
+        const { data } = response;
+
         if (response.response.status === 200) {
           notification.success({
-            message: `${message}`,
+            message: data && data.message,
           });
-          dispatch({
-            type: 'orders/fetchOrders',
-            payload: {
-              page: 1,
-              page_size: '',
-            },
-          });
-          id.length = 0;
+
+          if (onSuccess) onSuccess();
+
           this.setState({
             loading: false,
             visible: false,
+          });
+        } else {
+          this.setState({
+            loading: false,
+            error: data && data.error,
           });
         }
       },
@@ -66,27 +62,31 @@ class ButtonModel extends Component {
   };
 
   render() {
-    const { visible, loading } = this.state;
-    const { children, color, dis } = this.props;
+    const { visible, loading, error } = this.state;
+    const { children, color, ids = [] } = this.props;
 
     return (
       <div>
         <div style={{ color }} onClick={this.open}>
-          . {children}
+          {children}
         </div>
-        <Modal
-          okButtonProps={{ disabled: !dis }}
-          visible={visible}
-          title="确认修改"
-          onCancel={this.cancel}
-          onOk={this.handleOk}
-          confirmLoading={loading}
-        >
-          <p>
-            确定将状态修改为
-            <b style={{ color }}>{children}</b>?
-          </p>
-        </Modal>
+        {visible && (
+          <Modal
+            okButtonProps={{ disabled: ids.length === 0 }}
+            visible={visible}
+            title="确认修改"
+            onCancel={this.cancel}
+            onOk={this.handleOk}
+            centered
+            confirmLoading={loading}
+          >
+            <p>
+              确定将 <a>{ids.length}</a> 个订单的状态修改为
+              <b>{children}</b>?
+            </p>
+            <Alert type="error" message={error} closable />
+          </Modal>
+        )}
       </div>
     );
   }

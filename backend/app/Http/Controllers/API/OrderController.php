@@ -536,6 +536,101 @@ class OrderController extends Controller {
     }
 
     /**
+     * 批量更新状态
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function batchUpdateStatus(Request $request) {
+        $inArray = [];
+
+        foreach (Order::ORDER_STATUS as $key => $item) {
+            if ($key === Order::STATUS_UN_DOWNLOAD || $key === Order::STATUS_DOWNLOADED) {
+                continue;
+            }
+
+            $inArray[] = $key;
+        }
+
+        $validator = Validator::make($request->all(), [
+            'ids'    => [
+                'required',
+                'array'
+            ],
+            'status' => [
+                'required',
+                Rule::in($inArray)
+            ]
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => '修改失败',
+                'error'   => $validator->errors()->first() ?? '未知错误'
+            ], 422);
+        }
+
+        $ids = $request->input('ids', null);
+        $status = $request->input('status', null);
+
+        $orders = Order::whereIn('id', $ids)->get();
+
+        if (count($orders) == 0) {
+            return response()->json([
+                'message' => '修改失败',
+                'error'   => '未找到任何订单, 请确认后再试'
+            ], 422);
+        }
+
+        if (count($orders) > 300) {
+            return response()->json([
+                'message' => '修改被拒绝',
+                'error'   => '你要操作的订单数超过300条，请分批次操作'
+            ], 422);
+        }
+
+        $successOfTimes = 0;
+        $errorOfTimes = 0;
+
+        foreach ($orders as $order) {
+            $statusName = Order::ORDER_STATUS[$request->status] ?? '';
+
+            if ($order->status === $status) {
+                activity(ActivityLog::TYPE_ORDER_BATCH_UPDATE_STATUS_FAILED)
+                    ->performedOn($order)
+                    ->withProperties([
+                        'ip'    => $request->ip(),
+                        'agent'      => $request->userAgent(),
+                    ])
+                    ->log("修改订单状态为：{$statusName} 失败，重复修改");
+
+                $errorOfTimes ++;
+                continue;
+            }
+
+            $order->update([
+                'status'    => $status
+            ]);
+
+            activity(ActivityLog::TYPE_ORDER_BATCH_UPDATE_STATUS)
+                ->performedOn($order)
+                ->withProperties([
+                    'ip'    => $request->ip(),
+                    'agent'      => $request->userAgent(),
+                ])
+                ->log("修改订单状态为：{$statusName}");
+
+            $successOfTimes ++;
+        }
+
+        return response()->json([
+            'message'         => '修改完成',
+            'success_of_time' => $successOfTimes,
+            'error_of_time'   => $errorOfTimes,
+            'orders_count'    => count($orders)
+        ], 200);
+    }
+
+    /**
      * 上传完成图
      * @param Request $request
      * @param $id

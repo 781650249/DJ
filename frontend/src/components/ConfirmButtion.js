@@ -1,16 +1,19 @@
+/**
+ * 确认按钮, 冒泡提示
+ */
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Popover, Button } from 'antd';
 
 @connect(() => ({}))
-class UrgentConfirmButton extends Component {
+class ConfirmButton extends Component {
   state = {
     visible: false,
     loading: false,
   };
 
   popoverContent = () => {
-    const { content, dis } = this.props;
+    const { content, disabled } = this.props;
     const { loading } = this.state;
 
     return (
@@ -26,7 +29,7 @@ class UrgentConfirmButton extends Component {
             size="small"
             onClick={this.confirm}
             style={{ marginLeft: 5 }}
-            disabled={!dis}
+            disabled={disabled}
           >
             确认
           </Button>
@@ -72,7 +75,7 @@ class UrgentConfirmButton extends Component {
   };
 
   render() {
-    const { children, button, title, dis } = this.props;
+    const { children, button, title, disabled } = this.props;
     const { loading, visible } = this.state;
     return (
       <Popover
@@ -82,7 +85,7 @@ class UrgentConfirmButton extends Component {
         content={this.popoverContent()}
         onVisibleChange={this.handleVisibleChange}
       >
-        <Button style={{ height: '19' }} disabled={!dis} loading={loading} {...button}>
+        <Button disabled={disabled} loading={loading} {...button}>
           {children}
         </Button>
       </Popover>
@@ -90,4 +93,4 @@ class UrgentConfirmButton extends Component {
   }
 }
 
-export default UrgentConfirmButton;
+export default ConfirmButton;

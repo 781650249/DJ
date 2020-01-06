@@ -20,6 +20,28 @@ export async function query(resource, params) {
   return request(`/api/${resource}?${stringify(params)}`);
 }
 
+/**
+ * 更新资源
+ */
+export async function update(resource, id, params) {
+  return request(`api/${resource}/${id}`, {
+    method: 'PUT',
+    data: params,
+  });
+}
+
+/**
+ * 批量修改
+ * @param router api路由地址
+ * @param params 参数
+ */
+export async function batchUpdate(router, params) {
+  return request(`api/${router}`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
 // 订单的获取搜索
 export async function getOrders(params) {
   return request(`/api/orders?${stringify(params)}`);
@@ -31,13 +53,7 @@ export async function updCustomer(params) {
     data: params,
   });
 }
-// 修改订单状态
-export async function updorderStatus(params) {
-  return request(`/api/order/status/${params.id}`, {
-    method: 'PUT',
-    data: params,
-  });
-}
+
 // 批量加急
 export async function HurryOrders(params) {
   return request('/api/orders/batch_urgent', {

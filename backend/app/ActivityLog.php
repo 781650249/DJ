@@ -39,6 +39,8 @@ class ActivityLog extends Model
     const TYPE_IMPORT_ORDER_UPDATE = 'IMPORT_ORDER_UPDATE';
 
     const TYPE_ORDER_UPDATE_STATUS = 'ORDER_UPDATE_STATUS';
+    const TYPE_ORDER_BATCH_UPDATE_STATUS = 'ORDER_BATCH_UPDATE_STATUS'; // 批量修改状态
+    const TYPE_ORDER_BATCH_UPDATE_STATUS_FAILED = 'ORDER_BATCH_UPDATE_STATUS_FAILED'; // 批量修改状态
     const TYPE_ORDER_MARK_URGENT = 'ORDER_MARK_URGENT'; // 标记为加急
     const TYPE_ORDER_BATCH_MARK_URGENT = 'ORDER_BATCH_MARK_URGENT'; // 批量标记加急
     const TYPE_ORDER_BATCH_MARK_URGENT_FAILED = 'ORDER_BATCH_MARK_URGENT_FAILED'; // 批量标记失败
@@ -85,12 +87,14 @@ class ActivityLog extends Model
         self::TYPE_IMPORT_ORDER_CREATE       => '导入时创建订单',
         self::TYPE_IMPORT_ORDER_UPDATE       => '导入时更新订单',
 
-        self::TYPE_ORDER_UPDATE_STATUS            => '更新订单状态',
-        self::TYPE_ORDER_MARK_URGENT              => '标记为加',
-        self::TYPE_ORDER_BATCH_MARK_URGENT        => '批量标记加',
-        self::TYPE_ORDER_BATCH_MARK_URGENT_FAILED => '批量标记失',
-        self::TYPE_ORDER_CANCEL_URGENT            => '取消加',
-        self::TYPE_ORDER_BATCH_CANCEL_URGENT      => '批量取消加',
+        self::TYPE_ORDER_UPDATE_STATUS              => '更新订单状态',
+        self::TYPE_ORDER_BATCH_UPDATE_STATUS        => '批量修改订单状态',
+        self::TYPE_ORDER_BATCH_UPDATE_STATUS_FAILED => '批量修改订单状态失败',
+        self::TYPE_ORDER_MARK_URGENT                => '标记为加',
+        self::TYPE_ORDER_BATCH_MARK_URGENT          => '批量标记加',
+        self::TYPE_ORDER_BATCH_MARK_URGENT_FAILED   => '批量标记失',
+        self::TYPE_ORDER_CANCEL_URGENT              => '取消加',
+        self::TYPE_ORDER_BATCH_CANCEL_URGENT        => '批量取消加',
 
         /************* customer ****************/
         self::TYPE_CUSTOMER_ADD                   => '添加顾客信息',

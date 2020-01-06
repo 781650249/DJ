@@ -67,19 +67,7 @@ export default class HurryOrder extends Component {
     const { hasSelected } = this.props;
     return (
       <div>
-        {
-          <UrgentConfirmButton
-            dis={hasSelected}
-            content="你确定要将这条订单设为加急吗?"
-            onConfirm={this.handleChange}
-            button={{
-              type: 'link',
-              size: 'small',
-            }}
-          >
-            标记加急
-          </UrgentConfirmButton>
-        }
+        {}
 
         {
           <UrgentConfirmButton

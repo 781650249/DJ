@@ -66,7 +66,7 @@ class Order extends Model
     }
 
     public function shipping() {
-        return $this->hasOne(OrderShipping::class, 'order_number', 'order_number');
+        return $this->hasOne(OrderShipping::class, 'order_number', 'number');
     }
 
     public function files() {

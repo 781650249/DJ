@@ -64,6 +64,7 @@ class OrderController extends Controller {
                 'product',
                 'zipFile',
                 'unZipFiles',
+                'shipping'
             ])
             ->paginate($pageSize);
     }

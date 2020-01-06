@@ -158,11 +158,6 @@ export default {
             //   component: './Welcome',
             // },
             {
-              path: 'example/dorpdown_example',
-              name: '下拉菜单示例页面',
-              component: './ExamplePage/DropDownExample',
-            },
-            {
               path: '/admin',
               name: 'admin',
               icon: 'crown',

@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Table, Button, Alert, Row, Col, Card, Pagination } from 'antd';
+import { Table, Button, Alert, Row, Col, Card, Pagination, Icon, notification } from 'antd';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import UpdateCustomer from './components/UpdateCustomer';
 import OriginImg from './components/OriginImg';
-import SingHurryOrder from './components/SingHurryOrder';
 import UpdateOrderStatus from './components/UpdateOrderStatus';
 import SearchForm from './components/SearchForm';
 import LeadOrders from '@/components/OrderManage/LeadOrders';
@@ -26,13 +25,67 @@ export default class OrderManage extends Component {
 
   columns = [
     {
-      dataIndex: 'urgent',
-      render: (_, data) => <SingHurryOrder data={data} />,
-    },
-    {
       title: '订单编号',
       dataIndex: 'oid',
       sorter: true,
+      render: (oid, item) => (
+        <>
+          {/* {
+            item.status === 'published' && (
+              <div>
+                <Icon style={{ fontSize: 20 }} type="check-circle" theme="twoTone"
+                twoToneColor="#8bc34a" />
+                <span style={{ marginLeft: 8, flex: 1 }}>{oid}</span>
+              </div>
+            )
+          } */}
+          {!!item.urgent && (
+            <ConfirmButton
+              content={<span>你确定要取消该订单的加急标记么?</span>}
+              disabled={item.status === 'published'}
+              onConfirm={() => this.handleCancelUrgent(item.id)}
+              button={{
+                type: 'link',
+                size: 'small',
+                loading: false,
+              }}
+            >
+              <div className={styles.urgentDiv}>
+                <Icon
+                  style={{ fontSize: 20 }}
+                  type="clock-circle"
+                  theme="twoTone"
+                  twoToneColor="#ff4d4f"
+                />
+                <span style={{ marginLeft: 8, flex: 1 }}>{oid}</span>
+              </div>
+            </ConfirmButton>
+          )}
+
+          {!item.urgent && (
+            <ConfirmButton
+              content={<span>你确定要将该订单标记为加急吗?</span>}
+              disabled={item.status === 'published'}
+              onConfirm={() => this.handleUrgent(item.id)}
+              button={{
+                type: 'link',
+                size: 'small',
+                loading: false,
+              }}
+            >
+              <div className={styles.urgentDiv}>
+                <Icon
+                  style={{ fontSize: 20 }}
+                  type="clock-circle"
+                  theme="twoTone"
+                  twoToneColor="#ccc"
+                />
+                <span style={{ marginLeft: 8, flex: 1 }}>{oid}</span>
+              </div>
+            </ConfirmButton>
+          )}
+        </>
+      ),
     },
     { title: '订单号', dataIndex: 'number', key: 'number' },
     {
@@ -48,10 +101,20 @@ export default class OrderManage extends Component {
     {
       title: '订单状态',
       dataIndex: 'status',
-      render: status => (
-        <span style={{ color: orderStatus[status] && orderStatus[status].color }}>
-          {orderStatus[status] && orderStatus[status].value}
-        </span>
+      render: (status, item) => (
+        <UpdateOrderStatus
+          data={{
+            id: item.id,
+            oid: item.oid,
+            status: item.status,
+          }}
+          type="single"
+          onSuccess={this.handleUpdateStatusSuccess}
+        >
+          <span style={{ color: orderStatus[status] && orderStatus[status].color }}>
+            {orderStatus[status] && orderStatus[status].value}
+          </span>
+        </UpdateOrderStatus>
       ),
     },
     {
@@ -219,6 +282,127 @@ export default class OrderManage extends Component {
   };
 
   /**
+   * 标记加急
+   */
+  handleUrgent = async id => {
+    const { dispatch } = this.props;
+
+    await dispatch({
+      type: 'order/urgent',
+      id,
+      callback: res => {
+        const { data, response } = res;
+
+        if (response && response.status === 200) {
+          notification.success({
+            message: data && data.message,
+          });
+
+          this.fetch();
+        }
+      },
+    });
+  };
+
+  /**
+   * 取消加急标记
+   */
+  handleCancelUrgent = async id => {
+    const { dispatch } = this.props;
+
+    await dispatch({
+      type: 'order/calcelUrgent',
+      id,
+      callback: res => {
+        const { data, response } = res;
+
+        if (response && response.status === 200) {
+          notification.success({
+            message: data && data.message,
+          });
+
+          this.fetch();
+        }
+      },
+    });
+  };
+
+  /**
+   * 批量标记加急
+   */
+  handlBatchUrgent = async () => {
+    const { selectedRowKeys } = this.state;
+    const { dispatch } = this.props;
+
+    await dispatch({
+      type: 'order/batchUrgent',
+      payload: {
+        ids: selectedRowKeys,
+      },
+      callback: res => {
+        const { data, response } = res;
+
+        if (response && response.status === 200) {
+          notification.success({
+            message: data && data.message,
+            description: data && (
+              <>
+                <p style={{ marginBottom: 1 }}>
+                  标记了: <b>{data.orders_count}</b> 个订单，
+                </p>
+                <p style={{ marginBottom: 1 }}>
+                  成功： <b>{data.success_of_time} 个,</b>
+                </p>
+                <p style={{ marginBottom: 1, color: '#ff4d4f' }}>
+                  失败： <b>{data.error_of_time} 个,</b>
+                </p>
+              </>
+            ),
+          });
+        }
+
+        this.fetch();
+      },
+    });
+  };
+
+  handleBatchCancelUrgent = async () => {
+    const { selectedRowKeys } = this.state;
+    const { dispatch } = this.props;
+
+    await dispatch({
+      type: 'order/batchCancelUrgentOrder',
+      payload: {
+        ids: selectedRowKeys,
+      },
+      callback: res => {
+        const { data, response } = res;
+
+        if (response && response.status === 200) {
+          notification.success({
+            message: data && data.message,
+            description: data && (
+              <>
+                <p style={{ marginBottom: 1 }}>
+                  取消: <b>{data.orders_count}</b> 个订单标记加急，
+                </p>
+                <p style={{ marginBottom: 1 }}>
+                  成功： <b>{data.success_of_time} 个,</b>
+                </p>
+                <p style={{ marginBottom: 1, color: '#ff4d4f' }}>
+                  失败： <b>{data.error_of_time} 个,</b>
+                </p>
+              </>
+            ),
+          });
+        }
+
+        this.fetch();
+      },
+    });
+  };
+
+  /**
    * 修改状态成功
    */
   handleUpdateStatusSuccess = () => {
@@ -276,8 +460,12 @@ export default class OrderManage extends Component {
                 {/* 标记加急 */}
                 <ConfirmButton
                   disabled={selectedRowKeys.length === 0}
-                  content="你确定要将这条订单设为加急吗?"
-                  onConfirm={this.handleChange}
+                  content={
+                    <span>
+                      你确定要将 <a>{selectedRowKeys.length}</a> 条订单标记为加急吗?
+                    </span>
+                  }
+                  onConfirm={this.handlBatchUrgent}
                   button={{
                     type: 'link',
                     size: 'small',
@@ -289,8 +477,12 @@ export default class OrderManage extends Component {
                 {/* 取消标记加急 */}
                 <ConfirmButton
                   disabled={selectedRowKeys.length === 0}
-                  content="你确定要将这条订单取消加急吗?"
-                  onConfirm={this.batchCancelUrgent}
+                  content={
+                    <span>
+                      你确定要将 <a>{selectedRowKeys.length}</a> 条订单取消加急吗?
+                    </span>
+                  }
+                  onConfirm={this.handleBatchCancelUrgent}
                   button={{
                     type: 'link',
                     size: 'small',
@@ -305,6 +497,7 @@ export default class OrderManage extends Component {
           />
 
           <Table
+            className={styles.table}
             style={{
               marginTop: 20,
             }}

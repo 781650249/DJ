@@ -1,14 +1,4 @@
-import {
-  formData,
-  cancelUrgent,
-  updCustomer,
-  updorderStatus,
-  HurryOrders,
-  SingleHurryOrder,
-  BcancelUrgent,
-  query,
-  batchUpdate,
-} from '@/services/api';
+import { formData, updCustomer, BcancelUrgent, query, batchUpdate, update } from '@/services/api';
 
 export default {
   namespace: 'order',
@@ -84,13 +74,20 @@ export default {
       const response = yield call(updCustomer, payload);
       if (callback) callback(response);
     },
-    *updateStatus({ payload, callback }, { call }) {
-      const response = yield call(updorderStatus, payload);
+
+    /**
+     * 更新订单状态
+     * @param {payload} 参数
+     * @param {id} 订单id
+     * @param {callback} 回调
+     */
+    *updateStatus({ payload, id, callback }, { call }) {
+      const response = yield call(update, 'order/status', id, payload);
       if (callback) callback(response);
     },
 
     /**
-     * 批量更新
+     * 批量更新订单状态
      * @param {payload} 参数
      * @param {callback} 回调
      */
@@ -102,30 +99,48 @@ export default {
       }
     },
 
-    *BhurryOrder({ payload, callback }, { call }) {
-      const response = yield call(HurryOrders, payload);
+    /**
+     * 批量标记加急
+     * @param {payload} 参数
+     * @param {callback} 回调
+     */
+    *batchUrgent({ payload, callback }, { call }) {
+      const response = yield call(batchUpdate, 'orders/batch_urgent', payload);
       if (callback) callback(response);
     },
-    *HurryOrder(
-      {
-        payload: { id },
-        callback,
-      },
-      { call },
-    ) {
-      const response = yield call(SingleHurryOrder, id);
+
+    /**
+     * 标记加急
+     * @param {id} 订单id
+     * @param {callback} 回调
+     */
+    *urgent({ id, callback }, { call }) {
+      const response = yield call(update, 'order/urgent', id);
+
       if (callback) callback(response);
     },
-    *cancelUrgentOrder(
-      {
-        payload: { id },
-        callback,
-      },
-      { call },
-    ) {
-      const response = yield call(cancelUrgent, id);
+
+    /**
+     * 取消加急
+     * @param {id} 订单id
+     * @param {callback} 回调
+     */
+    *calcelUrgent({ id, callback }, { call }) {
+      const response = yield call(update, 'order/cancel_urgent', id);
+
       if (callback) callback(response);
     },
+
+    /**
+     * 批量取消标记加急
+     * @param {payload} 参数
+     * @param { callback } 回调
+     */
+    *batchCancelUrgentOrder({ payload, callback }, { call }) {
+      const response = yield call(batchUpdate, 'orders/batch_cancel_urgent', payload);
+      if (callback) callback(response);
+    },
+
     *batchCancelUrgent({ payload, callback }, { call }) {
       const response = yield call(BcancelUrgent, payload);
       if (callback) callback(response);

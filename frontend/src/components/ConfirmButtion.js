@@ -48,7 +48,9 @@ class ConfirmButton extends Component {
       this.setState({
         loading: true,
       });
-      onConfirm();
+
+      await onConfirm();
+
       this.setState({
         visible: false,
         loading: false,

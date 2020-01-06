@@ -27,7 +27,7 @@ class UpdateOrderStatus extends Component {
    * 确认修改
    */
   handleOk = async () => {
-    const { dispatch, ids, onSuccess } = this.props;
+    const { dispatch, ids, onSuccess, type, data = {} } = this.props;
     const { status } = this.state;
 
     this.setState({
@@ -35,47 +35,83 @@ class UpdateOrderStatus extends Component {
       error: null,
     });
 
-    await dispatch({
-      type: 'order/bacthUpdateStatus',
-      payload: {
-        ids,
-        status,
-      },
-      callback: response => {
-        const { data } = response;
+    if (type === 'batch') {
+      await dispatch({
+        type: 'order/bacthUpdateStatus',
+        payload: {
+          ids,
+          status,
+        },
+        callback: response => {
+          const resData = response.data;
 
-        if (response.response.status === 200) {
-          notification.success({
-            message: data && data.message,
-            description: (
-              <>
-                <p style={{ marginBottom: 1 }}>
-                  功修改: <b>{data.orders_count}</b> 个订单，
-                </p>
-                <p style={{ marginBottom: 1 }}>
-                  修改成功： <b>{data.success_of_time} 个,</b>
-                </p>
-                <p style={{ marginBottom: 1, color: '#ff4d4f' }}>
-                  修改失败： <b>{data.error_of_time} 个,</b>
-                </p>
-              </>
-            ),
-          });
+          if (response.response.status === 200) {
+            notification.success({
+              message: resData && resData.message,
+              description: (
+                <>
+                  <p style={{ marginBottom: 1 }}>
+                    修改: <b>{resData.orders_count}</b> 个订单，
+                  </p>
+                  <p style={{ marginBottom: 1 }}>
+                    修改成功： <b>{resData.success_of_time} 个,</b>
+                  </p>
+                  <p style={{ marginBottom: 1, color: '#ff4d4f' }}>
+                    修改失败： <b>{resData.error_of_time} 个,</b>
+                  </p>
+                </>
+              ),
+            });
 
-          if (onSuccess) onSuccess();
+            if (onSuccess) onSuccess();
 
-          this.setState({
-            loading: false,
-            visible: false,
-          });
-        } else {
-          this.setState({
-            loading: false,
-            error: data && data.error,
-          });
-        }
-      },
-    });
+            this.setState({
+              loading: false,
+              visible: false,
+            });
+          } else {
+            this.setState({
+              loading: false,
+              error: data && data.error,
+            });
+          }
+        },
+      });
+    }
+
+    if (type === 'single') {
+      const { id } = data;
+
+      await dispatch({
+        type: 'order/updateStatus',
+        id,
+        payload: {
+          status,
+        },
+        callback: res => {
+          const { response } = res;
+          const resData = res.data;
+
+          if (response && response.status === 200) {
+            notification.success({
+              message: resData.message,
+            });
+
+            if (onSuccess) onSuccess();
+
+            this.setState({
+              loading: false,
+              visible: false,
+            });
+          } else {
+            this.setState({
+              loading: false,
+              error: resData && resData.error,
+            });
+          }
+        },
+      });
+    }
   };
 
   /**
@@ -88,24 +124,26 @@ class UpdateOrderStatus extends Component {
   };
 
   render() {
-    const { ids, children } = this.props;
+    const { ids, children, type, data = {} } = this.props;
     const { visible, status, error, loading } = this.state;
 
     return (
       <>
         <Dropdown
-          disabled={ids.length === 0}
+          disabled={type === 'batch' && ids.length === 0}
           overlay={
             <Menu>
               {Object.keys(orderStatus).map(
                 key =>
                   orderStatus[key].showOnly === 'all' && (
-                    <MenuItem key={key}>
-                      <Button type="link" onClick={() => this.handleButtonClick(key)}>
-                        <span style={{ color: orderStatus[key] && orderStatus[key].color }}>
-                          {orderStatus[key] && orderStatus[key].value}
-                        </span>
-                      </Button>
+                    <MenuItem
+                      key={key}
+                      disabled={type === 'single' && key === data.status}
+                      onClick={() => this.handleButtonClick(key)}
+                    >
+                      <span style={{ color: orderStatus[key] && orderStatus[key].color }}>
+                        {orderStatus[key] && orderStatus[key].value}
+                      </span>
                     </MenuItem>
                   ),
               )}
@@ -119,7 +157,7 @@ class UpdateOrderStatus extends Component {
 
         {visible && status && (
           <Modal
-            okButtonProps={{ disabled: ids.length === 0 }}
+            okButtonProps={{ disabled: type === 'batch' && ids.length === 0 }}
             visible={visible}
             title="确认修改"
             onCancel={this.handleCancel}
@@ -128,7 +166,16 @@ class UpdateOrderStatus extends Component {
             confirmLoading={loading}
           >
             <p>
-              确定将 <a>{ids.length}</a> 个订单的状态修改为
+              {type === 'batch' && (
+                <span>
+                  确定将 <a>{ids.length}</a> 个订单的状态修改为
+                </span>
+              )}
+              {type === 'single' && (
+                <span>
+                  确定将订单 <a>{data.oid}</a> 的状态修改为
+                </span>
+              )}
               <b style={{ color: orderStatus[status] && orderStatus[status].color }}>
                 <span>{orderStatus[status] && orderStatus[status].value}</span>
               </b>

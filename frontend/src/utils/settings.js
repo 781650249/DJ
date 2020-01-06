@@ -34,7 +34,7 @@ export const orderStatus = {
     key: 'published',
     value: '已发稿',
     showOnly: 'all',
-    color: '#6B8E23 ',
+    color: '#8bc34a ',
   },
   confirmed: {
     key: 'confirmed',

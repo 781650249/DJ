@@ -6,10 +6,10 @@ import UpdateCustomer from './components/UpdateCustomer';
 import OriginImg from './components/OriginImg';
 import UpdateOrderStatus from './components/UpdateOrderStatus';
 import SearchForm from './components/SearchForm';
-import LeadOrders from '@/components/OrderManage/LeadOrders';
 import styles from './index.less';
 import ConfirmButton from '@/components/ConfirmButtion';
 import { orderStatus } from '@/utils/settings';
+import Import from './components/Import';
 
 @connect(({ order, loading }) => ({
   orderLists: order.data.lists,
@@ -472,7 +472,7 @@ export default class OrderManage extends Component {
           <Row>
             <Col span={12}>订单管理</Col>
             <Col span={12} style={{ textAlign: 'right' }}>
-              <LeadOrders />
+              <Import onSuccess={() => this.fetch({ page: 1 })} />
             </Col>
           </Row>
         }

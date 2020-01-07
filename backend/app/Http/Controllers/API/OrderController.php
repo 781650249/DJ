@@ -6,6 +6,7 @@ use App\ActivityLog;
 use App\Customer;
 use App\Exports\ExportOrderExcel;
 use App\Imports\ImportToArray;
+use App\Jobs\DelOrderFile;
 use App\Jobs\DownloadZipFileJob;
 use App\Order;
 use App\Rules\DateRule;
@@ -535,6 +536,74 @@ class OrderController extends Controller {
         return response()->json([
             'message' => '修改成功'
         ], 200);
+    }
+
+    /**
+     * 批量删除
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function batchDelete(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'ids'    => [
+                'required',
+                'array'
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => '修改失败',
+                'error'   => $validator->errors()->first() ?? '未知错误'
+            ], 422);
+        }
+
+        $ids = $request->input('ids');
+
+        $orders = Order::whereIn('id', $ids)->get();
+
+        if (count($orders) === 0) {
+            return response()->json([
+                'message'   => '删除订单失败',
+                'error'     => '没有找到相关订单'
+            ], 422);
+        }
+
+        if (count($orders) > 300) {
+            return response()->json([
+                'message' => '删除订单拒绝',
+                'error'   => '要删除的订单量超过300单, 请分批次操作'
+            ], 422);
+        }
+
+        $orderCount = count($orders);
+
+        foreach ($orders as $order) {
+            activity(ActivityLog::TYPE_ORDER_BATCH_DEL)
+                ->withProperties([
+                    'ip'    => $request->ip(),
+                    'agent' => $request->userAgent(),
+                    'order' => $order
+                ])
+                ->log("删除订单: {$order->oid}");
+
+            // 删除磁盘上的文件
+            dispatch(new DelOrderFile($order->oid));
+
+            // 删除文件
+            $order->files()->delete();
+
+            // 删除日志
+            $order->activityLog()->delete();
+
+            // 删除订单
+            $order->delete();
+        }
+
+        return response()->json([
+            'message'     => '删除完成',
+            'order_count' => $orderCount
+        ]);
     }
 
     /**

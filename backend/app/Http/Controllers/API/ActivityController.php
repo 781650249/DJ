@@ -32,6 +32,8 @@ class ActivityController extends Controller
 
     public function orderOperateLog(Request $request) {
         $logTypeArr = [
+            ActivityLog::TYPE_ORDER_BATCH_DEL,
+            ActivityLog::TYPE_ORDER_BATCH_UPDATE_STATUS,
             ActivityLog::TYPE_ORDER_UPDATE_STATUS,
             ActivityLog::TYPE_ORDER_MARK_URGENT,
             ActivityLog::TYPE_ORDER_BATCH_MARK_URGENT,

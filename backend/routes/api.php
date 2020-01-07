@@ -50,6 +50,9 @@ Route::group(['middleware' => 'auth:api', 'namespace'  => 'API'], function ($api
     // 更新状态
     $api->put('/order/status/{id}', 'OrderController@updateStatus');
 
+    // 批量删除
+    $api->post('/orders/batch_del', 'OrderController@batchDelete');
+
     // 批量更新订单状态
     $api->post('/orders/batch_status', 'OrderController@batchUpdateStatus');
 

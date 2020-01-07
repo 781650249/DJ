@@ -33,6 +33,7 @@ class ActivityLog extends Model
 
     /************* 订单管理 *****************/
     const TYPE_ORDER_ADD = 'ORDER_ADD'; // 添加订单
+    const TYPE_ORDER_BATCH_DEL = 'ORDER_BATCH_DEL'; // 订单批量删除
     const TYPE_IMPORT_ORDER = 'IMPORT_ORDER'; // 导入订单
     const TYPE_IMPORT_ORDER_FAILED = 'IMPORT_ORDER_FAILED';
     const TYPE_IMPORT_ORDER_CREATE = 'IMPORT_ORDER_CREATE';
@@ -81,7 +82,8 @@ class ActivityLog extends Model
         self::TYPE_PRODUCTS_BATCH_DEL        => '商品批量删',
 
         /************* 订单管理 *****************/
-        self::TYPE_ORDER_ADD                 => '添加订',
+        self::TYPE_ORDER_ADD                 => '添加订单',
+        self::TYPE_ORDER_BATCH_DEL           => '订单批量删除',
         self::TYPE_IMPORT_ORDER              => '导入订',
         self::TYPE_IMPORT_ORDER_FAILED       => '导入订单失败',
         self::TYPE_IMPORT_ORDER_CREATE       => '导入时创建订单',
@@ -93,7 +95,7 @@ class ActivityLog extends Model
         self::TYPE_ORDER_MARK_URGENT                => '标记为加',
         self::TYPE_ORDER_BATCH_MARK_URGENT          => '批量标记加',
         self::TYPE_ORDER_BATCH_MARK_URGENT_FAILED   => '批量标记失',
-        self::TYPE_ORDER_CANCEL_URGENT              => '取消加',
+        self::TYPE_ORDER_CANCEL_URGENT              => '取消加急',
         self::TYPE_ORDER_BATCH_CANCEL_URGENT        => '批量取消加',
 
         /************* customer ****************/

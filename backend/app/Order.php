@@ -83,6 +83,14 @@ class Order extends Model
             ->where('type', File::TYPE_UNZIP_FILE);
     }
 
+    /**
+     * 日志
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function activityLog() {
+        return $this->morphMany(ActivityLog::class, 'subject', 'subject_type', 'subject_id');
+    }
+
     //public function finishFiles() {
     //    return $this->hasMany(File::class, 'order_id')
     //        ->where('type', File::TYPE_FINISH_FILE);

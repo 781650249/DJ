@@ -386,6 +386,9 @@ export default class OrderManage extends Component {
     });
   };
 
+  /**
+   * 批量取消标记
+   */
   handleBatchCancelUrgent = async () => {
     const { selectedRowKeys } = this.state;
     const { dispatch } = this.props;
@@ -414,6 +417,33 @@ export default class OrderManage extends Component {
                 </p>
               </>
             ),
+          });
+        }
+
+        this.fetch();
+      },
+    });
+  };
+
+  /**
+   * 批量删除订单
+   */
+  handleBatchDelete = async () => {
+    const { selectedRowKeys } = this.state;
+    const { dispatch } = this.props;
+
+    await dispatch({
+      type: 'order/batchDelete',
+      payload: {
+        ids: selectedRowKeys,
+      },
+      callback: res => {
+        const { data, response } = res;
+
+        if (response && response.status === 200) {
+          notification.success({
+            message: data && data.message,
+            description: <p>删除了{data && data.order_count} 个订单</p>,
           });
         }
 
@@ -509,6 +539,28 @@ export default class OrderManage extends Component {
                   }}
                 >
                   取消加急
+                </ConfirmButton>
+
+                {/* 批量删除 */}
+                <ConfirmButton
+                  disabled={selectedRowKeys.length === 0}
+                  content={
+                    <>
+                      <p>
+                        确定删除这 <a>{selectedRowKeys.length}</a> 条订单？{' '}
+                      </p>
+                      <small style={{ color: '#ff4d4f' }}>
+                        同时还会删除订单相关的图片文件等信息
+                      </small>
+                    </>
+                  }
+                  onConfirm={this.handleBatchDelete}
+                  button={{
+                    type: 'link',
+                    size: 'small',
+                  }}
+                >
+                  删除订单
                 </ConfirmButton>
               </>
             }

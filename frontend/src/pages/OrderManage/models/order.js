@@ -76,6 +76,17 @@ export default {
     },
 
     /**
+     * 批量删除订单
+     * @param {payload} 参数
+     * @param {callback} 回调
+     */
+    *batchDelete({ payload, callback }, { call }) {
+      const response = yield call(batchUpdate, 'orders/batch_del', payload);
+
+      if (callback) callback(response);
+    },
+
+    /**
      * 更新订单状态
      * @param {payload} 参数
      * @param {id} 订单id

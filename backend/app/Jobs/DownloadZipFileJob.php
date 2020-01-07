@@ -88,7 +88,7 @@ class DownloadZipFileJob implements ShouldQueue
                 $orderName = $order->oid;
 
                 // 将.换成下划线
-                $orderName = str_replace('.', '_', $orderName);
+                // $orderName = str_replace('.', '_', $orderName);
 
                 $fileName = "file/{$orderName}/origin/origin_file.zip";
 

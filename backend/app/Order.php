@@ -183,6 +183,8 @@ class Order extends Model
                 continue;
             }
 
+            $fileInfo['file_path'] = Storage::disk('public')->url($fileInfo['path']);
+
             $response[] = $fileInfo;
         }
 

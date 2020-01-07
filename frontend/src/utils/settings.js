@@ -61,4 +61,7 @@ export const orderStatus = {
     showOnly: 'all',
   },
 };
+
+export const acceptImgFile = ['image/jpeg', 'image/png'];
+
 export default authRole;

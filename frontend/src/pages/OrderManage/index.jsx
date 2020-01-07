@@ -42,7 +42,7 @@ export default class OrderManage extends Component {
           {!!item.urgent && (
             <ConfirmButton
               content={<span>你确定要取消该订单的加急标记么?</span>}
-              disabled={item.status === 'published'}
+              disabled={item.status === 'produced'}
               onConfirm={() => this.handleCancelUrgent(item.id)}
               button={{
                 type: 'link',
@@ -65,7 +65,7 @@ export default class OrderManage extends Component {
           {!item.urgent && (
             <ConfirmButton
               content={<span>你确定要将该订单标记为加急吗?</span>}
-              disabled={item.status === 'published'}
+              disabled={item.status === 'produced'}
               onConfirm={() => this.handleUrgent(item.id)}
               button={{
                 type: 'link',
@@ -91,12 +91,32 @@ export default class OrderManage extends Component {
     {
       title: '原始素材',
       dataIndex: 'un_zip_files',
-      render: files => files && <OriginImg files={files} />,
+      render: files => (
+        <>
+          {files && files.length > 0 && (
+            <div style={{ minWidth: 80, textAlign: 'center' }}>
+              <OriginImg title="原始素材" files={files} />
+            </div>
+          )}
+          {(!files || files.length === 0) && (
+            <div style={{ color: '#ccc', textAlign: 'center' }}>——</div>
+          )}
+        </>
+      ),
     },
     {
       title: '成品图片',
       dataIndex: 'finish_files',
-      render: files => files && <OriginImg files={files} />,
+      render: files => (
+        <>
+          {files && (
+            <div style={{ minWidth: 80, textAlign: 'center' }}>
+              <OriginImg title="成品图片" files={files} />
+            </div>
+          )}
+          {!files && <div style={{ color: '#ccc', textAlign: 'center' }}>——</div>}
+        </>
+      ),
     },
     {
       title: '订单状态',

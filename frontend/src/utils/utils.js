@@ -1,6 +1,7 @@
 import { parse } from 'querystring';
 import pathRegexp from 'path-to-regexp';
 import moment from 'moment';
+import { acceptImgFile } from './settings';
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
 
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -70,4 +71,22 @@ export function formatDateRange(val) {
   }
 
   return val;
+}
+
+/**
+ * 可接受的图片
+ */
+export function acceptImgs(files) {
+  const imgs = [];
+
+  files.forEach(item => {
+    for (let i = 0; i < acceptImgFile.length; i += 1) {
+      if (item.mime_type === acceptImgFile[i]) {
+        imgs.push(item);
+        break;
+      }
+    }
+  });
+
+  return imgs;
 }

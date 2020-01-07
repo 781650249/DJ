@@ -512,7 +512,8 @@ class OrderController extends Controller {
         if ($orderStatus === Order::STATUS_PRODUCED) {
             $order->update([
                 'status'      => $request->status,
-                'produced_at' => Carbon::now()
+                'produced_at' => Carbon::now(),
+                'urgent'      => 0,
             ]);
         }
         else {
@@ -608,9 +609,26 @@ class OrderController extends Controller {
                 continue;
             }
 
-            $order->update([
-                'status'    => $status
-            ]);
+            $orderStatus = $order->status;
+
+            if ($orderStatus == Order::STATUS_PUBLISHED) {
+                $order->update([
+                    'status'       => $request->status,
+                    'published_at' => Carbon::now()
+                ]);
+            }
+            if ($orderStatus === Order::STATUS_PRODUCED) {
+                $order->update([
+                    'status'      => $request->status,
+                    'produced_at' => Carbon::now(),
+                    'urgent'      => 0,
+                ]);
+            }
+            else {
+                $order->update([
+                    'status' => $status,
+                ]);
+            }
 
             activity(ActivityLog::TYPE_ORDER_BATCH_UPDATE_STATUS)
                 ->performedOn($order)
@@ -680,7 +698,7 @@ class OrderController extends Controller {
         }
 
         $orderStatusArr = [
-            Order::STATUS_PUBLISHED,
+            Order::STATUS_PRODUCED,
         ];
 
         $orderStatus = $order->status;
@@ -688,7 +706,7 @@ class OrderController extends Controller {
         if (in_array($orderStatus, $orderStatusArr)) {
             return response()->json([
                 'message' => '标记失败',
-                'error'   => "该订单 ‘{$order->order_status}’, 不需要标记为加急"
+                'error'   => "该订单 ‘{$order->order_status}’, 不能标记为加急"
             ], 422);
         }
 
@@ -776,7 +794,7 @@ class OrderController extends Controller {
         $errorOfTimes = 0;
 
         $orderStatusArr = [
-            Order::STATUS_PUBLISHED,
+            Order::STATUS_PRODUCED,
         ];
 
         foreach ($orders as $order) {

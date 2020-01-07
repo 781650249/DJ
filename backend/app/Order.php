@@ -88,7 +88,7 @@ class Order extends Model
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function activityLog() {
-        return $this->morphMany(ActivityLog::class, 'subject', 'subject_type', 'subject_id');
+        return $this->morphMany(ActivityLog::class, self::class, 'subject_type', 'subject_id');
     }
 
     //public function finishFiles() {

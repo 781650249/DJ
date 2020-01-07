@@ -766,18 +766,18 @@ class OrderController extends Controller {
             ], 422);
         }
 
-        $orderStatusArr = [
-            Order::STATUS_PRODUCED,
-        ];
-
-        $orderStatus = $order->status;
-
-        if (in_array($orderStatus, $orderStatusArr)) {
-            return response()->json([
-                'message' => '标记失败',
-                'error'   => "该订单 ‘{$order->order_status}’, 不能标记为加急"
-            ], 422);
-        }
+        //$orderStatusArr = [
+        //    Order::STATUS_PRODUCED,
+        //];
+        //
+        //$orderStatus = $order->status;
+        //
+        //if (in_array($orderStatus, $orderStatusArr)) {
+        //    return response()->json([
+        //        'message' => '标记失败',
+        //        'error'   => "该订单 ‘{$order->order_status}’, 不能标记为加急"
+        //    ], 422);
+        //}
 
         $order->update([
             'urgent'    => 1
@@ -870,18 +870,18 @@ class OrderController extends Controller {
             $orderStatus = $order->status;
 
             // 已发稿的订单不需要标记为加急
-            if (in_array($orderStatus, $orderStatusArr)) {
-                $errorOfTimes++;
-                activity(ActivityLog::TYPE_ORDER_BATCH_MARK_URGENT_FAILED)
-                    ->performedOn($order)
-                    ->withProperties([
-                        'ip'    => $request->ip(),
-                        'agent' => $request->userAgent(),
-                    ])
-                    ->log("订单 {$order->oid} {$order->order_status}, 不能标记为加急");
-
-                continue;
-            }
+            //if (in_array($orderStatus, $orderStatusArr)) {
+            //    $errorOfTimes++;
+            //    activity(ActivityLog::TYPE_ORDER_BATCH_MARK_URGENT_FAILED)
+            //        ->performedOn($order)
+            //        ->withProperties([
+            //            'ip'    => $request->ip(),
+            //            'agent' => $request->userAgent(),
+            //        ])
+            //        ->log("订单 {$order->oid} {$order->order_status}, 不能标记为加急");
+            //
+            //    continue;
+            //}
 
             $order->update([
                 'urgent' => 1

@@ -42,7 +42,6 @@ export default class OrderManage extends Component {
           {!!item.urgent && (
             <ConfirmButton
               content={<span>你确定要取消该订单的加急标记么?</span>}
-              disabled={item.status === 'produced'}
               onConfirm={() => this.handleCancelUrgent(item.id)}
               button={{
                 type: 'link',
@@ -65,7 +64,6 @@ export default class OrderManage extends Component {
           {!item.urgent && (
             <ConfirmButton
               content={<span>你确定要将该订单标记为加急吗?</span>}
-              disabled={item.status === 'produced'}
               onConfirm={() => this.handleUrgent(item.id)}
               button={{
                 type: 'link',

@@ -34,7 +34,8 @@ class ExportOrderExcel implements FromCollection, WithHeadings, WithMapping, Sho
             '生产日期',
             'sku',
             '中文名',
-            '数量'
+            '数量',
+            '顾客'
         ];
     }
 
@@ -51,19 +52,20 @@ class ExportOrderExcel implements FromCollection, WithHeadings, WithMapping, Sho
             $query->number,
             $query->oid,
             Order::ORDER_STATUS[$query->status] ?? '',
-            $query->shipping->trach_number ?? '',
+            $query->shipping->track_number ?? '',
             $query->publoshed_at,
             $query->produced_at,
             $query->sku,
             $query->product->title ?? '',
-            $query->quantity
+            $query->quantity,
+            $query->customer->name ?? '',
         ];
     }
 
     public function columnFormats(): array {
         return [
             'A' => NumberFormat::FORMAT_NUMBER,
-            'B' => NumberFormat::FORMAT_NUMBER,
+            'B' => NumberFormat::FORMAT_TEXT,
             'D' => NumberFormat::FORMAT_NUMBER,
         ];
     }

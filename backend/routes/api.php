@@ -68,6 +68,7 @@ Route::group(['middleware' => 'auth:api', 'namespace'  => 'API'], function ($api
 
     // 导出订单
     $api->get('/orders/export', 'OrderController@export');
+    $api->post('/orders/export', 'OrderController@export');
 
     $api->resource('/orders', 'OrderController');
 

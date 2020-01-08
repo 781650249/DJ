@@ -1,4 +1,12 @@
-import { formData, updCustomer, BcancelUrgent, query, batchUpdate, update } from '@/services/api';
+import {
+  formData,
+  updCustomer,
+  BcancelUrgent,
+  query,
+  batchUpdate,
+  update,
+  post,
+} from '@/services/api';
 
 export default {
   namespace: 'order',
@@ -154,6 +162,23 @@ export default {
 
     *batchCancelUrgent({ payload, callback }, { call }) {
       const response = yield call(BcancelUrgent, payload);
+      if (callback) callback(response);
+    },
+
+    /**
+     * 导出搜索结果
+     * @param {payload} 参数
+     * @param {callback} 回调
+     */
+    *exportFIlter({ payload, callback }, { call }) {
+      const response = yield call(query, 'orders/export', payload);
+
+      if (callback) callback(response);
+    },
+
+    *exportSelect({ payload, callback }, { call }) {
+      const response = yield call(post, 'orders/export', payload);
+
       if (callback) callback(response);
     },
   },

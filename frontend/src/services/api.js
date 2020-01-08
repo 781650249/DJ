@@ -16,7 +16,6 @@ export const formData = async (resource, params) => {
  * Resource的查询接口
  */
 export async function query(resource, params) {
-  // console.log('params', params);
   return request(`/api/${resource}?${stringify(params)}`);
 }
 
@@ -46,6 +45,18 @@ export async function batchUpdate(router, params) {
 export async function updCustomer(params) {
   return request(`/api/customer/${params.id}`, {
     method: 'PUT',
+    data: params,
+  });
+}
+
+/**
+ * post提交
+ * @param {router} 路由
+ * @param {params} 参数
+ */
+export async function post(router, params) {
+  return request(`api/${router}`, {
+    method: 'POST',
     data: params,
   });
 }

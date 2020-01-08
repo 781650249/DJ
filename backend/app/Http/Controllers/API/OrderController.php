@@ -969,15 +969,48 @@ class OrderController extends Controller {
      * @return \Illuminate\Http\JsonResponse
      */
     public function export(Request $request) {
-        $query = $this->baseSearch($request);
+        if ($request->isMethod('post')) {
+            $ids = $request->input('ids', null);
 
-        $orders = $query->with([
-            'customer',
-            'product',
-            'shipping'
-        ])
-            ->limit(5000)
-            ->get();
+            if (!$ids || !is_array($ids) || count($ids) === 0) {
+                return response()->json([
+                    'message' => '导出失败',
+                    'error'   => '参数 ids 错误',
+                ], 422);
+            }
+
+            $orders = Order::whereIn('id', $ids)
+                ->with([
+                    'customer',
+                    'product',
+                    'shipping'
+                ])
+                ->get();
+        }
+        else {
+            $query = $this->baseSearch($request);
+
+            $orders = $query->with([
+                'customer',
+                'product',
+                'shipping'
+            ])
+                ->get();
+        }
+
+        if (count($orders) === 0) {
+            return response([
+                'message' => '导出失败',
+                'error'   => '未找打任务订单',
+            ], 422);
+        }
+
+        if (count($orders) > 500) {
+            return response([
+                'message' => '导出失败',
+                'error'   => '导出的订单超过500条'
+            ], 422);
+        }
 
         $fileName = str_random(16);
 

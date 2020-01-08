@@ -134,7 +134,7 @@ class Import extends Component {
     const { visible, confirmLoading, file, errorMessage } = this.state;
 
     return (
-      <div>
+      <>
         <Button type="primary" onClick={this.showModal}>
           导入订单
         </Button>
@@ -182,7 +182,7 @@ class Import extends Component {
           </Dragger>
           {errorMessage && <Alert style={{ marginTop: 12 }} type="error" message={errorMessage} />}
         </Modal>
-      </div>
+      </>
     );
   }
 }

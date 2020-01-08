@@ -90,3 +90,18 @@ export function acceptImgs(files) {
 
   return imgs;
 }
+
+/**
+ * 下载文件
+ * @param {*} url 链接地址
+ */
+export function downloadFile(url) {
+  const aLink = document.createElement('a'); // 创建a链接
+  aLink.style.display = 'none';
+  aLink.href = url;
+  aLink.target = 'blank';
+
+  document.body.appendChild(aLink);
+  aLink.click();
+  document.body.removeChild(aLink); // 点击完成后记得删除创建的链接
+}

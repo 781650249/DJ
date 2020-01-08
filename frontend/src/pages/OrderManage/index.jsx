@@ -10,6 +10,7 @@ import styles from './index.less';
 import ConfirmButton from '@/components/ConfirmButtion';
 import { orderStatus } from '@/utils/settings';
 import Import from './components/Import';
+import ExportExcel from './components/ExportExcel';
 
 @connect(({ order, loading }) => ({
   orderLists: order.data.lists,
@@ -240,6 +241,7 @@ export default class OrderManage extends Component {
     const { filter = {} } = params;
     this.setState({
       filter,
+      selectedRowKeys: [],
     });
 
     this.fetch(params);
@@ -463,7 +465,7 @@ export default class OrderManage extends Component {
       pagination: { page, pageSize, total },
       orderLists,
     } = this.props;
-    const { selectedRowKeys } = this.state;
+    const { selectedRowKeys, filter } = this.state;
 
     return (
       <PageHeaderWrapper
@@ -473,6 +475,15 @@ export default class OrderManage extends Component {
             <Col span={12}>订单管理</Col>
             <Col span={12} style={{ textAlign: 'right' }}>
               <Import onSuccess={() => this.fetch({ page: 1 })} />
+              <ExportExcel
+                title="导出订单Excel"
+                style={{ marginLeft: 8 }}
+                type="filter"
+                filter={filter}
+                total={total}
+              >
+                导出订单
+              </ExportExcel>
             </Col>
           </Row>
         }
@@ -560,6 +571,19 @@ export default class OrderManage extends Component {
                 >
                   删除订单
                 </ConfirmButton>
+
+                <ExportExcel
+                  disabled={selectedRowKeys.length === 0}
+                  ids={selectedRowKeys}
+                  title="导出订单"
+                  type="select"
+                  button={{
+                    type: 'link',
+                    size: 'small',
+                  }}
+                >
+                  导出订单
+                </ExportExcel>
               </>
             }
             type="info"

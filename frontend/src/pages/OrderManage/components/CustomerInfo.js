@@ -162,7 +162,6 @@ class CustomerInfo extends Component {
             this.setState({
               error: data && data.error,
               submiting: false,
-              visible: false,
             });
           }
         },

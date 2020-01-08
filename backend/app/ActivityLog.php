@@ -48,6 +48,8 @@ class ActivityLog extends Model
     const TYPE_ORDER_CANCEL_URGENT = 'ORDER_CANCEL_URGENT'; // 取消加急
     const TYPE_ORDER_BATCH_CANCEL_URGENT = 'ORDER_BATCH_CANCEL_URGENT'; // 批量取消加急
 
+    const TYPE_ORDER_UPDATE_NOTE = 'ORDER_UPDATE_NOTE'; // 修改备注
+
     /************* customer ****************/
     const TYPE_CUSTOMER_ADD = 'CUSTOMER_ADD';
     const TYPE_CUSTOMER_UPDATE = 'CUSTOMER_UPDATE';
@@ -97,6 +99,7 @@ class ActivityLog extends Model
         self::TYPE_ORDER_BATCH_MARK_URGENT_FAILED   => '批量标记失',
         self::TYPE_ORDER_CANCEL_URGENT              => '取消加急',
         self::TYPE_ORDER_BATCH_CANCEL_URGENT        => '批量取消加',
+        self::TYPE_ORDER_UPDATE_NOTE                => '修改备注',
 
         /************* customer ****************/
         self::TYPE_CUSTOMER_ADD                   => '添加顾客信息',

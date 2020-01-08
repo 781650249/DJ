@@ -70,6 +70,8 @@ Route::group(['middleware' => 'auth:api', 'namespace'  => 'API'], function ($api
     $api->get('/orders/export', 'OrderController@export');
     $api->post('/orders/export', 'OrderController@export');
 
+    $api->put('order/note/{id}', 'OrderController@updateNote');
+
     $api->resource('/orders', 'OrderController');
 
     /***************** 顾客 ******************************************/

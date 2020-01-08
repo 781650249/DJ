@@ -1042,4 +1042,53 @@ class OrderController extends Controller {
             ->download($filePath, $fileName)
             ->deleteFileAfterSend(true);
     }
+
+    /**
+     * 修改备注
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateNote(Request $request, $id) {
+        $validator = Validator::make($request->all(), [
+            'note'     => 'max:140',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => '修改失败',
+                'error'   => $validator->errors()->first() ?? '未知错误'
+            ], 422);
+        }
+
+        $order = Order::find($id);
+
+        if (empty($order)) {
+            return response()->json([
+                'message' => '修改失败',
+                'error'   => '未发现该订单'
+            ], 422);
+        }
+
+        $oldNote = $order->note;
+        $note = $request->input('note', null);
+
+        activity(ActivityLog::TYPE_ORDER_UPDATE_NOTE)
+            ->performedOn($order)
+            ->withProperties([
+                'ip'       => $request->ip(),
+                'agent'    => $request->userAgent(),
+                'old_note' => $oldNote,
+                'note'     => $note
+            ])
+            ->log('修改备注');
+
+        $order->update([
+            'note'  => $note
+        ]);
+
+        return response()->json([
+            'message'   => '修改成功'
+        ], 200);
+    }
 }

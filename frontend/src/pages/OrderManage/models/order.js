@@ -173,8 +173,25 @@ export default {
       if (callback) callback(response);
     },
 
+    /**
+     * 导出勾选订单
+     * @param {payload} 参数
+     * @param {callback} 回调
+     */
     *exportSelect({ payload, callback }, { call }) {
       const response = yield call(post, 'orders/export', payload);
+
+      if (callback) callback(response);
+    },
+
+    /**
+     * 修改备注
+     * @param {id} 订单id
+     * @param {payload} 参数
+     * @param {callback} 回调
+     */
+    *updateNote({ payload, callback, id }, { call }) {
+      const response = yield call(update, 'order/note', id, payload);
 
       if (callback) callback(response);
     },

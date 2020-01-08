@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Table, Button, Alert, Row, Col, Card, Pagination, Icon, notification } from 'antd';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import UpdateCustomer from './components/UpdateCustomer';
 import OriginImg from './components/OriginImg';
 import UpdateOrderStatus from './components/UpdateOrderStatus';
 import SearchForm from './components/SearchForm';
@@ -12,6 +11,7 @@ import { orderStatus } from '@/utils/settings';
 import Import from './components/Import';
 import ExportExcel from './components/ExportExcel';
 import CustomerInfo from './components/CustomerInfo';
+import EditNote from './components/EditNote';
 
 @connect(({ order, loading }) => ({
   orderLists: order.data.lists,
@@ -140,6 +140,19 @@ export default class OrderManage extends Component {
     {
       title: '备注',
       dataIndex: 'note',
+      render: (note, data) => (
+        <EditNote
+          data={data}
+          button={{
+            type: 'link',
+            size: 'small',
+          }}
+          onSuccess={this.fetch}
+        >
+          {!note && <span style={{ color: '#ccc' }}>设置备注</span>}
+          {!!note && note}
+        </EditNote>
+      ),
     },
     {
       title: '物流单号',

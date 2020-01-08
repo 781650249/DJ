@@ -1,12 +1,4 @@
-import {
-  formData,
-  updCustomer,
-  BcancelUrgent,
-  query,
-  batchUpdate,
-  update,
-  post,
-} from '@/services/api';
+import { formData, BcancelUrgent, query, batchUpdate, update, post } from '@/services/api';
 
 export default {
   namespace: 'order',
@@ -78,8 +70,13 @@ export default {
       if (callback) callback(data, response);
     },
 
-    *updateCustomer({ payload, callback }, { call }) {
-      const response = yield call(updCustomer, payload);
+    /**
+     * 修改顾客信息
+     * @param {payload} 参数
+     * @param {callback} 回调
+     */
+    *updateCusromer({ payload, id, callback }, { call }) {
+      const response = yield call(update, 'customer', id, payload);
       if (callback) callback(response);
     },
 

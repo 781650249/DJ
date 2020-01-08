@@ -11,6 +11,7 @@ import ConfirmButton from '@/components/ConfirmButtion';
 import { orderStatus } from '@/utils/settings';
 import Import from './components/Import';
 import ExportExcel from './components/ExportExcel';
+import CustomerInfo from './components/CustomerInfo';
 
 @connect(({ order, loading }) => ({
   orderLists: order.data.lists,
@@ -146,8 +147,18 @@ export default class OrderManage extends Component {
     },
     {
       title: '客户信息',
-      dataIndex: 'customer',
-      render: customer => customer.name,
+      dataIndex: 'customer.name',
+      render: (name, item) => (
+        <CustomerInfo
+          popover={{
+            title: '客户信息',
+          }}
+          data={item.customer}
+          onSuccess={() => this.fetch()}
+        >
+          {name}
+        </CustomerInfo>
+      ),
     },
     { title: '发稿时间', dataIndex: 'published_at', key: 'published_at' },
     { title: '生产时间', dataIndex: 'produced_at', key: 'produced_at' },
@@ -156,50 +167,6 @@ export default class OrderManage extends Component {
     {
       title: '中文名',
       dataIndex: 'product.title',
-    },
-  ];
-
-  columnSon = [
-    {
-      title: '姓名',
-      dataIndex: 'name',
-    },
-    {
-      title: '邮箱',
-      dataIndex: 'email',
-    },
-    {
-      title: '电话',
-      dataIndex: 'phone',
-    },
-    {
-      title: '国家',
-      dataIndex: 'country',
-    },
-    {
-      title: '省份',
-      dataIndex: 'province',
-    },
-    {
-      title: '地区',
-      dataIndex: 'city',
-    },
-    {
-      title: '地址',
-      dataIndex: 'address1',
-    },
-    {
-      title: '邮编',
-      dataIndex: 'zip_code',
-    },
-    {
-      title: '操作',
-      dataIndex: 'id',
-      render: (_, item) => (
-        <>
-          <UpdateCustomer style={{ marginLeft: '10px' }} data={item} />
-        </>
-      ),
     },
   ];
 

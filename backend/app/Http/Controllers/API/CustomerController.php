@@ -99,17 +99,16 @@ class CustomerController extends Controller
         $validator = Validator::make($request->all(), [
             'name'     => 'required',
             'email'    => [
-                'required',
                 'email'
             ],
-            'phone'    => ['max:32'],
-            'country'  => ['max:32'],
+            'phone'    => ['required', 'max:32'],
+            'country'  => ['required', 'max:32'],
             'province' => ['max:32'],
             'city'     => ['max:32'],
             'address1' => ['max:128'],
             'address2' => ['max:128'],
             'address3' => ['max:128'],
-            'zip_code' => ['max:16']
+            'zip_code' => ['required', 'max:16']
         ]);
 
         if ($validator->fails()) {

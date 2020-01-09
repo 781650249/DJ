@@ -11,7 +11,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: 'DJ Demo',
+  title: 'DJ Project',
   pwa: false,
   iconfontUrl: '',
 };

@@ -49,7 +49,7 @@ const UserLayout = props => {
                 src={logo}
                 alt=""
               />
-              <span className={styles.title}>DJ Demo</span>
+              <span className={styles.title}>DJ Project</span>
             </div>
             <div className={styles.desc}></div>
           </div>
@@ -57,7 +57,7 @@ const UserLayout = props => {
         </div>
         {/* <DefaultFooter /> */}
         <div style={{ textAlign: 'center', padding: '20px 0 30px' }}>
-          Copyright &copy; 2019 DJ Demo
+          Copyright &copy; 2020 DJ PROJECT
         </div>
       </div>
     </>

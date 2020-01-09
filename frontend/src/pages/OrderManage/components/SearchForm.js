@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Row, Col, Input, Button, Select, DatePicker } from 'antd';
+import { Form, Row, Col, Input, Button, Select, DatePicker, Checkbox } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import { formatCriteria } from '@/utils/utils';
@@ -29,7 +29,15 @@ export default class SearchForm extends Component {
     } = this.props;
 
     validateFields((err, values) => {
-      const filter = formatCriteria(values);
+      const tmpVal = values;
+
+      if (tmpVal.urgent) {
+        tmpVal.urgent = 1;
+      } else {
+        tmpVal.urgent = undefined;
+      }
+
+      const filter = formatCriteria(tmpVal);
 
       if (onSearch) {
         onSearch({
@@ -68,21 +76,21 @@ export default class SearchForm extends Component {
     return (
       <Form layout="inline" className={styles.form} onSubmit={this.handleSearch}>
         <Row gutter={16}>
-          <Col xs={12} md={8} lg={6}>
+          <Col xs={12} md={8} lg={8} xl={6}>
             <FormItem label="订单编号">
               {getFieldDecorator('keyword')(
                 <Input placeholder="订单编号" style={{ width: '100%' }} allowClear />,
               )}
             </FormItem>
           </Col>
-          <Col xs={12} md={8} lg={6}>
+          <Col xs={12} md={8} lg={8} xl={6}>
             <FormItem label="客户邮箱">
               {getFieldDecorator('email')(
                 <Input placeholder="客户邮箱" style={{ width: '100%' }} allowClear />,
               )}
             </FormItem>
           </Col>
-          <Col xs={12} md={8} lg={6}>
+          <Col xs={12} md={8} lg={8} xl={6}>
             <FormItem label="客户名称">
               {getFieldDecorator('name', {})(
                 <Input placeholder="客户名称" style={{ width: '100%' }} allowClear />,
@@ -90,7 +98,7 @@ export default class SearchForm extends Component {
             </FormItem>
           </Col>
 
-          <Col xs={12} md={8} lg={6}>
+          <Col xs={12} md={8} lg={8} xl={6}>
             <FormItem label="订单状态">
               {getFieldDecorator('status', {})(
                 <Select allowClear style={{ width: '100%' }} placeholder="订单状态">
@@ -105,7 +113,7 @@ export default class SearchForm extends Component {
               )}
             </FormItem>
           </Col>
-          <Col xs={12} md={8} lg={6}>
+          <Col xs={12} md={8} lg={8} xl={6}>
             <FormItem label="订单时间">
               {getFieldDecorator('created_at')(
                 <RangePicker
@@ -122,7 +130,7 @@ export default class SearchForm extends Component {
               )}
             </FormItem>
           </Col>
-          <Col xs={12} md={8} lg={6}>
+          <Col xs={12} md={8} lg={8} xl={6}>
             <FormItem label="发稿时间">
               {getFieldDecorator('published_at')(
                 <RangePicker
@@ -139,7 +147,7 @@ export default class SearchForm extends Component {
               )}
             </FormItem>
           </Col>
-          <Col xs={12} md={8} lg={6}>
+          <Col xs={12} md={8} lg={8} xl={6}>
             <FormItem label="生产时间">
               {getFieldDecorator('produced_at')(
                 <RangePicker
@@ -156,10 +164,16 @@ export default class SearchForm extends Component {
               )}
             </FormItem>
           </Col>
+
+          {/* 选择框 */}
+          <Col xs={12} md={8} lg={8} xl={2}>
+            <FormItem>{getFieldDecorator('urgent')(<Checkbox>加急</Checkbox>)}</FormItem>
+          </Col>
           <Col
             xs={12}
-            md={16}
-            lg={6}
+            md={8}
+            lg={8}
+            xl={4}
             style={{
               display: 'flex',
               alignItems: 'center',

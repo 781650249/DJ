@@ -36,7 +36,8 @@ class OrderController extends Controller {
                 AllowedFilter::scope('keyword'),
                 AllowedFilter::scope('created_at'),
                 AllowedFilter::scope('published_at'),
-                AllowedFilter::scope('produced_at')
+                AllowedFilter::scope('produced_at'),
+                AllowedFilter::exact('urgent')
             )
             ->allowedSorts(
                 'created_at',

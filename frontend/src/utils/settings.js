@@ -26,7 +26,7 @@ export const orderStatus = {
   },
   processed: {
     key: 'processed',
-    value: '已处理',
+    value: '处理完成',
     showOnly: 'all',
     color: '#8E236B',
   },

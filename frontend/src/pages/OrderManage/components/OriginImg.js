@@ -27,7 +27,7 @@ export default class OriginImg extends Component {
 
     return (
       <>
-        <Badge count={imgs.length}>
+        <Badge count={imgs.length} showZero>
           <Icon
             type="file-image"
             theme="twoTone"
